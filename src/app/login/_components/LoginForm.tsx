@@ -53,7 +53,7 @@ export default function LoginForm() {
 
       if (result?.error) {
         console.log(result);
-        let errorMessage = "An error occurred during login.";
+        const errorMessage = "An error occurred during login.";
 
         toast.error("Login Failed", {
           description: result.error || errorMessage,
