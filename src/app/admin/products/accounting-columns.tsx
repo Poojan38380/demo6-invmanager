@@ -1,13 +1,10 @@
 "use client";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { DataTableColumnHeader } from "@/components/ui/data-table/data-table-column-header";
-import { formatDateYYMMDDHHMM } from "@/lib/format-date";
 import { formatNumber } from "@/lib/format-number";
 import { ColumnDef } from "@tanstack/react-table";
 import { ProductWithOneImage } from "./page";
-import { Package } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 
 export const AccountingColumns: ColumnDef<ProductWithOneImage>[] = [
