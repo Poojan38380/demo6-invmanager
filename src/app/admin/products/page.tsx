@@ -23,11 +23,11 @@ export default async function ProductsPage() {
   const products = await getData();
 
   return (
-    <Card className="border-none">
+    <Card className="border-none ">
       <CardHeader>
         <CardTitle>All Products</CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="max-768:px-0">
         <DataTable columns={columns} data={products} />
       </CardContent>
       <CardFooter></CardFooter>

@@ -11,7 +11,11 @@ export const columns: ColumnDef<Product>[] = [
   {
     accessorKey: "name",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Product" />
+      <DataTableColumnHeader
+        column={column}
+        title="Product"
+        className="justify-center"
+      />
     ),
   },
   {
@@ -24,14 +28,14 @@ export const columns: ColumnDef<Product>[] = [
       const bufferStock: number = row.original.bufferStock || 0;
       const unit: string = row.original.unit || "pcs";
       return (
-        <>
+        <div className="flex items-center gap-1">
           <Badge
             variant={stock < (bufferStock || 0) ? "destructive" : "default"}
           >
             {formatNumber(stock)}
           </Badge>
-          <span className="ml-1">{unit}</span>
-        </>
+          <span>{unit}</span>
+        </div>
       );
     },
   },
