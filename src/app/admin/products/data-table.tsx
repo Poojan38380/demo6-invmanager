@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -21,7 +22,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import React from "react";
 import { Input } from "@/components/ui/input";
 
 import { DataTablePagination } from "@/components/ui/data-table/data-table-pagination";
@@ -43,6 +43,7 @@ export function DataTable<TData, TValue>({
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
+  const [globalFilter, setGlobalFilter] = React.useState("");
 
   const table = useReactTable({
     data,
@@ -55,24 +56,30 @@ export function DataTable<TData, TValue>({
     getSortedRowModel: getSortedRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
-
+    globalFilterFn: (row, columnId, filterValue) => {
+      const searchableColumns = ["name", "supplier", "category"];
+      return searchableColumns.some((col) => {
+        const value = row.getValue(col) as string;
+        return value?.toLowerCase().includes(filterValue.toLowerCase());
+      });
+    },
+    onGlobalFilterChange: setGlobalFilter,
     state: {
       sorting,
       columnFilters,
       columnVisibility,
       rowSelection,
+      globalFilter,
     },
   });
 
   return (
     <div>
-      <div className="flex items-center py-4 gap-2">
+      <div className="flex items-center pb-4 gap-2 max-768:px-4">
         <Input
-          placeholder="Filter products..."
-          value={table.getColumn("name")?.getFilterValue() as string}
-          onChange={(event) =>
-            table.getColumn("name")?.setFilterValue(event.target.value)
-          }
+          placeholder="Search products..."
+          value={globalFilter}
+          onChange={(event) => setGlobalFilter(event.target.value)}
           className="max-w-xs"
         />
         <DataTableViewOptions table={table} />
@@ -90,18 +97,16 @@ export function DataTable<TData, TValue>({
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                    </TableHead>
-                  );
-                })}
+                {headerGroup.headers.map((header) => (
+                  <TableHead key={header.id}>
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                  </TableHead>
+                ))}
               </TableRow>
             ))}
           </TableHeader>

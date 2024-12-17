@@ -1,20 +1,34 @@
 import prisma from "@/prisma";
 import { Product } from "@prisma/client";
 import React from "react";
-import { columns } from "./columns";
-import { DataTable } from "./data-table";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import ToggleTable from "./toggle-table";
 
-async function getData(): Promise<Product[]> {
+export type ProductWithOneImage = Product & {
+  productImages: {
+    url: string;
+  }[];
+  vendor: {
+    companyName: string;
+  } | null;
+  category: {
+    name: string;
+  } | null;
+};
+
+async function getData(): Promise<ProductWithOneImage[]> {
   // Fetch data from your API here.
   const products = await prisma.product.findMany({
     orderBy: { updatedAt: "desc" },
+    include: {
+      vendor: {
+        select: { companyName: true },
+      },
+      category: { select: { name: true } },
+      productImages: {
+        take: 1,
+        select: { url: true },
+      },
+    },
   });
   return products;
 }
@@ -23,14 +37,8 @@ export default async function ProductsPage() {
   const products = await getData();
 
   return (
-    <Card className="border-none ">
-      <CardHeader>
-        <CardTitle>All Products</CardTitle>
-      </CardHeader>
-      <CardContent className="max-768:px-0">
-        <DataTable columns={columns} data={products} />
-      </CardContent>
-      <CardFooter></CardFooter>
-    </Card>
+    <>
+      <ToggleTable products={products} />
+    </>
   );
 }

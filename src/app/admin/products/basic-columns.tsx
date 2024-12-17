@@ -1,13 +1,15 @@
 "use client";
 
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { DataTableColumnHeader } from "@/components/ui/data-table/data-table-column-header";
 import { formatDateYYMMDDHHMM } from "@/lib/format-date";
 import { formatNumber } from "@/lib/format-number";
-import { Product } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
+import { ProductWithOneImage } from "./page";
+import { Package } from "lucide-react";
 
-export const columns: ColumnDef<Product>[] = [
+export const BasicColumns: ColumnDef<ProductWithOneImage>[] = [
   {
     accessorKey: "name",
     header: ({ column }) => (
@@ -17,6 +19,21 @@ export const columns: ColumnDef<Product>[] = [
         className="justify-center"
       />
     ),
+
+    cell: ({ row }) => {
+      const productName: string = row.getValue("name");
+      return (
+        <div className="flex items-center gap-2">
+          <Avatar className="max-425:hidden">
+            <AvatarImage src={row.original.productImages[0]?.url} />
+            <AvatarFallback>
+              <Package className="h-5 w-5 text-muted-foreground" />
+            </AvatarFallback>
+          </Avatar>
+          <span>{productName}</span>
+        </div>
+      );
+    },
   },
   {
     accessorKey: "stock",
@@ -40,9 +57,17 @@ export const columns: ColumnDef<Product>[] = [
     },
   },
   {
-    accessorKey: "costPrice",
+    accessorKey: "vendor.companyName",
+    id: "supplier",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Price" />
+      <DataTableColumnHeader column={column} title="Supplier" />
+    ),
+  },
+  {
+    accessorKey: "category.name",
+    id: "category",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Category" />
     ),
   },
   {
