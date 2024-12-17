@@ -62,6 +62,10 @@ export const BasicColumns: ColumnDef<ProductWithOneImage>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Supplier" />
     ),
+    cell: ({ row }) => {
+      const companyName = row.original.vendor?.companyName ?? null;
+      return <span>{companyName}</span>;
+    },
   },
   {
     accessorKey: "category.name",
@@ -69,6 +73,10 @@ export const BasicColumns: ColumnDef<ProductWithOneImage>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Category" />
     ),
+    cell: ({ row }) => {
+      const categoryName = row.original.category?.name ?? null;
+      return <span>{categoryName}</span>;
+    },
   },
   {
     accessorKey: "updatedAt",
