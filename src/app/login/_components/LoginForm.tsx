@@ -69,7 +69,6 @@ export default function LoginForm() {
       });
       router.push("/admin");
     } catch (error) {
-      console.log(error);
       console.error("Unexpected error during login:", error);
       toast.error("Error", {
         description: "An unexpected error occurred. Please try again later.",
