@@ -18,7 +18,7 @@ export async function AppSidebar({
 }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar className="" variant="inset" {...props}>
-      <SidebarHeader className="flex flex-row justify-between items-center">
+      <SidebarHeader className="pt-3">
         <a href="/admin" className="grow flex gap-2">
           <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
             <Command className="size-4" />
@@ -28,7 +28,6 @@ export async function AppSidebar({
             <span className="truncate text-xs">Enterprise</span>
           </div>
         </a>
-        <ThemeToggleButton />
       </SidebarHeader>
       <SidebarContent>
         <PrimaryNav />
