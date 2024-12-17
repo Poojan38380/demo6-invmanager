@@ -22,7 +22,7 @@ export function DataTableViewOptions<TData>({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" className="ml-auto  flex">
+        <Button variant="outline" className="ml-auto rounded-full flex">
           <Settings2 />
           View
         </Button>

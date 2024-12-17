@@ -75,12 +75,12 @@ export function DataTable<TData, TValue>({
 
   return (
     <div>
-      <div className="flex items-center pb-4 gap-2 max-768:px-4">
+      <div className="flex items-center justify-between pb-4 gap-2 max-768:px-6">
         <Input
           placeholder="Search products..."
           value={globalFilter}
           onChange={(event) => setGlobalFilter(event.target.value)}
-          className="max-w-xs"
+          className="max-w-60 rounded-full"
         />
         <DataTableViewOptions table={table} />
       </div>
