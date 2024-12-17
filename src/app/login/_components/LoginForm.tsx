@@ -7,6 +7,7 @@ import * as z from "zod";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -52,11 +53,12 @@ export default function LoginForm() {
       });
 
       if (result?.error) {
-        console.log(result);
-        const errorMessage = "An error occurred during login.";
-
+        let errorMessage = "An error occurred during login.";
+        if (result.error === "CredentialsSignin") {
+          errorMessage = "Invalid username or password.";
+        }
         toast.error("Login Failed", {
-          description: result.error || errorMessage,
+          description: errorMessage,
         });
         setIsLoading(false);
         return;
@@ -67,6 +69,7 @@ export default function LoginForm() {
       });
       router.push("/admin");
     } catch (error) {
+      console.log(error);
       console.error("Unexpected error during login:", error);
       toast.error("Error", {
         description: "An unexpected error occurred. Please try again later.",
