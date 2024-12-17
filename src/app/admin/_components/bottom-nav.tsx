@@ -6,7 +6,6 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 
-import { InstallPWAApp } from "./install-app-button";
 import Link from "next/link";
 import { BottomNavItems } from "../_menus/bottomNavMenu";
 
@@ -15,7 +14,6 @@ export function BottomNav({ ...props }) {
     <SidebarGroup {...props}>
       <SidebarGroupContent>
         <SidebarMenu>
-          <InstallPWAApp />
           {BottomNavItems.map((item) => (
             <SidebarMenuItem key={item.title}>
               <SidebarMenuButton asChild size="sm">
