@@ -25,7 +25,7 @@ export const PrimaryNavItems: NavItem[] = [
     isActive: true,
     items: [
       {
-        title: "Dashboard",
+        title: "Overview",
         url: "/admin",
       },
       {
