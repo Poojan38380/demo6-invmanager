@@ -1,0 +1,160 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt  DateTime @default(now())
+  isArchived Boolean  @default(false)
+
+  username String @unique
+  password String
+
+  email      String?
+  contact    String?
+  profilePic String  @default("https://ui-avatars.com/api/?background=random&name=x&bold=true")
+
+  transactions Transaction[]
+  products     Product[]     @relation("createdProducts")
+}
+
+model Product {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  isArchived Boolean  @default(false)
+
+  name  String
+  stock Float  @default(0)
+
+  SKU              String?
+  shortDescription String?
+  longDescription  String?
+
+  bufferStock  Float? @default(0)
+  costPrice    Float?
+  sellingPrice Float?
+
+  unit String? @default("pcs")
+
+  creator   User   @relation("createdProducts", fields: [creatorId], references: [id])
+  creatorId String @db.ObjectId
+
+  category    Category?  @relation(fields: [categoryId], references: [id])
+  categoryId  String?    @db.ObjectId
+  warehouse   Warehouse? @relation(fields: [warehouseId], references: [id])
+  warehouseId String?    @db.ObjectId
+  vendor      Vendor?    @relation(fields: [vendorId], references: [id])
+  vendorId    String?    @db.ObjectId
+
+  transactions  Transaction[]
+  productImages ProductImage[]
+}
+
+model Transaction {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime @default(now())
+
+  action      TransactionAction
+  stockBefore Float
+  stockChange Float
+  stockAfter  Float
+
+  note String?
+
+  product   Product @relation(fields: [productId], references: [id])
+  productId String  @db.ObjectId
+  user      User    @relation(fields: [userId], references: [id])
+  userId    String  @db.ObjectId
+
+  customer   Customer? @relation(fields: [customerId], references: [id])
+  customerId String?   @db.ObjectId
+  vendor     Vendor?   @relation(fields: [vendorId], references: [id])
+  vendorId   String?   @db.ObjectId
+}
+
+enum TransactionAction {
+  CREATED
+  UPDATED
+  DELETED
+  INCREASED
+  DECREASED
+}
+
+model Customer {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt  DateTime @default(now())
+  isArchived Boolean  @default(false)
+
+  companyName String
+
+  contactName   String?
+  contactNumber String?
+  email         String?
+  address       String?
+
+  transactions Transaction[]
+}
+
+model Vendor {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt  DateTime @default(now())
+  isArchived Boolean  @default(false)
+
+  companyName String
+
+  contactName   String?
+  contactNumber String?
+  email         String?
+  address       String?
+
+  products     Product[]
+  transactions Transaction[]
+}
+
+model ProductImage {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime @default(now())
+
+  url String
+
+  product   Product? @relation(fields: [productId], references: [id])
+  productId String?  @db.ObjectId
+}
+
+model MeasurementUnit {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime @default(now())
+
+  name String @unique
+}
+
+model Category {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime @default(now())
+
+  name String @unique
+
+  products Product[]
+}
+
+model Warehouse {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime @default(now())
+
+  name     String
+  location String
+
+  products Product[]
+}
+
+model Notification {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime @default(now())
+  message   String
+}
