@@ -1,5 +1,6 @@
 import prisma from "@/prisma";
 import { Product } from "@prisma/client";
+import { unstable_cache as cache } from "next/cache";
 
 export type ProductWithOneImage = Product & {
   productImages: {
@@ -13,7 +14,7 @@ export type ProductWithOneImage = Product & {
   } | null;
 };
 
-export async function getProductsforTable(): Promise<ProductWithOneImage[]> {
+async function getProductsforTable(): Promise<ProductWithOneImage[]> {
   // Fetch data from your API here.
   const products = await prisma.product.findMany({
     orderBy: { updatedAt: "desc" },
@@ -30,3 +31,8 @@ export async function getProductsforTable(): Promise<ProductWithOneImage[]> {
   });
   return products;
 }
+
+export const getCachedProductsforTable = cache(
+  () => getProductsforTable(),
+  ["get-products-for-table"]
+);
