@@ -22,47 +22,48 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { SupplierSelectorforUpdater } from "./select-supplier-update";
+import { CustomerSelectorforUpdater } from "./select-customer-update copy";
 import { updateProductStock } from "../_actions/stock";
 import { Product } from "@prisma/client";
-import { CustomerSelectorforUpdater } from "./select-customer-update copy";
 
 export default function UpdateStock({ product }: { product: Product }) {
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
-
   const router = useRouter();
 
-  const [addValue, setAddValue] = useState(0);
-  const [removeValue, setRemoveValue] = useState(0);
-  const [vendorId, setVendorId] = useState<string | undefined>();
+  // State for stock management
+  const [stockValue, setStockValue] = useState(0);
+  const [isAdding, setIsAdding] = useState(true);
+  const [vendorId, setVendorId] = useState<string | undefined>(
+    product.vendorId || undefined
+  );
   const [customerId, setCustomerId] = useState<string | undefined>();
   const [note, setNote] = useState("");
   const [error, setError] = useState("");
 
+  // Calculate new stock based on whether we're adding or removing
   const stockChange = useMemo(
-    () => addValue - removeValue,
-    [addValue, removeValue]
+    () => (isAdding ? stockValue : -stockValue),
+    [stockValue, isAdding]
   );
+
   const newStock = useMemo(
     () => product.stock + stockChange,
     [product.stock, stockChange]
   );
 
-  const resetForm = () => {
-    setAddValue(0);
-    setRemoveValue(0);
-    setVendorId(undefined);
-    setCustomerId(undefined);
-    setNote("");
-    setError("");
-  };
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError("");
 
-    if (stockChange === 0) {
+    if (stockValue === 0) {
       setError("Please enter a non-zero value to update stock.");
+      return;
+    }
+
+    // Validate stock removal doesn't exceed current stock
+    if (!isAdding && stockValue > product.stock) {
+      setError("Cannot remove more stock than available.");
       return;
     }
 
@@ -73,14 +74,14 @@ export default function UpdateStock({ product }: { product: Product }) {
       const data = {
         productId: product.id,
         change: stockChange,
-        customerId,
-        vendorId,
+        customerId: !isAdding ? customerId : undefined,
+        vendorId: isAdding ? vendorId : undefined,
         transactionNote: note,
       };
+
       const result = await updateProductStock({ data });
       if (result.success) {
         toast.success("Stock updated successfully.", { id: loadingToast });
-        resetForm();
         setOpen(false);
         router.refresh();
       } else {
@@ -96,16 +97,19 @@ export default function UpdateStock({ product }: { product: Product }) {
     }
   };
 
-  const handleAddChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setAddValue(Number(e.target.value));
-    setRemoveValue(0); // Ensure mutual exclusivity
+  const handleStockChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = Number(e.target.value);
+    setStockValue(value >= 0 ? value : 0);
     setError("");
   };
 
-  const handleRemoveChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setRemoveValue(Number(e.target.value));
-    setAddValue(0); // Ensure mutual exclusivity
+  const handleModeChange = (adding: boolean) => {
+    setIsAdding(adding);
+    setStockValue(0);
     setError("");
+    // Reset the IDs when switching modes
+    setVendorId(adding ? product.vendorId || undefined : undefined);
+    setCustomerId(undefined);
   };
 
   return (
@@ -132,60 +136,74 @@ export default function UpdateStock({ product }: { product: Product }) {
           </DrawerHeader>
           <form onSubmit={handleSubmit} className="space-y-6 p-4">
             <div className="grid gap-6">
-              <div className="grid grid-cols-2 gap-4">
+              <div className="flex gap-4 justify-center">
+                <Button
+                  type="button"
+                  variant={isAdding ? "default" : "outline"}
+                  onClick={() => handleModeChange(true)}
+                >
+                  Add Stock
+                </Button>
+                <Button
+                  type="button"
+                  variant={!isAdding ? "default" : "outline"}
+                  onClick={() => handleModeChange(false)}
+                >
+                  Remove Stock
+                </Button>
+              </div>
+
+              <div className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="add" className="text-lg">
-                    {removeValue > 0 ? "Select Customer?" : "Add Stock"}
+                  <Label htmlFor="stock" className="text-lg">
+                    {isAdding ? "Add Stock" : "Remove Stock"}
                   </Label>
-                  {removeValue > 0 ? (
-                    <CustomerSelectorforUpdater
-                      onCustomerSelect={setCustomerId}
+                  <div className="relative">
+                    <Input
+                      id="stock"
+                      type="number"
+                      min="0"
+                      value={stockValue}
+                      onChange={handleStockChange}
+                      className="pl-8"
                     />
-                  ) : (
-                    <div className="relative">
-                      <Input
-                        id="add"
-                        type="number"
-                        min="0"
-                        value={addValue}
-                        onChange={handleAddChange}
-                        className="pl-8"
-                      />
+                    {isAdding ? (
                       <Plus
                         className="absolute left-2 top-1/2 transform -translate-y-1/2 text-green-500"
                         size={16}
                       />
-                    </div>
-                  )}
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="remove" className="text-lg">
-                    {addValue > 0 ? "Select Supplier?" : "Remove Stock"}
-                  </Label>
-                  {addValue > 0 ? (
-                    <SupplierSelectorforUpdater
-                      onSupplierSelect={setVendorId}
-                      defaultValue={product.vendorId || ""}
-                    />
-                  ) : (
-                    <div className="relative">
-                      <Input
-                        id="remove"
-                        type="number"
-                        min="0"
-                        value={removeValue}
-                        onChange={handleRemoveChange}
-                        className="pl-8"
-                      />
+                    ) : (
                       <Minus
                         className="absolute left-2 top-1/2 transform -translate-y-1/2 text-red-500"
                         size={16}
                       />
-                    </div>
-                  )}
+                    )}
+                  </div>
                 </div>
+
+                {stockValue > 0 && (
+                  <div className="space-y-2">
+                    <Label className="text-lg">
+                      {isAdding
+                        ? "Select Supplier (Optional)"
+                        : "Select Customer (Optional)"}
+                    </Label>
+                    {isAdding ? (
+                      <SupplierSelectorforUpdater
+                        onSupplierSelect={setVendorId}
+                        defaultValue={product.vendorId || undefined}
+                      />
+                    ) : (
+                      <CustomerSelectorforUpdater
+                        onCustomerSelect={setCustomerId}
+                      />
+                    )}
+                  </div>
+                )}
               </div>
+
               {error && <p className="text-sm text-red-500">{error}</p>}
+
               <span
                 className={`text-2xl font-bold flex gap-2 justify-end items-center ${
                   newStock < (product.bufferStock || 0) ? "text-red-600" : ""
@@ -203,6 +221,7 @@ export default function UpdateStock({ product }: { product: Product }) {
                 )}
                 {newStock} {product.unit}
               </span>
+
               <Textarea
                 placeholder="Add a note (optional)"
                 id="note"
@@ -212,6 +231,7 @@ export default function UpdateStock({ product }: { product: Product }) {
                 className="resize-none"
               />
             </div>
+
             <DrawerFooter className="px-0">
               <Button type="submit" disabled={loading} className="w-full">
                 {loading ? "Updating..." : "Update Stock"}
