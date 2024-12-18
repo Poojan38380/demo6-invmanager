@@ -76,7 +76,7 @@ export const AccountingColumns: ColumnDef<ProductWithOneImage>[] = [
   {
     accessorKey: "totalValue",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Total Value" />
+      <DataTableColumnHeader column={column} title="Total Raw" />
     ),
     cell: ({ row }) => {
       const stock: number = row.getValue("stock");
@@ -86,13 +86,61 @@ export const AccountingColumns: ColumnDef<ProductWithOneImage>[] = [
     },
   },
   {
-    accessorKey: "updatedAt",
+    accessorKey: "sellingPrice",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Selling price" />
+    ),
     cell: ({ row }) => {
-      const updatedAt: Date = row.getValue("updatedAt");
+      const cost: number = row.getValue("sellingPrice");
+
+      return formatCurrency(cost);
+    },
+  },
+  {
+    accessorKey: "totalFinalValue",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Total Raw" />
+    ),
+    cell: ({ row }) => {
+      const stock: number = row.getValue("stock");
+      const sellingPrice: number = row.getValue("sellingPrice");
+      const totalFinalValue = stock * sellingPrice;
+      return <div>{formatNumber(totalFinalValue)}</div>;
+    },
+  },
+
+  {
+    accessorKey: "updatedAt",
+    id: "updated-at-accounting",
+    cell: ({ row }) => {
+      const updatedAt: Date = row.getValue("updated-at-accounting");
       return formatDateYYMMDDHHMM(updatedAt);
     },
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Updated at" />
     ),
+  },
+
+  {
+    accessorKey: "vendor.companyName",
+    id: "supplier",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Supplier" />
+    ),
+    cell: ({ row }) => {
+      const companyName = row.original.vendor?.companyName ?? null;
+      return <span>{companyName}</span>;
+    },
+  },
+  {
+    accessorKey: "category.name",
+    id: "category",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Category" />
+    ),
+    cell: ({ row }) => {
+      const categoryName = row.original.category?.name ?? null;
+      return <span>{categoryName}</span>;
+    },
   },
 ];

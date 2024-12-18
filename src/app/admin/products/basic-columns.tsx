@@ -80,8 +80,9 @@ export const BasicColumns: ColumnDef<ProductWithOneImage>[] = [
   },
   {
     accessorKey: "updatedAt",
+    id: "updated-at-basic",
     cell: ({ row }) => {
-      const updatedAt: Date = row.getValue("updatedAt");
+      const updatedAt: Date = row.getValue("updated-at-basic");
       return formatDateYYMMDDHHMM(updatedAt);
     },
     header: ({ column }) => (
