@@ -8,22 +8,19 @@ import {
 } from "@/components/ui/select";
 import { Category } from "@prisma/client";
 import { getCachedCategories } from "../_actions/selector-data";
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "@/components/ui/form";
 
-interface SelectCategoryProps {
-  onCategorySelect: (categoryId: string | undefined) => void;
-  defaultValue?: string;
-  label?: string;
-}
-
-export function SelectCategory({
-  onCategorySelect,
-  defaultValue,
-}: SelectCategoryProps) {
+export function SelectCategory({ form }: { form: any }) {
   const [categories, setCategories] = useState<Category[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchSuppliers = async () => {
+    const fetchCategories = async () => {
       try {
         const data = await getCachedCategories();
         setCategories(data);
@@ -32,40 +29,36 @@ export function SelectCategory({
       }
     };
 
-    fetchSuppliers();
+    fetchCategories();
   }, []);
-
-  const [selectedCategory, setSelectedCategory] = useState<string | undefined>(
-    defaultValue
-  );
-
-  useEffect(() => {
-    if (defaultValue) {
-      setSelectedCategory(defaultValue);
-    }
-  }, [defaultValue]);
-
-  const handleCategoryChange = (value: string) => {
-    setSelectedCategory(value);
-    onCategorySelect(value === "none" ? undefined : value);
-  };
 
   if (error) return <p>Error: {error}</p>;
 
   return (
-    <Select value={selectedCategory} onValueChange={handleCategoryChange}>
-      <SelectTrigger id="category-select">
-        <SelectValue placeholder="Select a category" />
-      </SelectTrigger>
-      <SelectContent>
-        <SelectItem value="none">None</SelectItem>
-        {categories.length &&
-          categories.map((category) => (
-            <SelectItem key={category.id} value={category.id}>
-              {category.name}
-            </SelectItem>
-          ))}
-      </SelectContent>
-    </Select>
+    <FormField
+      control={form.control}
+      name="categoryId"
+      render={({ field }) => (
+        <FormItem>
+          <Select onValueChange={field.onChange} defaultValue={field.value}>
+            <FormControl>
+              <SelectTrigger id="category-select">
+                <SelectValue />
+              </SelectTrigger>
+            </FormControl>
+            <SelectContent>
+              <SelectItem value="none">None</SelectItem>
+              {categories.length &&
+                categories.map((category) => (
+                  <SelectItem key={category.id} value={category.id}>
+                    {category.name}
+                  </SelectItem>
+                ))}
+            </SelectContent>
+          </Select>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
   );
 }

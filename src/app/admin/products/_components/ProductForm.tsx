@@ -10,10 +10,11 @@ import MediaCard from "./media-card";
 import ProductInfoCard from "./product-info-card";
 import ProductDetailsCard from "./product-details-card";
 import PricingCard from "./product-pricing-card";
-import CategoryCard from "./product-category-select-card";
-import SupplierCard from "./product-supplier-select-card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { SupplierSelector } from "../../_components/select-supplier";
+import { SelectCategory } from "../../_components/select-category";
 
-const formSchema = z.object({
+const AddProductformSchema = z.object({
   name: z.string().min(2, {
     message: "Name must be at least 2 characters.",
   }),
@@ -46,26 +47,22 @@ const formSchema = z.object({
     .optional(),
 });
 
-type FormValues = z.infer<typeof formSchema>;
+export type AddProductFormValues = z.infer<typeof AddProductformSchema>;
 
 export default function ProductForm() {
-  const [selectedUnit, setSelectedUnit] = useState<string>("pcs");
-  const [vendorId, setVendorId] = useState<string | undefined>();
-  const [categoryId, setCategoryId] = useState<string | undefined>();
   const [productImages, setProductImages] = useState<File[]>([]);
 
-  const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<AddProductFormValues>({
+    resolver: zodResolver(AddProductformSchema),
     defaultValues: {
       name: "",
       stock: 0,
       bufferStock: 0,
-      unit: selectedUnit,
+      unit: "pcs",
     },
   });
 
-  const onSubmit = (data: FormValues) => {
-    // Handle form submission
+  const onSubmit = (data: AddProductFormValues) => {
     console.log(data);
   };
 
@@ -87,11 +84,22 @@ export default function ProductForm() {
           </div>
           <div className="col-span-1 flex flex-col space-y-6">
             <PricingCard form={form} margin={calculateMargin()} />
-            <CategoryCard
-              categoryId={categoryId}
-              setCategoryId={setCategoryId}
-            />
-            <SupplierCard vendorId={vendorId} setVendorId={setVendorId} />
+            <Card>
+              <CardHeader>
+                <CardTitle>Select Category</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <SelectCategory form={form} />
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle>Select Supplier</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <SupplierSelector form={form} />
+              </CardContent>
+            </Card>
             <div className="flex justify-end px-6">
               <Button type="submit">Create Product</Button>
             </div>

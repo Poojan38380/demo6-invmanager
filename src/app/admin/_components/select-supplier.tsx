@@ -10,16 +10,18 @@ import {
 } from "@/components/ui/select";
 import { getCachedSuppliers } from "../_actions/selector-data";
 import { Vendor } from "@prisma/client";
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "@/components/ui/form";
 
 interface SupplierSelectorProps {
-  onSupplierSelect: (supplierId: string | undefined) => void;
-  defaultValue?: string;
+  form: any;
 }
 
-export function SupplierSelector({
-  onSupplierSelect,
-  defaultValue,
-}: SupplierSelectorProps) {
+export function SupplierSelector({ form }: SupplierSelectorProps) {
   const [suppliers, setSuppliers] = useState<Vendor[]>([]);
   const [error, setError] = useState<string | null>(null);
 
@@ -36,37 +38,33 @@ export function SupplierSelector({
     fetchSuppliers();
   }, []);
 
-  const [selectedSupplier, setSelectedSupplier] = useState<string | undefined>(
-    defaultValue
-  );
-
-  useEffect(() => {
-    if (defaultValue) {
-      setSelectedSupplier(defaultValue);
-    }
-  }, [defaultValue]);
-
-  const handleSupplierChange = (value: string) => {
-    setSelectedSupplier(value);
-    onSupplierSelect(value === "none" ? undefined : value);
-  };
-
   if (error) return <p>Error: {error}</p>;
 
   return (
-    <Select value={selectedSupplier} onValueChange={handleSupplierChange}>
-      <SelectTrigger id="supplier-select">
-        <SelectValue placeholder="Select a supplier" />
-      </SelectTrigger>
-      <SelectContent>
-        <SelectItem value="none">None</SelectItem>
-        {suppliers.length &&
-          suppliers.map((supplier) => (
-            <SelectItem key={supplier.id} value={supplier.id}>
-              {supplier.companyName}
-            </SelectItem>
-          ))}
-      </SelectContent>
-    </Select>
+    <FormField
+      control={form.control}
+      name="vendorId"
+      render={({ field }) => (
+        <FormItem>
+          <Select onValueChange={field.onChange} defaultValue={field.value}>
+            <FormControl>
+              <SelectTrigger id="supplier-select">
+                <SelectValue />
+              </SelectTrigger>
+            </FormControl>
+            <SelectContent>
+              <SelectItem value="none">None</SelectItem>
+              {suppliers.length &&
+                suppliers.map((supplier) => (
+                  <SelectItem key={supplier.id} value={supplier.id}>
+                    {supplier.companyName}
+                  </SelectItem>
+                ))}
+            </SelectContent>
+          </Select>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
   );
 }

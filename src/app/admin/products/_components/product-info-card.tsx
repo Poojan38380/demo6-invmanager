@@ -67,10 +67,7 @@ export default function ProductInfoCard({ form }: { form: any }) {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Unit</FormLabel>
-                <UnitSelector
-                  defaultValue={field.value}
-                  onUnitChange={field.onChange}
-                />
+                <UnitSelector form={form} />
               </FormItem>
             )}
           />
