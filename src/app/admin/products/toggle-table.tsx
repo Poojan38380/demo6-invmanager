@@ -32,7 +32,12 @@ function ToggleTable({ products }: { products: ProductWithOneImage[] }) {
             className=" shadow-sm"
             aria-label="Toggle accounting table"
           />
-          <div>{showAccountingTable ? "Accounting" : "Products"}</div>
+          <div
+            className="cursor-pointer"
+            onClick={() => setShowAccountingTable(!showAccountingTable)}
+          >
+            {showAccountingTable ? "Accounting" : "Products"}
+          </div>
         </CardTitle>
         <Button asChild className="rounded-full shadow-sm">
           <Link href="/admin/products/new">
