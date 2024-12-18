@@ -10,7 +10,6 @@ import {
   revalidateTag,
 } from "next/cache";
 import { redirect } from "next/navigation";
-import { nullable } from "zod";
 import { uploadImagesToCloudinary } from "./cloudinary";
 
 export type ProductWithOneImage = Product & {

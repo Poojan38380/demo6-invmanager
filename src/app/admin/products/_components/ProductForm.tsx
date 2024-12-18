@@ -14,7 +14,7 @@ import { SupplierSelector } from "../../_components/select-supplier";
 import { SelectCategory } from "../../_components/select-category";
 import { toast } from "sonner";
 import { addProduct } from "../_actions/products";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import MediaCard from "./media-card";
 
 const ProductformSchema = z.object({
@@ -68,18 +68,21 @@ export default function ProductForm() {
   });
 
   const onSubmit = async (data: ProductFormValues) => {
+    const loadingToast = toast.loading("Adding product...");
     try {
       const result = await addProduct(data, productImages);
       if (result.success) {
-        toast.success("Product added successfully");
+        toast.success("Product added successfully", { id: loadingToast });
         form.reset();
         router.push("/admin/products");
       } else {
-        toast.error(result.error || "Failed to add product");
+        toast.error(result.error || "Failed to add product", {
+          id: loadingToast,
+        });
       }
     } catch (error) {
-      console.log(error);
-      toast.error("An unexpected error occurred");
+      console.error(error);
+      toast.error("An unexpected error occurred", { id: loadingToast });
     }
   };
 
