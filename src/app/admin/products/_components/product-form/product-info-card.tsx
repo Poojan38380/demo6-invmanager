@@ -7,7 +7,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { UnitSelector } from "../../_components/unit-selector";
+import { UnitSelector } from "../../../_components/unit-selector";
 import { UseFormReturn } from "react-hook-form";
 import { ProductFormValues } from "./ProductForm";
 

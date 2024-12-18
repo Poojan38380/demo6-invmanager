@@ -1,8 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import React from "react";
-import ProductForm from "../_components/ProductForm";
 import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
+import ProductForm from "../_components/product-form/ProductForm";
 
 export default function CreateProductPage() {
   return (

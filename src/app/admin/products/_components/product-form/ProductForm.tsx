@@ -10,12 +10,12 @@ import ProductInfoCard from "./product-info-card";
 import ProductDetailsCard from "./product-details-card";
 import PricingCard from "./product-pricing-card";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { SupplierSelector } from "../../_components/select-supplier";
-import { SelectCategory } from "../../_components/select-category";
 import { toast } from "sonner";
-import { addProduct } from "../_actions/products";
 import { useRouter } from "next/navigation";
 import MediaCard from "./media-card";
+import { addProduct } from "../../_actions/products";
+import { SupplierSelector } from "@/app/admin/_components/select-supplier";
+import { SelectCategory } from "@/app/admin/_components/select-category";
 
 const ProductformSchema = z.object({
   name: z.string().min(2, {

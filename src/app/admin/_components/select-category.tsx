@@ -15,7 +15,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { UseFormReturn } from "react-hook-form";
-import { ProductFormValues } from "../products/_components/ProductForm";
+import { ProductFormValues } from "../products/_components/product-form/ProductForm";
 
 export function SelectCategory({
   form,
