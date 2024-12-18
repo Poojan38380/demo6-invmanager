@@ -67,35 +67,73 @@ export const AccountingColumns: ColumnDef<ProductWithOneImage>[] = [
   {
     accessorKey: "costPrice",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Raw price" />
+      <DataTableColumnHeader
+        column={column}
+        title="Raw price"
+        className="justify-end"
+      />
     ),
-    cell: ({ row }) => formatCurrency(row.getValue("costPrice")),
+    cell: ({ row }) => {
+      return (
+        <div className="text-right">
+          {formatCurrency(row.getValue("costPrice"))}
+        </div>
+      );
+    },
   },
   {
     accessorKey: "totalValue",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Total Raw" />
+      <DataTableColumnHeader
+        column={column}
+        title="Total Raw"
+        className="justify-end"
+      />
     ),
+    accessorFn: (row) => row.stock * (row.costPrice ?? 0),
     cell: ({ row }) => {
-      const { stock, costPrice } = row.original;
-      return <div>{formatNumber(stock * (costPrice ?? 0))}</div>;
+      const totalValue = row.getValue("totalValue");
+      return (
+        <div className="text-right ">
+          {formatCurrency(totalValue as number)}
+        </div>
+      );
     },
   },
   {
     accessorKey: "sellingPrice",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Selling price" />
+      <DataTableColumnHeader
+        column={column}
+        title="Selling price"
+        className="justify-end"
+      />
     ),
-    cell: ({ row }) => formatCurrency(row.getValue("sellingPrice")),
+    cell: ({ row }) => {
+      return (
+        <div className="text-right ">
+          {formatCurrency(row.getValue("sellingPrice"))}
+        </div>
+      );
+    },
   },
   {
     accessorKey: "totalFinalValue",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Total Final" />
+      <DataTableColumnHeader
+        column={column}
+        title="Total Final"
+        className="justify-end"
+      />
     ),
+    accessorFn: (row) => row.stock * (row.sellingPrice ?? 0),
     cell: ({ row }) => {
-      const { stock, sellingPrice } = row.original;
-      return <div>{formatNumber(stock * (sellingPrice ?? 0))}</div>;
+      const totalFinalValue = row.getValue("totalFinalValue");
+      return (
+        <div className="text-right ">
+          {formatCurrency(totalFinalValue as number)}
+        </div>
+      );
     },
   },
   {

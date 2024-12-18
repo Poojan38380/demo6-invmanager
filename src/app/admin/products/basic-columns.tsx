@@ -25,7 +25,7 @@ export const BasicColumns: ColumnDef<ProductWithOneImage>[] = [
       const productName: string = row.getValue("name");
       return (
         <div className="flex items-center gap-2">
-          <Avatar className="max-425:hidden">
+          <Avatar className="">
             <AvatarImage src={row.original.productImages[0]?.url} />
             <AvatarFallback>
               <Package className="h-5 w-5 text-muted-foreground" />
