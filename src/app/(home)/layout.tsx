@@ -1,4 +1,4 @@
-// import Header from "@/components/home-layout/header";
+import Header from "./_components/header";
 
 export default function HomeLayout({
   children,
@@ -7,7 +7,7 @@ export default function HomeLayout({
 }>) {
   return (
     <>
-      {/* <Header /> */}
+      <Header />
       <div className="pt-16">{children}</div>
     </>
   );

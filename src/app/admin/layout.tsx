@@ -6,7 +6,7 @@ import {
 } from "@/components/ui/sidebar";
 import { AppSidebar } from "./_components/admin-sidebar";
 import { BreadCrumbs } from "./_components/breadcrumbs";
-import { ThemeToggleButton } from "@/components/ThemeSelectorButton";
+import { ThemeToggleButton } from "@/components/theme/ThemeSelectorButton";
 
 export default function AdminLayout({
   children,
