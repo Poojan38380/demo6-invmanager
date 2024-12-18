@@ -22,7 +22,7 @@ function ToggleTable({ products }: { products: ProductWithOneImage[] }) {
   const [showAccountingTable, setShowAccountingTable] = useState(false);
 
   return (
-    <Card className="border-none  shadow-md bg-background ">
+    <Card className="border-none  shadow-none bg-background ">
       <CardHeader className="py-2 flex flex-row items-center justify-between ">
         <CardTitle className="flex items-center space-x-2">
           <Switch

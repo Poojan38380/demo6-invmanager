@@ -36,3 +36,5 @@ export const getCachedProductsforTable = cache(
   () => getProductsforTable(),
   ["get-products-for-table"]
 );
+
+export async function addProduct(prevState: unknown, formData: FormData) {}

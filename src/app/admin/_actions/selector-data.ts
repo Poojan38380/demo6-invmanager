@@ -1,5 +1,11 @@
 import prisma from "@/prisma";
-import { Category, Customer, Vendor, Warehouse } from "@prisma/client";
+import {
+  Category,
+  Customer,
+  MeasurementUnit,
+  Vendor,
+  Warehouse,
+} from "@prisma/client";
 import { unstable_cache as cache } from "next/cache";
 
 async function getCategories(): Promise<Category[]> {
@@ -41,8 +47,16 @@ async function getWarehouses(): Promise<Warehouse[]> {
   });
   return warehouses;
 }
-
 export const getCachedWarehouses = cache(
   () => getWarehouses(),
   ["get-warehouses"]
 );
+
+async function getUnits(): Promise<MeasurementUnit[]> {
+  const units = await prisma.measurementUnit.findMany({
+    orderBy: { createdAt: "desc" },
+  });
+  return units;
+}
+
+export const getCachedUnits = cache(() => getUnits(), ["get-units"]);
