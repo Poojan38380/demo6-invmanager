@@ -1,33 +1,38 @@
 "use client";
 
+import { useMemo } from "react";
 import { Badge } from "@/components/ui/badge";
 import { DataTableColumnHeader } from "@/components/ui/data-table/data-table-column-header";
-import { ColumnDef } from "@tanstack/react-table";
+import { ColumnDef, Row, Table } from "@tanstack/react-table";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ProductWithOneImage } from "./_actions/products";
 import { formatCurrency, formatNumber } from "@/lib/formatter";
 import { formatDateYYMMDDHHMM } from "@/lib/format-date";
 
+const SelectHeader = ({ table }: { table: Table<ProductWithOneImage> }) => (
+  <Checkbox
+    checked={
+      table.getIsAllPageRowsSelected() ||
+      (table.getIsSomePageRowsSelected() && "indeterminate")
+    }
+    onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+    aria-label="Select all"
+  />
+);
+
+const SelectCell = ({ row }: { row: Row<ProductWithOneImage> }) => (
+  <Checkbox
+    checked={row.getIsSelected()}
+    onCheckedChange={(value) => row.toggleSelected(!!value)}
+    aria-label="Select row"
+  />
+);
+
 export const AccountingColumns: ColumnDef<ProductWithOneImage>[] = [
   {
     id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
+    header: SelectHeader,
+    cell: SelectCell,
     enableSorting: false,
     enableHiding: false,
   },
@@ -47,13 +52,11 @@ export const AccountingColumns: ColumnDef<ProductWithOneImage>[] = [
       <DataTableColumnHeader column={column} title="Stock" />
     ),
     cell: ({ row }) => {
-      const stock: number = row.getValue("stock");
-      const bufferStock: number = row.original.bufferStock || 0;
-      const unit: string = row.original.unit || "pcs";
+      const { stock, bufferStock = 0, unit = "pcs" } = row.original;
       return (
         <div className="flex items-center gap-1">
           <Badge
-            variant={stock < (bufferStock || 0) ? "destructive" : "default"}
+            variant={stock < (bufferStock ?? 0) ? "destructive" : "default"}
           >
             {formatNumber(stock)}
           </Badge>
@@ -67,11 +70,7 @@ export const AccountingColumns: ColumnDef<ProductWithOneImage>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Raw price" />
     ),
-    cell: ({ row }) => {
-      const cost: number = row.getValue("costPrice");
-
-      return formatCurrency(cost);
-    },
+    cell: ({ row }) => formatCurrency(row.getValue("costPrice")),
   },
   {
     accessorKey: "totalValue",
@@ -79,10 +78,8 @@ export const AccountingColumns: ColumnDef<ProductWithOneImage>[] = [
       <DataTableColumnHeader column={column} title="Total Raw" />
     ),
     cell: ({ row }) => {
-      const stock: number = row.getValue("stock");
-      const costPrice: number = row.getValue("costPrice");
-      const totalValue = stock * costPrice;
-      return <div>{formatNumber(totalValue)}</div>;
+      const { stock, costPrice } = row.original;
+      return <div>{formatNumber(stock * (costPrice ?? 0))}</div>;
     },
   },
   {
@@ -90,47 +87,34 @@ export const AccountingColumns: ColumnDef<ProductWithOneImage>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Selling price" />
     ),
-    cell: ({ row }) => {
-      const cost: number = row.getValue("sellingPrice");
-
-      return formatCurrency(cost);
-    },
+    cell: ({ row }) => formatCurrency(row.getValue("sellingPrice")),
   },
   {
     accessorKey: "totalFinalValue",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Total Raw" />
+      <DataTableColumnHeader column={column} title="Total Final" />
     ),
     cell: ({ row }) => {
-      const stock: number = row.getValue("stock");
-      const sellingPrice: number = row.getValue("sellingPrice");
-      const totalFinalValue = stock * sellingPrice;
-      return <div>{formatNumber(totalFinalValue)}</div>;
+      const { stock, sellingPrice } = row.original;
+      return <div>{formatNumber(stock * (sellingPrice ?? 0))}</div>;
     },
   },
-
   {
     accessorKey: "updatedAt",
     id: "updated-at-accounting",
-    cell: ({ row }) => {
-      const updatedAt: Date = row.getValue("updated-at-accounting");
-      return formatDateYYMMDDHHMM(updatedAt);
-    },
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Updated at" />
     ),
+    cell: ({ row }) =>
+      formatDateYYMMDDHHMM(row.getValue("updated-at-accounting")),
   },
-
   {
     accessorKey: "vendor.companyName",
     id: "supplier",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Supplier" />
     ),
-    cell: ({ row }) => {
-      const companyName = row.original.vendor?.companyName ?? null;
-      return <span>{companyName}</span>;
-    },
+    cell: ({ row }) => <span>{row.original.vendor?.companyName ?? null}</span>,
   },
   {
     accessorKey: "category.name",
@@ -138,9 +122,6 @@ export const AccountingColumns: ColumnDef<ProductWithOneImage>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Category" />
     ),
-    cell: ({ row }) => {
-      const categoryName = row.original.category?.name ?? null;
-      return <span>{categoryName}</span>;
-    },
+    cell: ({ row }) => <span>{row.original.category?.name ?? null}</span>,
   },
 ];

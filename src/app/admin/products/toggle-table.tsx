@@ -22,19 +22,19 @@ function ToggleTable({ products }: { products: ProductWithOneImage[] }) {
   const [showAccountingTable, setShowAccountingTable] = useState(false);
 
   return (
-    <Card className="border-none  ">
+    <Card className="border-none  shadow-md bg-background ">
       <CardHeader className="py-2 flex flex-row items-center justify-between ">
         <CardTitle className="flex items-center space-x-2">
           <Switch
             id="table-toggle"
             checked={showAccountingTable}
             onCheckedChange={setShowAccountingTable}
-            className="data-[state=unchecked]:bg-gray-300"
+            className="data-[state=unchecked]:bg-gray-300 shadow-sm"
             aria-label="Toggle accounting table"
           />
           <div>{showAccountingTable ? "Accounting" : "Products"}</div>
         </CardTitle>
-        <Button asChild className="rounded-full ">
+        <Button asChild className="rounded-full shadow-sm">
           <Link href="/admin/products/new">
             <PlusIcon size={16} />
             Add product

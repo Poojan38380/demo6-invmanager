@@ -42,7 +42,7 @@ export function DataTable<TData, TValue>({
   );
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({
-      "updated-at-basic": false,
+      "updated-at-accounting": false,
       sellingPrice: false,
       totalFinalValue: false,
     });
@@ -84,7 +84,7 @@ export function DataTable<TData, TValue>({
           placeholder="Search products..."
           value={globalFilter}
           onChange={(event) => setGlobalFilter(event.target.value)}
-          className="max-w-60 rounded-full"
+          className="max-w-60 rounded-full bg-card shadow-sm"
         />
         <DataTableViewOptions table={table} />
       </div>
@@ -96,7 +96,7 @@ export function DataTable<TData, TValue>({
           </div>
         )}
       </div>
-      <div className="rounded-md border">
+      <div className="rounded-2xl border bg-card shadow-md">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
