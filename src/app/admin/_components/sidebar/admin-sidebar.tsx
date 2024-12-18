@@ -7,9 +7,10 @@ import {
   SidebarFooter,
   SidebarHeader,
 } from "@/components/ui/sidebar";
+
+import { BottomNav } from "./bottom-nav";
 import { PrimaryNav } from "./primary-nav";
 import { SecondaryNav } from "./secondary-nav";
-import { BottomNav } from "./bottom-nav";
 import { NavUser } from "./nav-user";
 
 export async function AppSidebar({

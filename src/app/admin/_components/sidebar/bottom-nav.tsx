@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/sidebar";
 
 import Link from "next/link";
-import { BottomNavItems } from "../_menus/bottomNavMenu";
+import { BottomNavItems } from "../../_menus/bottomNavMenu";
 
 export function BottomNav({ ...props }) {
   return (

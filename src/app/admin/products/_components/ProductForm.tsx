@@ -20,9 +20,12 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { zodResolver } from "@hookform/resolvers/zod";
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { UnitSelector } from "../../_components/unit-selector";
+import { SupplierSelector } from "../../_components/select-supplier";
+import { SelectCategory } from "../../_components/select-category";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -44,6 +47,10 @@ const formSchema = z.object({
 });
 
 export default function ProductForm() {
+  const [selectedUnit, setSelectedUnit] = useState<string>("pcs");
+  const [vendorId, setVendorId] = useState<string | undefined>();
+  const [categoryId, setCategoryId] = useState<string | undefined>();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -114,10 +121,10 @@ export default function ProductForm() {
                   />
                   <FormItem>
                     <FormLabel>Unit</FormLabel>
-                    {/* <UnitSelector
+                    <UnitSelector
                       defaultValue={selectedUnit}
                       onUnitChange={(unit) => setSelectedUnit(unit)}
-                    /> */}
+                    />
                   </FormItem>
                 </div>
               </CardContent>
@@ -255,10 +262,10 @@ export default function ProductForm() {
                 <CardTitle>Select Category</CardTitle>
               </CardHeader>
               <CardContent>
-                {/* <SelectCategory
+                <SelectCategory
                   defaultValue={categoryId || "none"}
                   onCategorySelect={(id) => setCategoryId(id)}
-                /> */}
+                />
               </CardContent>
             </Card>
             <Card>
@@ -266,10 +273,10 @@ export default function ProductForm() {
                 <CardTitle>Select Supplier</CardTitle>
               </CardHeader>
               <CardContent>
-                {/* <SupplierSelector
+                <SupplierSelector
                   onSupplierSelect={(supplierId) => setVendorId(supplierId)}
                   defaultValue={vendorId || "none"}
-                /> */}
+                />
               </CardContent>
             </Card>
             <div className="flex justify-end px-6">

@@ -4,8 +4,8 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import { AppSidebar } from "./_components/admin-sidebar";
-import { BreadCrumbs } from "./_components/breadcrumbs";
+import { AppSidebar } from "./_components/sidebar/admin-sidebar";
+import { BreadCrumbs } from "./_components/sidebar/breadcrumbs";
 import { ThemeToggleButton } from "@/components/theme/ThemeSelectorButton";
 import { SessionProvider } from "next-auth/react";
 

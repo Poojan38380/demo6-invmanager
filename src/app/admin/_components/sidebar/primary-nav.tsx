@@ -17,7 +17,7 @@ import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils"; // Assuming you have a cn utility for conditional classes
-import { PrimaryNavItems } from "../_menus/primaryNavMenu";
+import { PrimaryNavItems } from "../../_menus/primaryNavMenu";
 
 export function PrimaryNav() {
   const pathname = usePathname();

@@ -1,3 +1,4 @@
+"use server";
 import prisma from "@/prisma";
 import {
   Category,
@@ -16,7 +17,7 @@ async function getCategories(): Promise<Category[]> {
 }
 
 export const getCachedCategories = cache(
-  () => getCategories(),
+  async () => getCategories(),
   ["get-categories"]
 );
 async function getSuppliers(): Promise<Vendor[]> {
@@ -27,7 +28,7 @@ async function getSuppliers(): Promise<Vendor[]> {
 }
 
 export const getCachedSuppliers = cache(
-  () => getSuppliers(),
+  async () => getSuppliers(),
   ["get-suppliers"]
 );
 async function getCustomers(): Promise<Customer[]> {
@@ -38,7 +39,7 @@ async function getCustomers(): Promise<Customer[]> {
 }
 
 export const getCachedCustomers = cache(
-  () => getCustomers(),
+  async () => getCustomers(),
   ["get-customers"]
 );
 async function getWarehouses(): Promise<Warehouse[]> {
@@ -48,15 +49,13 @@ async function getWarehouses(): Promise<Warehouse[]> {
   return warehouses;
 }
 export const getCachedWarehouses = cache(
-  () => getWarehouses(),
+  async () => getWarehouses(),
   ["get-warehouses"]
 );
 
 async function getUnits(): Promise<MeasurementUnit[]> {
-  const units = await prisma.measurementUnit.findMany({
-    orderBy: { createdAt: "desc" },
-  });
+  const units = await prisma.measurementUnit.findMany();
   return units;
 }
 
-export const getCachedUnits = cache(() => getUnits(), ["get-units"]);
+export const getCachedUnits = cache(async () => getUnits(), ["get-units"]);

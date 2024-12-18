@@ -1,3 +1,5 @@
+"use server";
+
 import prisma from "@/prisma";
 import { Product } from "@prisma/client";
 import { unstable_cache as cache } from "next/cache";
@@ -33,6 +35,6 @@ async function getProductsforTable(): Promise<ProductWithOneImage[]> {
 }
 
 export const getCachedProductsforTable = cache(
-  () => getProductsforTable(),
+  async () => getProductsforTable(),
   ["get-products-for-table"]
 );
