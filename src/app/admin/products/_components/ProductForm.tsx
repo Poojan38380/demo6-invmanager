@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -13,13 +13,16 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { SupplierSelector } from "../../_components/select-supplier";
 import { SelectCategory } from "../../_components/select-category";
 import { toast } from "sonner";
+import { addProduct } from "../_actions/products";
+import { redirect, useRouter } from "next/navigation";
+import MediaCard from "./media-card";
 
 const ProductformSchema = z.object({
   name: z.string().min(2, {
     message: "Name must be at least 2 characters.",
   }),
-  stock: z.number().nonnegative().optional(),
-  bufferStock: z.number().nonnegative().optional(),
+  stock: z.number(),
+  bufferStock: z.number().optional(),
   shortDescription: z
     .string()
     .max(200, {
@@ -27,8 +30,8 @@ const ProductformSchema = z.object({
     })
     .optional(),
   longDescription: z.string().optional(),
-  costPrice: z.number().nonnegative().optional(),
-  sellingPrice: z.number().nonnegative().optional(),
+  costPrice: z.number().optional(),
+  sellingPrice: z.number().optional(),
   unit: z.string(),
   vendorId: z.string().optional(),
   categoryId: z.string().optional(),
@@ -50,7 +53,9 @@ const ProductformSchema = z.object({
 export type ProductFormValues = z.infer<typeof ProductformSchema>;
 
 export default function ProductForm() {
-  // const [productImages, setProductImages] = useState<File[]>([]);
+  const [productImages, setProductImages] = useState<File[]>([]);
+
+  const router = useRouter();
 
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(ProductformSchema),
@@ -62,9 +67,20 @@ export default function ProductForm() {
     },
   });
 
-  const onSubmit = (data: ProductFormValues) => {
-    console.log(data);
-    toast.success("Product added");
+  const onSubmit = async (data: ProductFormValues) => {
+    try {
+      const result = await addProduct(data, productImages);
+      if (result.success) {
+        toast.success("Product added successfully");
+        form.reset();
+        router.push("/admin/products");
+      } else {
+        toast.error(result.error || "Failed to add product");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("An unexpected error occurred");
+    }
   };
 
   const calculateMargin = () => {
@@ -80,7 +96,7 @@ export default function ProductForm() {
         <div className="px-3 max-768:px-0 grid max-1024:grid-cols-1 gap-6 grid-cols-3 max-w-5xl mx-auto mb-10">
           <div className="col-span-2 space-y-6">
             <ProductInfoCard form={form} />
-            {/* <MediaCard setProductImages={setProductImages} /> */}
+            <MediaCard setProductImages={setProductImages} />
             <ProductDetailsCard form={form} />
           </div>
           <div className="col-span-1 flex flex-col space-y-6">
@@ -102,7 +118,9 @@ export default function ProductForm() {
               </CardContent>
             </Card>
             <div className="flex justify-end px-6">
-              <Button type="submit">Create Product</Button>
+              <Button type="submit" disabled={form.formState.isSubmitting}>
+                {form.formState.isSubmitting ? "Adding..." : "Add product"}
+              </Button>
             </div>
           </div>
         </div>
