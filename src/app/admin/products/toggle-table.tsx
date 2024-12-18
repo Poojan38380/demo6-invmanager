@@ -29,7 +29,7 @@ function ToggleTable({ products }: { products: ProductWithOneImage[] }) {
             id="table-toggle"
             checked={showAccountingTable}
             onCheckedChange={setShowAccountingTable}
-            className="data-[state=unchecked]:bg-gray-300 shadow-sm"
+            className=" shadow-sm"
             aria-label="Toggle accounting table"
           />
           <div>{showAccountingTable ? "Accounting" : "Products"}</div>

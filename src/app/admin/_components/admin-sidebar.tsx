@@ -16,7 +16,7 @@ export async function AppSidebar({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
   return (
-    <Sidebar className="" variant="inset" {...props}>
+    <Sidebar variant="inset" {...props}>
       <SidebarHeader className="pt-3">
         <a href="/admin" className="grow flex gap-2">
           <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
