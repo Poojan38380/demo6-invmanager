@@ -8,6 +8,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Package } from "lucide-react";
 import { ProductWithOneImage } from "./_actions/products";
 import { formatNumber } from "@/lib/formatter";
+import UpdateStock from "./_components/update-stock";
 
 export const BasicColumns: ColumnDef<ProductWithOneImage>[] = [
   {
@@ -54,6 +55,13 @@ export const BasicColumns: ColumnDef<ProductWithOneImage>[] = [
           <span>{unit}</span>
         </div>
       );
+    },
+  },
+  {
+    accessorKey: "actions",
+    header: undefined,
+    cell: ({ row }) => {
+      return <UpdateStock product={row.original} />;
     },
   },
   {
