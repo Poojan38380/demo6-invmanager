@@ -8,8 +8,14 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { UnitSelector } from "../../_components/unit-selector";
+import { UseFormReturn } from "react-hook-form";
+import { ProductFormValues } from "./ProductForm";
 
-export default function ProductInfoCard({ form }: { form: any }) {
+export default function ProductInfoCard({
+  form,
+}: {
+  form: UseFormReturn<ProductFormValues>;
+}) {
   return (
     <Card>
       <CardContent className="space-y-6 pt-6">
@@ -64,7 +70,7 @@ export default function ProductInfoCard({ form }: { form: any }) {
           <FormField
             control={form.control}
             name="unit"
-            render={({ field }) => (
+            render={() => (
               <FormItem>
                 <FormLabel>Unit</FormLabel>
                 <UnitSelector form={form} />

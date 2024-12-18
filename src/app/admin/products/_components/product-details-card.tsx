@@ -8,8 +8,14 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
+import { UseFormReturn } from "react-hook-form";
+import { ProductFormValues } from "./ProductForm";
 
-export default function ProductDetailsCard({ form }: { form: any }) {
+export default function ProductDetailsCard({
+  form,
+}: {
+  form: UseFormReturn<ProductFormValues>;
+}) {
   return (
     <Card>
       <CardHeader>

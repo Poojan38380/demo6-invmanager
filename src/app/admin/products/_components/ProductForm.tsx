@@ -1,20 +1,20 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
-import MediaCard from "./media-card";
 import ProductInfoCard from "./product-info-card";
 import ProductDetailsCard from "./product-details-card";
 import PricingCard from "./product-pricing-card";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { SupplierSelector } from "../../_components/select-supplier";
 import { SelectCategory } from "../../_components/select-category";
+import { toast } from "sonner";
 
-const AddProductformSchema = z.object({
+const ProductformSchema = z.object({
   name: z.string().min(2, {
     message: "Name must be at least 2 characters.",
   }),
@@ -47,13 +47,13 @@ const AddProductformSchema = z.object({
     .optional(),
 });
 
-export type AddProductFormValues = z.infer<typeof AddProductformSchema>;
+export type ProductFormValues = z.infer<typeof ProductformSchema>;
 
 export default function ProductForm() {
-  const [productImages, setProductImages] = useState<File[]>([]);
+  // const [productImages, setProductImages] = useState<File[]>([]);
 
-  const form = useForm<AddProductFormValues>({
-    resolver: zodResolver(AddProductformSchema),
+  const form = useForm<ProductFormValues>({
+    resolver: zodResolver(ProductformSchema),
     defaultValues: {
       name: "",
       stock: 0,
@@ -62,14 +62,15 @@ export default function ProductForm() {
     },
   });
 
-  const onSubmit = (data: AddProductFormValues) => {
+  const onSubmit = (data: ProductFormValues) => {
     console.log(data);
+    toast.success("Product added");
   };
 
   const calculateMargin = () => {
     const costPrice = form.watch("costPrice") || 0;
     const sellingPrice = form.watch("sellingPrice") || 0;
-    if (costPrice === 0) return 0;
+    if (costPrice === 0 || sellingPrice === 0) return 0;
     return ((sellingPrice - costPrice) / costPrice) * 100;
   };
 
@@ -79,7 +80,7 @@ export default function ProductForm() {
         <div className="px-3 max-768:px-0 grid max-1024:grid-cols-1 gap-6 grid-cols-3 max-w-5xl mx-auto mb-10">
           <div className="col-span-2 space-y-6">
             <ProductInfoCard form={form} />
-            <MediaCard setProductImages={setProductImages} />
+            {/* <MediaCard setProductImages={setProductImages} /> */}
             <ProductDetailsCard form={form} />
           </div>
           <div className="col-span-1 flex flex-col space-y-6">

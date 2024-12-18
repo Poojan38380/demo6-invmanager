@@ -14,11 +14,13 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { UseFormReturn } from "react-hook-form";
+import { ProductFormValues } from "./ProductForm";
 export default function PricingCard({
   form,
   margin,
 }: {
-  form: any;
+  form: UseFormReturn<ProductFormValues>;
   margin: number;
 }) {
   return (

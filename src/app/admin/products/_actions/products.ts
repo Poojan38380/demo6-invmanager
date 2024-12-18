@@ -39,4 +39,4 @@ export const getCachedProductsforTable = cache(
   ["get-products-for-table"]
 );
 
-export async function addProduct(prevState: unknown, formData: FormData) {}
+// export async function addProduct(prevState: unknown, formData: FormData) {}
