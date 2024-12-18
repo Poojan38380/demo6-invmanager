@@ -2,10 +2,11 @@
 
 import { Badge } from "@/components/ui/badge";
 import { DataTableColumnHeader } from "@/components/ui/data-table/data-table-column-header";
-import { formatNumber } from "@/lib/format-number";
 import { ColumnDef } from "@tanstack/react-table";
-import { ProductWithOneImage } from "./page";
 import { Checkbox } from "@/components/ui/checkbox";
+import { ProductWithOneImage } from "./_actions/products";
+import { formatCurrency, formatNumber } from "@/lib/formatter";
+import { formatDateYYMMDDHHMM } from "@/lib/format-date";
 
 export const AccountingColumns: ColumnDef<ProductWithOneImage>[] = [
   {
@@ -64,8 +65,13 @@ export const AccountingColumns: ColumnDef<ProductWithOneImage>[] = [
   {
     accessorKey: "costPrice",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Price" />
+      <DataTableColumnHeader column={column} title="Raw price" />
     ),
+    cell: ({ row }) => {
+      const cost: number = row.getValue("costPrice");
+
+      return formatCurrency(cost);
+    },
   },
   {
     accessorKey: "totalValue",
@@ -78,5 +84,15 @@ export const AccountingColumns: ColumnDef<ProductWithOneImage>[] = [
       const totalValue = stock * costPrice;
       return <div>{formatNumber(totalValue)}</div>;
     },
+  },
+  {
+    accessorKey: "updatedAt",
+    cell: ({ row }) => {
+      const updatedAt: Date = row.getValue("updatedAt");
+      return formatDateYYMMDDHHMM(updatedAt);
+    },
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Updated at" />
+    ),
   },
 ];

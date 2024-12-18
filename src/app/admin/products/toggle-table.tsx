@@ -11,12 +11,12 @@ import {
 import { Switch } from "@/components/ui/switch";
 
 import { DataTable } from "./data-table";
-import { ProductWithOneImage } from "./page";
 import { BasicColumns } from "./basic-columns";
 import { AccountingColumns } from "./accounting-columns";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { PlusIcon } from "lucide-react";
+import { ProductWithOneImage } from "./_actions/products";
 
 function ToggleTable({ products }: { products: ProductWithOneImage[] }) {
   const [showAccountingTable, setShowAccountingTable] = useState(false);

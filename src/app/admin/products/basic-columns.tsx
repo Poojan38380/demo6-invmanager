@@ -4,10 +4,10 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { DataTableColumnHeader } from "@/components/ui/data-table/data-table-column-header";
 import { formatDateYYMMDDHHMM } from "@/lib/format-date";
-import { formatNumber } from "@/lib/format-number";
 import { ColumnDef } from "@tanstack/react-table";
-import { ProductWithOneImage } from "./page";
 import { Package } from "lucide-react";
+import { ProductWithOneImage } from "./_actions/products";
+import { formatNumber } from "@/lib/formatter";
 
 export const BasicColumns: ColumnDef<ProductWithOneImage>[] = [
   {
