@@ -1,3 +1,5 @@
+"use server";
+
 import TelegramBot from "node-telegram-bot-api";
 
 if (!process.env.TELEGRAM_BOT_TOKEN) {

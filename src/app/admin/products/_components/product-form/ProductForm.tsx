@@ -73,7 +73,6 @@ export default function ProductForm() {
       const result = await addProduct(data, productImages);
       if (result.success) {
         toast.success("Product added successfully", { id: loadingToast });
-        form.reset();
         router.push("/admin/products");
       } else {
         toast.error(result.error || "Failed to add product", {

@@ -1,7 +1,6 @@
 "use server";
 
 import { auth } from "@/lib/auth";
-import { sendTelegramMessage } from "@/lib/send-telegram-message";
 import prisma from "@/prisma";
 import { Product } from "@prisma/client";
 import {
@@ -11,6 +10,7 @@ import {
 } from "next/cache";
 import { redirect } from "next/navigation";
 import { uploadImagesToCloudinary } from "./cloudinary";
+import { sendTelegramMessage } from "@/lib/send-telegram-message";
 
 export type ProductWithOneImage = Product & {
   productImages: {
@@ -71,17 +71,17 @@ export async function addProduct(data: addproductProps, productImages: File[]) {
 
   if (!creatorId) return redirect("/login");
 
-  const creator = await prisma.user.findUnique({
-    where: { id: creatorId },
-  });
-
-  if (!creator) {
-    throw new Error("User not found in database.");
-  }
-
-  const productImageUrls = await uploadImagesToCloudinary(productImages);
-
   try {
+    const creator = await prisma.user.findUnique({
+      where: { id: creatorId },
+    });
+
+    if (!creator) {
+      throw new Error("User not found in database.Login Again");
+    }
+
+    const productImageUrls = await uploadImagesToCloudinary(productImages);
+
     const product = await prisma.product.create({
       data: {
         name: data.name,

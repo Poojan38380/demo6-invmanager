@@ -1,3 +1,4 @@
+"use server";
 export const uploadImagesToCloudinary = async (files: File[]) => {
   const imageUrls: string[] = [];
 
