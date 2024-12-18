@@ -1,19 +1,28 @@
 "use client";
-import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { zodResolver } from "@hookform/resolvers/zod";
-import React, { useState } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { UnitSelector } from "./select-units";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -43,8 +52,6 @@ export default function ProductForm() {
       bufferStock: 0,
     },
   });
-
-  const [selectedUnit, setSelectedUnit] = useState<string>("pcs");
 
   return (
     <Form {...form}>
@@ -107,14 +114,172 @@ export default function ProductForm() {
                   />
                   <FormItem>
                     <FormLabel>Unit</FormLabel>
-                    <UnitSelector
+                    {/* <UnitSelector
                       defaultValue={selectedUnit}
                       onUnitChange={(unit) => setSelectedUnit(unit)}
-                    />
+                    /> */}
                   </FormItem>
                 </div>
               </CardContent>
             </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Media</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <section id="media" className="space-y-4">
+                  {/* <ImageUploader onImagesChange={setProductImages} /> */}
+                </section>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Product Details</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <section id="product-description" className="space-y-4">
+                  <FormField
+                    control={form.control}
+                    name="shortDescription"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Short Description (Optional)</FormLabel>
+                        <FormControl>
+                          <Textarea
+                            placeholder="Enter a brief description of the product"
+                            className="resize-none"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormDescription>
+                          A concise summary of the product (optional).
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="longDescription"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Long Description (Optional)</FormLabel>
+                        <FormControl>
+                          <Textarea
+                            placeholder="Enter a detailed description of the product"
+                            value={field.value}
+                            onChange={field.onChange}
+                          />
+                        </FormControl>
+                        <FormDescription>
+                          A comprehensive description of the product (optional).
+                          You can format the text.
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </section>
+              </CardContent>
+            </Card>
+          </div>
+          <div className="col-span-1 flex flex-col   space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center justify-between">
+                  Pricing
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Badge className="rounded-full px-3 text-sm">
+                          {/* {margin || 0} % */}
+                        </Badge>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        {/* <p>{`Margin Percent: ${margin || 0}`}</p> */}
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <FormField
+                  control={form.control}
+                  name="costPrice"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Cost Price</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          step="0.01"
+                          placeholder="0.00"
+                          {...field}
+                          onChange={(e) =>
+                            field.onChange(parseFloat(e.target.value) || "")
+                          }
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="sellingPrice"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Selling Price</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="number"
+                          step="0.01"
+                          placeholder="0.00"
+                          {...field}
+                          onChange={(e) =>
+                            field.onChange(parseFloat(e.target.value) || "")
+                          }
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Select Category</CardTitle>
+              </CardHeader>
+              <CardContent>
+                {/* <SelectCategory
+                  defaultValue={categoryId || "none"}
+                  onCategorySelect={(id) => setCategoryId(id)}
+                /> */}
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle>Select Supplier</CardTitle>
+              </CardHeader>
+              <CardContent>
+                {/* <SupplierSelector
+                  onSupplierSelect={(supplierId) => setVendorId(supplierId)}
+                  defaultValue={vendorId || "none"}
+                /> */}
+              </CardContent>
+            </Card>
+            <div className="flex justify-end px-6">
+              <Button
+                type="submit"
+                //   disabled={loading}
+              >
+                {/* {loading ? "Creating..." : "Create Product"} */}
+              </Button>
+            </div>
           </div>
         </div>
       </form>
