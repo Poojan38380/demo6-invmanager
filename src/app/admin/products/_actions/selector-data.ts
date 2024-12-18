@@ -1,5 +1,5 @@
 import prisma from "@/prisma";
-import { Category, Customer, Vendor } from "@prisma/client";
+import { Category, Customer, Vendor, Warehouse } from "@prisma/client";
 
 export async function getCategories(): Promise<Category[]> {
   const categories = await prisma.category.findMany({
@@ -18,4 +18,10 @@ export async function getCustomers(): Promise<Customer[]> {
     orderBy: { createdAt: "desc" },
   });
   return customers;
+}
+export async function getWarehouses(): Promise<Warehouse[]> {
+  const warehouses = await prisma.warehouse.findMany({
+    orderBy: { createdAt: "desc" },
+  });
+  return warehouses;
 }
