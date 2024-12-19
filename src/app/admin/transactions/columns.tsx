@@ -11,7 +11,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Badge } from "@/components/ui/badge";
 import {
   ArrowDownIcon,
   ArrowUpIcon,
