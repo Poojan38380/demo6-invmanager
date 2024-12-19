@@ -25,7 +25,6 @@ export type ProductWithOneImage = Product & {
 };
 
 async function getProductsforTable(): Promise<ProductWithOneImage[]> {
-  // Fetch data from your API here.
   const products = await prisma.product.findMany({
     orderBy: { updatedAt: "desc" },
     include: {
@@ -45,6 +44,21 @@ async function getProductsforTable(): Promise<ProductWithOneImage[]> {
 export const getCachedProductsforTable = cache(
   async () => getProductsforTable(),
   ["get-products-for-table"]
+);
+
+async function getSingleProductforEdit(id: string): Promise<Product | null> {
+  const product = await prisma.product.findUnique({
+    where: { id },
+    include: {
+      productImages: { select: { url: true } },
+    },
+  });
+  return product;
+}
+
+export const getCachedSingleProductforEdit = cache(
+  async (id: string): Promise<Product | null> => getSingleProductforEdit(id),
+  ["get-single-product-for-edit"]
 );
 
 interface addproductProps {

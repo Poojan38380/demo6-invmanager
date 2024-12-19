@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { DataTableColumnHeader } from "@/components/ui/data-table/data-table-column-header";
 import { ColumnDef, Row, Table } from "@tanstack/react-table";
 import { Checkbox } from "@/components/ui/checkbox";
-import { ProductWithOneImage } from "./_actions/products";
+import { ProductWithOneImage } from "../_actions/products";
 import { formatCurrency, formatNumber } from "@/lib/formatter";
 import { formatDateYYMMDDHHMM } from "@/lib/format-date";
 

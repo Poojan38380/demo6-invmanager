@@ -10,9 +10,9 @@ import {
 } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 
-import { DataTable } from "./data-table";
-import { BasicColumns } from "./basic-columns";
-import { AccountingColumns } from "./accounting-columns";
+import { DataTable } from "./_components/data-table";
+import { BasicColumns } from "./_cloumns/basic-columns";
+import { AccountingColumns } from "./_cloumns/accounting-columns";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { PlusIcon } from "lucide-react";

@@ -5,10 +5,12 @@ import { Badge } from "@/components/ui/badge";
 import { DataTableColumnHeader } from "@/components/ui/data-table/data-table-column-header";
 import { formatDateYYMMDDHHMM } from "@/lib/format-date";
 import { ColumnDef } from "@tanstack/react-table";
-import { Package } from "lucide-react";
-import { ProductWithOneImage } from "./_actions/products";
+import { Edit, Package } from "lucide-react";
+import { ProductWithOneImage } from "../_actions/products";
 import { formatNumber } from "@/lib/formatter";
-import UpdateStock from "./_components/update-stock";
+import UpdateStock from "../_components/update-stock";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export const BasicColumns: ColumnDef<ProductWithOneImage>[] = [
   {
@@ -61,7 +63,26 @@ export const BasicColumns: ColumnDef<ProductWithOneImage>[] = [
     accessorKey: "actions",
     header: undefined,
     cell: ({ row }) => {
-      return <UpdateStock product={row.original} />;
+      const product = row.original;
+      return (
+        <div className="flex items-center justify-center gap-2">
+          <UpdateStock product={product} />
+          <Button
+            asChild
+            variant="ghost"
+            size="sm"
+            className="opacity-50 h-2 w-2"
+          >
+            <Link
+              href={`/admin/products/${product.id}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Edit />
+            </Link>
+          </Button>
+        </div>
+      );
     },
   },
   {
