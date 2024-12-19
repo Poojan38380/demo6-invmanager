@@ -225,7 +225,7 @@ export async function editProduct(data: editProductProps) {
   }
 }
 
-async function handleProductImages(
+export async function handleProductImages(
   productId: string,
   prevImageUrls: string[],
   newImageUrls: string[]
