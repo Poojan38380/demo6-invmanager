@@ -108,14 +108,14 @@ export default function UpdateStock({ product }: { product: Product }) {
       <DrawerTrigger asChild>
         <Button
           variant="outline"
-          className="bg-white hover:bg-gray-50 shadow-sm border-gray-300 "
+          className=" rounded-full bg-card shadow-sm "
           size="sm"
         >
           <ArrowUpDown className="" />
           <span className="max-768:hidden">Stock</span>
         </Button>
       </DrawerTrigger>
-      <DrawerContent>
+      <DrawerContent className="bg-background">
         <div className="mx-auto w-full max-w-lg">
           <DrawerHeader>
             <DrawerTitle className="flex items-center gap-2 text-xl font-semibold">
@@ -127,45 +127,49 @@ export default function UpdateStock({ product }: { product: Product }) {
           </DrawerHeader>
 
           <form onSubmit={handleSubmit} className="space-y-6 p-4">
-            <div className="grid grid-cols-2 gap-3 p-1 bg-gray-50 rounded-lg">
+            <div className="grid grid-cols-2 gap-3 p-1  rounded-lg">
               <Button
                 type="button"
                 variant={isAdding ? "default" : "ghost"}
                 onClick={() => handleModeChange(true)}
-                className={`transition-all bg-green-100  ${
-                  isAdding ? "shadow-lg bg-primary" : ""
+                className={`transition-all bg-green-100 h-12    ${
+                  isAdding
+                    ? "shadow-md bg-primary rounded-full"
+                    : " dark:text-muted-foreground"
                 }`}
               >
-                <Plus className="mr-2 h-4 w-4" />
+                <Plus className="" />
                 Add Stock
               </Button>
               <Button
                 type="button"
                 variant={!isAdding ? "default" : "ghost"}
                 onClick={() => handleModeChange(false)}
-                className={`transition-all bg-red-100 ${
-                  !isAdding ? "shadow-lg bg-primary" : ""
+                className={`transition-all bg-red-100 h-12  ${
+                  !isAdding
+                    ? "shadow-md bg-primary rounded-full"
+                    : "dark:text-muted-foreground"
                 }`}
               >
-                <Minus className="mr-2 h-4 w-4" />
+                <Minus className="" />
                 Remove Stock
               </Button>
             </div>
 
             <div className="space-y-4 ">
-              <div className="grid grid-cols-2 max-425:grid-cols-1 gap-4">
+              <div className="grid grid-cols-2 max-425:grid-cols-1 gap-4 items-end">
                 <div>
-                  <Label htmlFor="stock">{isAdding ? "Add" : "Remove"}</Label>
                   <Input
                     id="stock"
                     type="number"
                     min="0"
+                    className="text-lg h-12  border-none rounded-full"
                     value={stockValue}
                     onChange={(e) => handleStockChange(Number(e.target.value))}
                   />
                 </div>
                 <div>
-                  <Label>{isAdding ? "Supplier" : "Customer"} (Optional)</Label>
+                  <div className="text-right w-full text-sm">Optional</div>
                   {isAdding ? (
                     <SupplierSelectorforUpdater
                       onSupplierSelect={setVendorId}
@@ -228,13 +232,17 @@ export default function UpdateStock({ product }: { product: Product }) {
             </div>
 
             <DrawerFooter className="px-0 pt-2">
-              <Button type="submit" disabled={loading} className="w-full">
+              <Button
+                type="submit"
+                disabled={loading}
+                className="rounded-full h-12 shadow-md"
+              >
                 {loading
                   ? "Updating..."
                   : `${isAdding ? "Add" : "Remove"} Stock`}
               </Button>
               <DrawerClose asChild>
-                <Button variant="outline" className="w-full">
+                <Button variant="outline" className="rounded-full h-12 ">
                   Cancel
                 </Button>
               </DrawerClose>
