@@ -98,7 +98,10 @@ export async function updateProductStock({
 
     await sendTelegramMessage(notificationMessage);
     revalidateTag("get-products-for-table");
+    revalidateTag("get-all-transactions");
     revalidatePath("/admin/products");
+    revalidatePath("/admin/transactions");
+
     return { success: true, productId: product.id };
   } catch (error) {
     console.error("Error updating stock:", error);

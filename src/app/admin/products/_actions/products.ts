@@ -140,7 +140,9 @@ export async function addProduct(data: addproductProps, productImages: File[]) {
     await sendTelegramMessage(notificationMessage);
 
     revalidateTag("get-products-for-table");
+    revalidateTag("get-all-transactions");
     revalidatePath("/admin/products");
+    revalidatePath("/admin/transactions");
     return { success: true, productId: product.id };
   } catch (error) {
     console.error("Error adding product:", error);
