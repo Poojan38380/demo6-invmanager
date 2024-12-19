@@ -15,8 +15,8 @@ import { useRouter } from "next/navigation";
 import { addProduct, editProduct } from "../../_actions/products";
 import { SupplierSelector } from "@/app/admin/_components/select-supplier";
 import { SelectCategory } from "@/app/admin/_components/select-category";
-import { ProductWithImages } from "@/types/productWithImages";
 import { ImageUploader } from "./image-uploader";
+import { ProductWithImages } from "@/types/dataTypes";
 
 const ProductformSchema = z.object({
   name: z.string().min(2, {
