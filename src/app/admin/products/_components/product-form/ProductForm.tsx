@@ -12,11 +12,11 @@ import PricingCard from "./product-pricing-card";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import MediaCard from "./media-card";
 import { addProduct, editProduct } from "../../_actions/products";
 import { SupplierSelector } from "@/app/admin/_components/select-supplier";
 import { SelectCategory } from "@/app/admin/_components/select-category";
-import { Product } from "@prisma/client";
+import { ProductWithImages } from "@/types/productWithImages";
+import { ImageUploader } from "./image-uploader";
 
 const ProductformSchema = z.object({
   name: z.string().min(2, {
@@ -40,8 +40,15 @@ const ProductformSchema = z.object({
 
 export type ProductFormValues = z.infer<typeof ProductformSchema>;
 
-export default function ProductForm({ product }: { product?: Product | null }) {
+export default function ProductForm({
+  product,
+}: {
+  product?: ProductWithImages | null;
+}) {
   const [productImages, setProductImages] = useState<File[]>([]);
+  const [productPrevImageUrls, setProductPrevImageUrls] = useState<string[]>(
+    product?.productImages?.map((image) => image.url) || []
+  );
 
   const router = useRouter();
 
@@ -65,11 +72,15 @@ export default function ProductForm({ product }: { product?: Product | null }) {
     if (product) {
       const loadingToast = toast.loading("Editing product...");
       try {
-        const payload = { ...data, productId: product.id };
-        const result = await editProduct(payload);
+        const payload = {
+          ...data,
+          productId: product.id,
+          productPrevImageUrls: productPrevImageUrls,
+        };
+        const result = await editProduct(payload, productImages);
         if (result.success) {
-          toast.success("Product edited successfully", { id: loadingToast });
           router.push("/admin/products");
+          toast.success("Product edited successfully", { id: loadingToast });
         } else {
           toast.error(result.error || "Failed to edit product", {
             id: loadingToast,
@@ -84,8 +95,8 @@ export default function ProductForm({ product }: { product?: Product | null }) {
       try {
         const result = await addProduct(data, productImages);
         if (result.success) {
-          toast.success("Product added successfully", { id: loadingToast });
           router.push("/admin/products");
+          toast.success("Product added successfully", { id: loadingToast });
         } else {
           toast.error(result.error || "Failed to add product", {
             id: loadingToast,
@@ -114,7 +125,24 @@ export default function ProductForm({ product }: { product?: Product | null }) {
               form={form}
               canStockChange={product ? false : true}
             />
-            <MediaCard setProductImages={setProductImages} />
+            <Card>
+              <CardHeader>
+                <CardTitle>Media</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <section id="media" className="space-y-4">
+                  {product ? (
+                    <ImageUploader
+                      onImagesChange={setProductImages}
+                      existingImages={productPrevImageUrls}
+                      onRemoveExistingImage={setProductPrevImageUrls}
+                    />
+                  ) : (
+                    <ImageUploader onImagesChange={setProductImages} />
+                  )}
+                </section>
+              </CardContent>
+            </Card>
             <ProductDetailsCard form={form} />
           </div>
           <div className="col-span-1 flex flex-col space-y-6">

@@ -11,6 +11,7 @@ import {
 import { redirect } from "next/navigation";
 import { uploadImagesToCloudinary } from "./cloudinary";
 import { sendTelegramMessage } from "@/lib/send-telegram-message";
+import { ProductWithImages } from "@/types/productWithImages";
 
 export type ProductWithOneImage = Product & {
   productImages: {
@@ -46,7 +47,7 @@ export const getCachedProductsforTable = cache(
   ["get-products-for-table"]
 );
 
-async function getSingleProductforEdit(id: string): Promise<Product | null> {
+async function getSingleProduct(id: string): Promise<ProductWithImages | null> {
   const product = await prisma.product.findUnique({
     where: { id },
     include: {
@@ -56,8 +57,8 @@ async function getSingleProductforEdit(id: string): Promise<Product | null> {
   return product;
 }
 
-export const getCachedSingleProductforEdit = cache(
-  async (id: string): Promise<Product | null> => getSingleProductforEdit(id),
+export const getCachedSingleProduct = cache(
+  async (id: string): Promise<ProductWithImages | null> => getSingleProduct(id),
   ["get-single-product-for-edit"]
 );
 
@@ -158,10 +159,12 @@ interface editProductProps {
   sellingPrice?: number | undefined;
   vendorId?: string | undefined;
   categoryId?: string | undefined;
-  productImageUrls?: string[] | undefined;
-  productPrevImageUrls?: string[] | undefined;
+  productPrevImageUrls: string[];
 }
-export async function editProduct(data: editProductProps) {
+export async function editProduct(
+  data: editProductProps,
+  productImages: File[]
+) {
   const session = await auth();
   if (!session?.user) {
     throw new Error("Unauthorized. Login first.");
@@ -191,6 +194,8 @@ export async function editProduct(data: editProductProps) {
       throw new Error("Product not found.");
     }
 
+    const productImageUrls = await uploadImagesToCloudinary(productImages);
+
     await Promise.all([
       prisma.product.update({
         where: { id: data.productId },
@@ -206,7 +211,11 @@ export async function editProduct(data: editProductProps) {
           vendorId: data.vendorId,
         },
       }),
-      // handleProductImages(productId, productPrevImageUrls, productImageUrls),
+      handleProductImages(
+        data.productId,
+        data.productPrevImageUrls,
+        productImageUrls
+      ),
     ]);
 
     const notificationMessage = `Details of product ${existingProduct.name} has been updated by ${updater.username}`;
@@ -225,7 +234,7 @@ export async function editProduct(data: editProductProps) {
   }
 }
 
-export async function handleProductImages(
+async function handleProductImages(
   productId: string,
   prevImageUrls: string[],
   newImageUrls: string[]
