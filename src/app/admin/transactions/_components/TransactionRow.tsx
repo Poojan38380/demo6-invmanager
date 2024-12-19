@@ -19,9 +19,11 @@ export function TransactionRow({
     customer,
     vendor,
     note,
+    stockBefore,
     stockChange,
     stockAfter,
     createdAt,
+    action,
   } = transaction;
 
   const customerOrVendor = customer
@@ -51,16 +53,18 @@ export function TransactionRow({
       </TableCell>
       <TableCell>{note || null}</TableCell>
       <TableCell>
+        <span className="text-muted-foreground">{stockBefore} </span>
         <span
           className={`font-medium ${
             stockChange > 0 ? "text-green-600" : "text-red-600"
           }`}
         >
-          {stockChange > 0 ? "+" : ""}
+          {stockChange > 0 ? "+ " : " "}
           {stockChange.toFixed(2)}
         </span>
       </TableCell>
       <TableCell>{stockAfter.toFixed(2)}</TableCell>
+      <TableCell>{action}</TableCell>
       <TableCell className="text-muted-foreground">
         {formatDateYYMMDDHHMM(new Date(createdAt))}
       </TableCell>

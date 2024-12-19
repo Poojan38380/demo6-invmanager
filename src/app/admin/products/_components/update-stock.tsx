@@ -140,7 +140,7 @@ export default function UpdateStock({ product }: { product: Product }) {
                 type="button"
                 variant={isAdding ? "default" : "ghost"}
                 onClick={() => handleModeChange(true)}
-                className={`transition-all bg-green-200 h-12    ${
+                className={`transition-all bg-green-200 h-12   hover:rounded-full  ${
                   isAdding
                     ? "shadow-md bg-primary rounded-full"
                     : " dark:text-muted-foreground"
@@ -153,7 +153,7 @@ export default function UpdateStock({ product }: { product: Product }) {
                 type="button"
                 variant={!isAdding ? "default" : "ghost"}
                 onClick={() => handleModeChange(false)}
-                className={`transition-all bg-red-100 h-12  ${
+                className={`transition-all duration-300  bg-red-100 h-12 hover:rounded-full  ${
                   !isAdding
                     ? "shadow-md bg-primary rounded-full"
                     : "dark:text-muted-foreground"

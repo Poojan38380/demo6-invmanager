@@ -24,6 +24,7 @@ export function TransactionTable({
           <TableHead>Note</TableHead>
           <TableHead>Stock Change</TableHead>
           <TableHead>Final Stock</TableHead>
+          <TableHead>Action</TableHead>
           <TableHead>Date</TableHead>
         </TableRow>
       </TableHeader>
