@@ -1,11 +1,8 @@
 "use client";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
 import { DataTableColumnHeader } from "@/components/ui/data-table/data-table-column-header";
 import { formatDateYYMMDDHHMM } from "@/lib/format-date";
 import { ColumnDef } from "@tanstack/react-table";
-import { IndentDecrease, Package, SquareChevronUp } from "lucide-react";
 import { formatNumber } from "@/lib/formatter";
 
 import { TransactionForTable } from "@/types/dataTypes";
@@ -21,7 +18,10 @@ export const TransactionTableColumns: ColumnDef<TransactionForTable>[] = [
       const productName = row.original.product.name;
       const productId = row.original.productId;
       return (
-        <Link href={`/admin/transactions/product/${productId}`}>
+        <Link
+          href={`/admin/transactions/product/${productId}`}
+          className="underline"
+        >
           {productName}
         </Link>
       );
