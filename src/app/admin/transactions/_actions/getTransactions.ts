@@ -1,5 +1,4 @@
 "use server";
-"use cache";
 import prisma from "@/prisma";
 import { Transaction } from "@prisma/client";
 import { unstable_cache as cache } from "next/cache";
@@ -19,6 +18,12 @@ async function getTransactions(
     const transactions = await prisma.transaction.findMany({
       where: filter,
       orderBy: { createdAt: "desc" },
+      include: {
+        product: { select: { name: true } },
+        user: { select: { username: true } },
+        customer: { select: { companyName: true } },
+        vendor: { select: { companyName: true } },
+      },
     });
     return transactions;
   } catch (error) {
@@ -28,17 +33,17 @@ async function getTransactions(
 }
 
 // Cached version of getTransactions
-export const getCachedTransactions = cache(getTransactions, [
+export const cacheTransactionsFn = cache(getTransactions, [
   "get-all-transactions",
 ]);
 
 // Helper functions for specific queries
-export const getAllTransactions = () => getCachedTransactions({});
-export const getTransactionsByProductId = (productId: string) =>
-  getCachedTransactions({ productId });
-export const getTransactionsByUserId = (userId: string) =>
-  getCachedTransactions({ userId });
-export const getTransactionsByVendorId = (vendorId: string) =>
-  getCachedTransactions({ vendorId });
-export const getTransactionsByCustomerId = (customerId: string) =>
-  getCachedTransactions({ customerId });
+export const getAllCachedTransactions = async () => cacheTransactionsFn({});
+export const getCachedTransactionsByProductId = async (productId: string) =>
+  cacheTransactionsFn({ productId });
+export const getCachedTransactionsByUserId = async (userId: string) =>
+  cacheTransactionsFn({ userId });
+export const getCachedTransactionsByVendorId = async (vendorId: string) =>
+  cacheTransactionsFn({ vendorId });
+export const getCachedTransactionsByCustomerId = async (customerId: string) =>
+  cacheTransactionsFn({ customerId });

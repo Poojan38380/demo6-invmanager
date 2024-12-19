@@ -11,7 +11,7 @@ import {
 import { redirect } from "next/navigation";
 import { uploadImagesToCloudinary } from "./cloudinary";
 import { sendTelegramMessage } from "@/lib/send-telegram-message";
-import { ProductWithImages } from "@/types/productWithImages";
+import { ProductWithImages } from "@/types/dataTypes";
 
 export type ProductWithOneImage = Product & {
   productImages: {
