@@ -91,7 +91,11 @@ export const BasicColumns: ColumnDef<ProductWithOneImage>[] = [
     id: "updated-at-basic",
     cell: ({ row }) => {
       const updatedAt: Date = row.getValue("updated-at-basic");
-      return formatDateYYMMDDHHMM(updatedAt);
+      return (
+        <span className="text-muted-foreground">
+          {formatDateYYMMDDHHMM(updatedAt)}
+        </span>
+      );
     },
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Updated at" />

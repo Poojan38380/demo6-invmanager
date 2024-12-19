@@ -42,9 +42,9 @@ export function DataTable<TData, TValue>({
   );
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({
-      "updated-at-accounting": false,
       sellingPrice: false,
       totalFinalValue: false,
+      bufferStock: false,
     });
   const [rowSelection, setRowSelection] = React.useState({});
   const [globalFilter, setGlobalFilter] = React.useState("");

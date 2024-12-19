@@ -117,7 +117,7 @@ export default function UpdateStock({ product }: { product: Product }) {
       <DrawerTrigger asChild>
         <Button
           variant="outline"
-          className="bg-transparent shadow-sm border-gray-400"
+          className="bg-transparent shadow-sm border-gray-400 h-8"
           size="sm"
         >
           <ArrowUpDown className="mr-1 max-768:mr-0 h-4 w-4" />
@@ -222,6 +222,7 @@ export default function UpdateStock({ product }: { product: Product }) {
                   {newStock} {product.unit}
                 </span>
               </div>
+              {product.bufferStock && <div>{product.bufferStock}</div>}
 
               <div className="space-y-2">
                 <Label htmlFor="note" className="text-sm font-medium">

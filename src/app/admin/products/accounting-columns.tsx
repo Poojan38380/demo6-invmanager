@@ -65,6 +65,20 @@ export const AccountingColumns: ColumnDef<ProductWithOneImage>[] = [
     },
   },
   {
+    accessorKey: "bufferStock",
+    header: ({ column }) => (
+      <DataTableColumnHeader
+        column={column}
+        title="Min. stock"
+        className="justify-end"
+      />
+    ),
+    cell: ({ row }) => {
+      const { bufferStock = 0 } = row.original;
+      return <div className="text-right">{formatNumber(bufferStock || 0)}</div>;
+    },
+  },
+  {
     accessorKey: "costPrice",
     header: ({ column }) => (
       <DataTableColumnHeader
@@ -136,15 +150,7 @@ export const AccountingColumns: ColumnDef<ProductWithOneImage>[] = [
       );
     },
   },
-  {
-    accessorKey: "updatedAt",
-    id: "updated-at-accounting",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Updated at" />
-    ),
-    cell: ({ row }) =>
-      formatDateYYMMDDHHMM(row.getValue("updated-at-accounting")),
-  },
+
   {
     accessorKey: "vendor.companyName",
     id: "supplier",
@@ -160,5 +166,19 @@ export const AccountingColumns: ColumnDef<ProductWithOneImage>[] = [
       <DataTableColumnHeader column={column} title="Category" />
     ),
     cell: ({ row }) => <span>{row.original.category?.name ?? null}</span>,
+  },
+  {
+    accessorKey: "updatedAt",
+    id: "updated-at-accounting",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Updated at" />
+    ),
+    cell: ({ row }) => {
+      return (
+        <span className="text-muted-foreground">
+          {formatDateYYMMDDHHMM(row.getValue("updated-at-accounting"))}
+        </span>
+      );
+    },
   },
 ];
