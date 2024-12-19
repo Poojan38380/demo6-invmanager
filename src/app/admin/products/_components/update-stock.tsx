@@ -126,21 +126,22 @@ export default function UpdateStock({ product }: { product: Product }) {
       </DrawerTrigger>
       <DrawerContent>
         <div className="mx-auto w-full max-w-lg">
-          <DrawerHeader>
-            <DrawerTitle className="text-2xl">
+          <DrawerHeader className="space-y-2 pb-6">
+            <DrawerTitle className="text-2xl font-semibold">
               Update Stock for {product.name}
             </DrawerTitle>
-            <DrawerDescription className="text-lg">
+            <DrawerDescription className="text-sm text-muted-foreground">
               Current stock: {product.stock} {product.unit}
             </DrawerDescription>
           </DrawerHeader>
-          <form onSubmit={handleSubmit} className="space-y-6 p-4">
-            <div className="grid gap-6">
-              <div className="flex gap-4 justify-center">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="space-y-4">
+              <div className="flex gap-2 justify-center">
                 <Button
                   type="button"
                   variant={isAdding ? "default" : "outline"}
                   onClick={() => handleModeChange(true)}
+                  className="w-full"
                 >
                   Add Stock
                 </Button>
@@ -148,88 +149,93 @@ export default function UpdateStock({ product }: { product: Product }) {
                   type="button"
                   variant={!isAdding ? "default" : "outline"}
                   onClick={() => handleModeChange(false)}
+                  className="w-full"
                 >
                   Remove Stock
                 </Button>
               </div>
 
-              <div className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="stock" className="text-lg">
-                    {isAdding ? "Add Stock" : "Remove Stock"}
-                  </Label>
-                  <div className="relative">
-                    <Input
-                      id="stock"
-                      type="number"
-                      min="0"
-                      value={stockValue}
-                      onChange={handleStockChange}
-                      className="pl-8"
+              <div className="space-y-2">
+                <Label htmlFor="stock" className="text-sm font-medium">
+                  {isAdding ? "Add Stock" : "Remove Stock"}
+                </Label>
+                <div className="relative">
+                  <Input
+                    id="stock"
+                    type="number"
+                    min="0"
+                    value={stockValue}
+                    onChange={handleStockChange}
+                    className="pl-8"
+                  />
+                  {isAdding ? (
+                    <Plus
+                      className="absolute left-2 top-1/2 transform -translate-y-1/2 text-green-500"
+                      size={16}
                     />
-                    {isAdding ? (
-                      <Plus
-                        className="absolute left-2 top-1/2 transform -translate-y-1/2 text-green-500"
-                        size={16}
-                      />
-                    ) : (
-                      <Minus
-                        className="absolute left-2 top-1/2 transform -translate-y-1/2 text-red-500"
-                        size={16}
-                      />
-                    )}
-                  </div>
+                  ) : (
+                    <Minus
+                      className="absolute left-2 top-1/2 transform -translate-y-1/2 text-red-500"
+                      size={16}
+                    />
+                  )}
                 </div>
+              </div>
 
-                {stockValue > 0 && (
-                  <div className="space-y-2">
-                    <Label className="text-lg">
-                      {isAdding
-                        ? "Select Supplier (Optional)"
-                        : "Select Customer (Optional)"}
-                    </Label>
-                    {isAdding ? (
-                      <SupplierSelectorforUpdater
-                        onSupplierSelect={setVendorId}
-                        defaultValue={product.vendorId || undefined}
-                      />
-                    ) : (
-                      <CustomerSelectorforUpdater
-                        onCustomerSelect={setCustomerId}
-                      />
-                    )}
-                  </div>
+              <div className="space-y-2">
+                <Label className="text-sm font-medium">
+                  {isAdding
+                    ? "Select Supplier (Optional)"
+                    : "Select Customer (Optional)"}
+                </Label>
+                {isAdding ? (
+                  <SupplierSelectorforUpdater
+                    onSupplierSelect={setVendorId}
+                    defaultValue={product.vendorId || undefined}
+                  />
+                ) : (
+                  <CustomerSelectorforUpdater
+                    onCustomerSelect={setCustomerId}
+                  />
                 )}
               </div>
 
               {error && <p className="text-sm text-red-500">{error}</p>}
 
-              <span
-                className={`text-2xl font-bold flex gap-2 justify-end items-center ${
-                  newStock < (product.bufferStock || 0) ? "text-red-600" : ""
-                }`}
-              >
-                {newStock < (product.bufferStock || 0) && (
-                  <Popover>
-                    <PopoverTrigger>
-                      <TriangleAlert />
-                    </PopoverTrigger>
-                    <PopoverContent>
-                      <p>Stock is below minimum level.</p>
-                    </PopoverContent>
-                  </Popover>
-                )}
-                {newStock} {product.unit}
-              </span>
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium">New Stock:</span>
+                <span
+                  className={`text-xl font-bold flex items-center ${
+                    newStock < (product.bufferStock || 0) ? "text-red-600" : ""
+                  }`}
+                >
+                  {newStock < (product.bufferStock || 0) && (
+                    <Popover>
+                      <PopoverTrigger>
+                        <TriangleAlert className="mr-1 h-4 w-4" />
+                      </PopoverTrigger>
+                      <PopoverContent>
+                        <p className="text-sm">Stock is below minimum level.</p>
+                      </PopoverContent>
+                    </Popover>
+                  )}
+                  {newStock} {product.unit}
+                </span>
+              </div>
 
-              <Textarea
-                placeholder="Add a note (optional)"
-                id="note"
-                rows={3}
-                value={note}
-                onChange={(e) => setNote(e.target.value)}
-                className="resize-none"
-              />
+              <div className="space-y-2">
+                <Label htmlFor="note" className="text-sm font-medium">
+                  Note (Optional)
+                </Label>
+                <Textarea
+                  placeholder="Add a note"
+                  id="note"
+                  rows={3}
+                  value={note}
+                  onChange={(e) => setNote(e.target.value)}
+                  className="resize-none"
+                />
+              </div>
             </div>
 
             <DrawerFooter className="px-0">
