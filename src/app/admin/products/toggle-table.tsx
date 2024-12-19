@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 
-import { DataTable } from "./_components/data-table";
+import { ProductDataTable } from "./_components/data-table";
 import { BasicColumns } from "./_cloumns/basic-columns";
 import { AccountingColumns } from "./_cloumns/accounting-columns";
 import { Button } from "@/components/ui/button";
@@ -48,9 +48,9 @@ function ToggleTable({ products }: { products: ProductWithOneImage[] }) {
       </CardHeader>
       <CardContent className="max-768:px-0">
         {showAccountingTable ? (
-          <DataTable columns={AccountingColumns} data={products} />
+          <ProductDataTable columns={AccountingColumns} data={products} />
         ) : (
-          <DataTable columns={BasicColumns} data={products} />
+          <ProductDataTable columns={BasicColumns} data={products} />
         )}
       </CardContent>
       <CardFooter></CardFooter>

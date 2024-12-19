@@ -1,6 +1,6 @@
 "use server";
 import prisma from "@/prisma";
-import { Transaction } from "@prisma/client";
+import { TransactionForTable } from "@/types/dataTypes";
 import { unstable_cache as cache } from "next/cache";
 
 // Define a type for the filter options
@@ -13,13 +13,13 @@ type TransactionFilter = {
 
 async function getTransactions(
   filter: TransactionFilter = {}
-): Promise<Transaction[]> {
+): Promise<TransactionForTable[]> {
   try {
     const transactions = await prisma.transaction.findMany({
       where: filter,
       orderBy: { createdAt: "desc" },
       include: {
-        product: { select: { name: true } },
+        product: { select: { name: true, unit: true } },
         user: { select: { username: true } },
         customer: { select: { companyName: true } },
         vendor: { select: { companyName: true } },

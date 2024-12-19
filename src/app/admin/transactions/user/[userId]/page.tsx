@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { getCachedTransactionsByUserId } from "../../_actions/getTransactions";
-import { TransactionTable } from "../../_components/TransactionTable";
+import TransactionLayout from "../../transactionLayout";
 
 export default async function UserTransactionsPage({
   params,
@@ -12,9 +12,9 @@ export default async function UserTransactionsPage({
   const transactions = await getCachedTransactionsByUserId(userId);
   if (!transactions) return notFound();
   return (
-    <>
-      <h1 className="text-2xl font-bold mb-5">Transactions</h1>
-      <TransactionTable transactions={transactions} />
-    </>
+    <TransactionLayout
+      title={`Transactions by user: ${transactions[0].user.username}`}
+      transactions={transactions}
+    />
   );
 }

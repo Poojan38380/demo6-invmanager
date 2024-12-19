@@ -32,7 +32,7 @@ interface DataTableProps<TData, TValue> {
   data: TData[];
 }
 
-export function ProductDataTable<TData, TValue>({
+export function TransactionsDataTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {

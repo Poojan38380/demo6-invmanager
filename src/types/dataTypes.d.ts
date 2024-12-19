@@ -1,4 +1,4 @@
-import { Product } from "@prisma/client";
+import { Product, Transaction } from "@prisma/client";
 
 export type ProductWithImages = Product & {
   productImages: {
@@ -8,19 +8,16 @@ export type ProductWithImages = Product & {
 
 export type TransactionForTable = Transaction & {
   product: {
-    id: string;
     name: string;
+    unit?: string | null;
   };
   user: {
-    id: string;
     username: string;
   };
-  customer?: {
-    id: string;
+  customer: {
     companyName: string;
-  };
-  vendor?: {
-    id: string;
+  } | null;
+  vendor: {
     companyName: string;
-  };
+  } | null;
 };
