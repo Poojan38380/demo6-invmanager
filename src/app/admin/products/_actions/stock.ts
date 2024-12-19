@@ -86,13 +86,17 @@ export async function updateProductStock({
 
     // Craft a notification
     const notificationMessage = `
-  User: *${updater.username}* *${action}*  Product: *${product.name}*...
-  - Stock Before: ${stockBefore} ${product.unit}
-  - Change: *${data.change > 0 ? "+" : ""}${data.change}*
-  - Stock After: ${stockAfter} ${product.unit}
-  ${data.transactionNote ? `- Note: ${data.transactionNote || ""}` : ""}
-  ${customer ? `-Customer: ${customer.companyName}` : ""}
-  ${vendor ? `-Supplier: ${vendor.companyName}` : ""}
+Product: *${product.name}*
+User: *${updater.username}*   
+*${action}*
+
+- Stock Before: ${stockBefore} ${product.unit}
+    - Change: *${data.change > 0 ? "+" : ""}${data.change}*
+    - Final Stock: *${stockAfter} ${product.unit}*
+
+${data.transactionNote ? `- Note: ${data.transactionNote || ""}` : ""}
+${customer ? `-Customer: ${customer.companyName}` : ""}
+${vendor ? `-Supplier: ${vendor.companyName}` : ""}
   
   `;
 

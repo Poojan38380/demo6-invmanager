@@ -1,3 +1,5 @@
+"use server";
+"use cache";
 import prisma from "@/prisma";
 import { Transaction } from "@prisma/client";
 import { unstable_cache as cache } from "next/cache";
