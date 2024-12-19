@@ -128,7 +128,7 @@ export const TransactionTableColumns: ColumnDef<TransactionForTable>[] = [
             <TooltipTrigger asChild>
               <div className="flex items-center gap-2">
                 <CalendarIcon className="h-4 w-4 text-muted-foreground" />
-                <span className="font-medium">
+                <span className="font-medium text-muted-foreground">
                   {formatDateYYMMDDHHMM(createdAt)}
                 </span>
               </div>

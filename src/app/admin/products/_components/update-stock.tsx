@@ -213,7 +213,6 @@ export default function UpdateStock({ product }: { product: Product }) {
                       <TriangleAlert className="h-4 w-4" />
                       Below minimum stock ({product.bufferStock} {product.unit})
                     </div>
-                    <p className="text-red-600 text-sm">REFILL FAST !</p>
                   </>
                 )}
               </div>
