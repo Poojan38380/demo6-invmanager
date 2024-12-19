@@ -66,7 +66,12 @@ export function TransactionsDataTable<TData, TValue>({
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
     globalFilterFn: (row, columnId, filterValue) => {
-      const searchableColumns = ["name", "supplier", "category"];
+      const searchableColumns = [
+        "product",
+        "username",
+        "customer-supplier",
+        "note",
+      ];
       return searchableColumns.some((col) => {
         const value = row.getValue(col) as string;
         return value?.toLowerCase().includes(filterValue.toLowerCase());

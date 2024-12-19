@@ -28,6 +28,7 @@ import { formatDateYYMMDDHHMM } from "@/lib/format-date";
 export const TransactionTableColumns: ColumnDef<TransactionForTable>[] = [
   {
     accessorKey: "product.name",
+    id: "product",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Product" />
     ),
@@ -37,7 +38,7 @@ export const TransactionTableColumns: ColumnDef<TransactionForTable>[] = [
       return (
         <Link
           href={`/admin/transactions/product/${productId}`}
-          className="flex items-center gap-2 text-blue-600 hover:text-blue-800 transition-colors"
+          className="flex items-center gap-2 text-primary hover:underline hover:text-accent-foreground transition-colors"
         >
           <Package className="h-4 w-4" />
           <span className="font-medium">{productName}</span>
@@ -59,7 +60,27 @@ export const TransactionTableColumns: ColumnDef<TransactionForTable>[] = [
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1">
+                <span className="text-muted-foreground text-xs">
+                  {action !== "CREATED" && formatNumber(stockBefore)}
+                </span>
+                <span
+                  className={
+                    action === "INCREASED"
+                      ? "text-success font-semibold"
+                      : action === "DECREASED"
+                      ? "text-destructive font-semibold"
+                      : "text-primary"
+                  }
+                >
+                  {action === "INCREASED"
+                    ? "+ "
+                    : action === "DECREASED"
+                    ? "- "
+                    : ""}
+
+                  {formatNumber(Math.abs(stockChange))}
+                </span>
                 {action === "INCREASED" ? (
                   <ArrowUpIcon className="h-4 w-4 text-success" />
                 ) : action === "DECREASED" ? (
@@ -67,26 +88,6 @@ export const TransactionTableColumns: ColumnDef<TransactionForTable>[] = [
                 ) : (
                   <PlusCircle className="h-4 w-4 text-primary" />
                 )}
-                <span className="text-muted-foreground text-xs">
-                  {action !== "CREATED" && formatNumber(stockBefore)}
-                </span>
-                <span
-                  className={
-                    action === "INCREASED"
-                      ? "text-green-600 font-semibold"
-                      : action === "DECREASED"
-                      ? "text-red-600 font-semibold"
-                      : "text-primary"
-                  }
-                >
-                  {action === "INCREASED"
-                    ? "+"
-                    : action === "DECREASED"
-                    ? "-"
-                    : ""}
-
-                  {formatNumber(Math.abs(stockChange))}
-                </span>
               </div>
             </TooltipTrigger>
             <TooltipContent>
@@ -143,6 +144,7 @@ export const TransactionTableColumns: ColumnDef<TransactionForTable>[] = [
   },
   {
     accessorKey: "user.username",
+    id: "username",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="User" />
     ),
@@ -152,7 +154,7 @@ export const TransactionTableColumns: ColumnDef<TransactionForTable>[] = [
       return (
         <Link
           href={`/admin/transactions/user/${userId}`}
-          className="flex items-center gap-2 text-blue-600 hover:text-blue-800 transition-colors"
+          className="flex items-center gap-2 text-primary hover:underline hover:text-accent-foreground transition-colors"
         >
           <User className="h-4 w-4" />
           <span className="font-medium">{userName}</span>
@@ -162,6 +164,7 @@ export const TransactionTableColumns: ColumnDef<TransactionForTable>[] = [
   },
   {
     accessorKey: "Customer/Supplier",
+    id: "customer-supplier",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Customer/Supplier" />
     ),
@@ -184,7 +187,7 @@ export const TransactionTableColumns: ColumnDef<TransactionForTable>[] = [
         return (
           <Link
             href={`/admin/transactions/${customerOrVendor.type}/${customerOrVendor.id}`}
-            className="flex items-center gap-2 text-blue-600 hover:text-blue-800 transition-colors"
+            className="flex items-center gap-2 text-primary hover:underline hover:text-accent-foreground transition-colors"
           >
             {customerOrVendor.type === "customer" ? (
               <Building className="h-4 w-4" />
@@ -199,6 +202,7 @@ export const TransactionTableColumns: ColumnDef<TransactionForTable>[] = [
   {
     accessorKey: "note",
     header: "Note",
+    id: "note",
     enableSorting: false,
     cell: ({ row }) => {
       const note = row.getValue("note") as string;
