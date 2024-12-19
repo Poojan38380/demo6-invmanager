@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Select,
   SelectContent,
@@ -26,6 +26,7 @@ export function SelectCategory({
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [hasLoaded, setHasLoaded] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   const fetchCategories = async () => {
     if (hasLoaded) return;
@@ -42,6 +43,12 @@ export function SelectCategory({
     }
   };
 
+  useEffect(() => {
+    if (isOpen) {
+      fetchCategories();
+    }
+  }, [isOpen]);
+
   if (error) return <p>Error: {error}</p>;
 
   return (
@@ -50,9 +57,19 @@ export function SelectCategory({
       name="categoryId"
       render={({ field }) => (
         <FormItem>
-          <Select onValueChange={field.onChange} defaultValue={field.value}>
+          <Select
+            onValueChange={(value) => {
+              if (value === "none") {
+                field.onChange(undefined);
+              } else {
+                field.onChange(value);
+              }
+            }}
+            defaultValue={field.value}
+            onOpenChange={(open) => setIsOpen(open)}
+          >
             <FormControl>
-              <SelectTrigger id="category-select" onClick={fetchCategories}>
+              <SelectTrigger id="category-select">
                 <SelectValue />
               </SelectTrigger>
             </FormControl>

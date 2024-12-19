@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Select,
   SelectContent,
@@ -26,6 +26,13 @@ export function UnitSelector({
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [hasLoaded, setHasLoaded] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    if (isOpen) {
+      fetchUnits();
+    }
+  }, [isOpen]);
 
   const fetchUnits = async () => {
     if (hasLoaded) return;
@@ -50,9 +57,13 @@ export function UnitSelector({
       name="unit"
       render={({ field }) => (
         <FormItem>
-          <Select onValueChange={field.onChange} defaultValue={field.value}>
+          <Select
+            onValueChange={field.onChange}
+            defaultValue={field.value}
+            onOpenChange={(open) => setIsOpen(open)}
+          >
             <FormControl>
-              <SelectTrigger id="unit-select" onClick={fetchUnits}>
+              <SelectTrigger id="unit-select">
                 <SelectValue />
               </SelectTrigger>
             </FormControl>

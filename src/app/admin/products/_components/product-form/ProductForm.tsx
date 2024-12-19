@@ -16,6 +16,7 @@ import MediaCard from "./media-card";
 import { addProduct } from "../../_actions/products";
 import { SupplierSelector } from "@/app/admin/_components/select-supplier";
 import { SelectCategory } from "@/app/admin/_components/select-category";
+import { Product } from "@prisma/client";
 
 const ProductformSchema = z.object({
   name: z.string().min(2, {
@@ -52,7 +53,7 @@ const ProductformSchema = z.object({
 
 export type ProductFormValues = z.infer<typeof ProductformSchema>;
 
-export default function ProductForm() {
+export default function ProductForm({ product }: { product?: Product | null }) {
   const [productImages, setProductImages] = useState<File[]>([]);
 
   const router = useRouter();
@@ -60,28 +61,53 @@ export default function ProductForm() {
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(ProductformSchema),
     defaultValues: {
-      name: "",
-      stock: 0,
-      bufferStock: 0,
-      unit: "pcs",
+      name: product?.name || "",
+      stock: product?.stock || 0,
+      bufferStock: product?.bufferStock || 0,
+      unit: product?.unit || "pcs",
+      shortDescription: product?.shortDescription || undefined,
+      longDescription: product?.longDescription || undefined,
+      costPrice: product?.costPrice || undefined,
+      sellingPrice: product?.sellingPrice || undefined,
+      vendorId: product?.vendorId || undefined,
+      categoryId: product?.categoryId || undefined,
     },
   });
 
   const onSubmit = async (data: ProductFormValues) => {
-    const loadingToast = toast.loading("Adding product...");
-    try {
-      const result = await addProduct(data, productImages);
-      if (result.success) {
-        toast.success("Product added successfully", { id: loadingToast });
-        router.push("/admin/products");
-      } else {
-        toast.error(result.error || "Failed to add product", {
-          id: loadingToast,
-        });
+    if (product) {
+      const loadingToast = toast.loading("Editing product...");
+      try {
+        // const result = await editProduct(data);
+        console.log(data);
+        // if (result.success) {
+        //   toast.success("Product edited successfully", { id: loadingToast });
+        //   router.push("/admin/products");
+        // } else {
+        //   toast.error(result.error || "Failed to edit product", {
+        //     id: loadingToast,
+        //   });
+        // }
+      } catch (error) {
+        console.error(error);
+        toast.error("An unexpected error occurred", { id: loadingToast });
       }
-    } catch (error) {
-      console.error(error);
-      toast.error("An unexpected error occurred", { id: loadingToast });
+    } else {
+      const loadingToast = toast.loading("Adding product...");
+      try {
+        const result = await addProduct(data, productImages);
+        if (result.success) {
+          toast.success("Product added successfully", { id: loadingToast });
+          router.push("/admin/products");
+        } else {
+          toast.error(result.error || "Failed to add product", {
+            id: loadingToast,
+          });
+        }
+      } catch (error) {
+        console.error(error);
+        toast.error("An unexpected error occurred", { id: loadingToast });
+      }
     }
   };
 

@@ -14,7 +14,7 @@ export default async function EditProductPage({
   if (!product) return notFound();
   return (
     <>
-      <ProductForm />
+      <ProductForm product={product} />
     </>
   );
 }

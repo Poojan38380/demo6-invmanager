@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Select,
   SelectContent,
@@ -28,11 +28,17 @@ export function SupplierSelector({ form }: SupplierSelectorProps) {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [hasLoaded, setHasLoaded] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    if (isOpen) {
+      fetchSuppliers();
+    }
+  }, [isOpen]);
 
   const fetchSuppliers = async () => {
     if (hasLoaded) return;
 
-    setIsLoading(true);
     try {
       const data = await getCachedSuppliers();
       setSuppliers(data);
@@ -50,9 +56,19 @@ export function SupplierSelector({ form }: SupplierSelectorProps) {
       name="vendorId"
       render={({ field }) => (
         <FormItem>
-          <Select onValueChange={field.onChange} defaultValue={field.value}>
+          <Select
+            onValueChange={(value) => {
+              if (value === "none") {
+                field.onChange(undefined);
+              } else {
+                field.onChange(value);
+              }
+            }}
+            defaultValue={field.value}
+            onOpenChange={(open) => setIsOpen(open)}
+          >
             <FormControl>
-              <SelectTrigger id="supplier-select" onClick={fetchSuppliers}>
+              <SelectTrigger id="supplier-select">
                 <SelectValue />
               </SelectTrigger>
             </FormControl>
