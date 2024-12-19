@@ -1,7 +1,15 @@
 import React, { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { ArrowUpDown, Minus, Plus, TriangleAlert, Info } from "lucide-react";
+import {
+  ArrowUpDown,
+  Minus,
+  Plus,
+  TriangleAlert,
+  Info,
+  Truck,
+  Store,
+} from "lucide-react";
 import {
   Drawer,
   DrawerClose,
@@ -118,9 +126,9 @@ export default function UpdateStock({ product }: { product: Product }) {
       <DrawerContent className="bg-background">
         <div className="mx-auto w-full max-w-lg">
           <DrawerHeader>
-            <DrawerTitle className="flex items-center gap-2 text-xl font-semibold">
+            <DrawerTitle className="flex items-center gap-2 text-xl font-semibold justify-between">
               {product.name}
-              <span className="text-sm font-normal text-gray-500">
+              <span className=" text-muted-foreground">
                 Current: {product.stock} {product.unit}
               </span>
             </DrawerTitle>
@@ -132,7 +140,7 @@ export default function UpdateStock({ product }: { product: Product }) {
                 type="button"
                 variant={isAdding ? "default" : "ghost"}
                 onClick={() => handleModeChange(true)}
-                className={`transition-all bg-green-100 h-12    ${
+                className={`transition-all bg-green-200 h-12    ${
                   isAdding
                     ? "shadow-md bg-primary rounded-full"
                     : " dark:text-muted-foreground"
@@ -158,18 +166,22 @@ export default function UpdateStock({ product }: { product: Product }) {
 
             <div className="space-y-4 ">
               <div className="grid grid-cols-2 max-425:grid-cols-1 gap-4 items-end">
-                <div>
+                <div className="flex gap-2 items-center">
+                  {isAdding ? <Truck /> : <Store />}
                   <Input
                     id="stock"
                     type="number"
                     min="0"
-                    className="text-lg h-12  border-none rounded-full"
+                    className="text-lg h-12  border-none rounded-full shadow-sm"
                     value={stockValue}
                     onChange={(e) => handleStockChange(Number(e.target.value))}
                   />
+                  {product.unit}
                 </div>
                 <div>
-                  <div className="text-right w-full text-sm">Optional</div>
+                  <div className="text-right w-full text-sm mb-2">
+                    {isAdding ? "Supplier " : "Customer "}(Optional)
+                  </div>
                   {isAdding ? (
                     <SupplierSelectorforUpdater
                       onSupplierSelect={setVendorId}
@@ -183,9 +195,9 @@ export default function UpdateStock({ product }: { product: Product }) {
                 </div>
               </div>
 
-              <div className="bg-gray-50 p-4 rounded-lg space-y-2">
+              <div className="bg-gray-50 p-4 rounded-lg space-y-2 shadow-sm">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium">New Stock:</span>
+                  <span className=" text-sm font-medium">New Stock:</span>
                   <span
                     className={`text-lg font-bold ${
                       isBelowBuffer ? "text-red-600" : ""

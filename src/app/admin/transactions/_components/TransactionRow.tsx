@@ -2,6 +2,7 @@ import React from "react";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { TransactionForTable } from "@/types/dataTypes";
 import { formatDateYYMMDDHHMM } from "@/lib/format-date";
+import Link from "next/link";
 
 export function TransactionRow({
   transaction,
@@ -9,6 +10,10 @@ export function TransactionRow({
   transaction: TransactionForTable;
 }) {
   const {
+    userId,
+    productId,
+    customerId,
+    vendorId,
     product,
     user,
     customer,
@@ -20,16 +25,30 @@ export function TransactionRow({
   } = transaction;
 
   const customerOrVendor = customer
-    ? customer.companyName
+    ? { id: customerId, name: customer.companyName, type: "customer" }
     : vendor
-    ? vendor.companyName
+    ? { id: vendorId, name: vendor.companyName, type: "supplier" }
     : null;
 
   return (
     <TableRow>
-      <TableCell>{product.name}</TableCell>
-      <TableCell>{user.username}</TableCell>
-      <TableCell>{customerOrVendor}</TableCell>
+      <TableCell>
+        <Link href={`/admin/transactions/product/${productId}`}>
+          {product.name}
+        </Link>
+      </TableCell>
+      <TableCell>
+        <Link href={`/admin/transactions/user/${userId}`}>{user.username}</Link>
+      </TableCell>
+      <TableCell>
+        {customerOrVendor && (
+          <Link
+            href={`/admin/transactions/${customerOrVendor.type}/${customerOrVendor.id}`}
+          >
+            {customerOrVendor.name}
+          </Link>
+        )}
+      </TableCell>
       <TableCell>{note || null}</TableCell>
       <TableCell>
         <span
