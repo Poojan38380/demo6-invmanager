@@ -13,8 +13,10 @@ import { ProductFormValues } from "./ProductForm";
 
 export default function ProductInfoCard({
   form,
+  canStockChange,
 }: {
   form: UseFormReturn<ProductFormValues>;
+  canStockChange: boolean;
 }) {
   return (
     <Card>
@@ -42,6 +44,7 @@ export default function ProductInfoCard({
                 <FormControl>
                   <Input
                     type="number"
+                    disabled={!canStockChange}
                     {...field}
                     onChange={(e) => field.onChange(parseInt(e.target.value))}
                   />

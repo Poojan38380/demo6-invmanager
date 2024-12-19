@@ -13,7 +13,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import MediaCard from "./media-card";
-import { addProduct } from "../../_actions/products";
+import { addProduct, editProduct } from "../../_actions/products";
 import { SupplierSelector } from "@/app/admin/_components/select-supplier";
 import { SelectCategory } from "@/app/admin/_components/select-category";
 import { Product } from "@prisma/client";
@@ -36,19 +36,6 @@ const ProductformSchema = z.object({
   unit: z.string(),
   vendorId: z.string().optional(),
   categoryId: z.string().optional(),
-  images: z
-    .array(z.instanceof(File))
-    .refine((files) => files.every((file) => file.size <= 5 * 1024 * 1024), {
-      message: "Each file must be smaller than 5MB.",
-    })
-    .refine(
-      (files) =>
-        files.every((file) => ["image/jpeg", "image/png"].includes(file.type)),
-      {
-        message: "Only JPEG and PNG files are allowed.",
-      }
-    )
-    .optional(),
 });
 
 export type ProductFormValues = z.infer<typeof ProductformSchema>;
@@ -78,16 +65,16 @@ export default function ProductForm({ product }: { product?: Product | null }) {
     if (product) {
       const loadingToast = toast.loading("Editing product...");
       try {
-        // const result = await editProduct(data);
-        console.log(data);
-        // if (result.success) {
-        //   toast.success("Product edited successfully", { id: loadingToast });
-        //   router.push("/admin/products");
-        // } else {
-        //   toast.error(result.error || "Failed to edit product", {
-        //     id: loadingToast,
-        //   });
-        // }
+        const payload = { ...data, productId: product.id };
+        const result = await editProduct(payload);
+        if (result.success) {
+          toast.success("Product edited successfully", { id: loadingToast });
+          router.push("/admin/products");
+        } else {
+          toast.error(result.error || "Failed to edit product", {
+            id: loadingToast,
+          });
+        }
       } catch (error) {
         console.error(error);
         toast.error("An unexpected error occurred", { id: loadingToast });
@@ -123,7 +110,10 @@ export default function ProductForm({ product }: { product?: Product | null }) {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <div className="px-3 max-768:px-0 grid max-1024:grid-cols-1 gap-6 grid-cols-3 max-w-5xl mx-auto mb-10">
           <div className="col-span-2 space-y-6">
-            <ProductInfoCard form={form} />
+            <ProductInfoCard
+              form={form}
+              canStockChange={product ? false : true}
+            />
             <MediaCard setProductImages={setProductImages} />
             <ProductDetailsCard form={form} />
           </div>
@@ -147,7 +137,13 @@ export default function ProductForm({ product }: { product?: Product | null }) {
             </Card>
             <div className="flex justify-end px-6">
               <Button type="submit" disabled={form.formState.isSubmitting}>
-                {form.formState.isSubmitting ? "Adding..." : "Add product"}
+                {product
+                  ? form.formState.isSubmitting
+                    ? "Editing..."
+                    : "Edit product"
+                  : form.formState.isSubmitting
+                  ? "Adding..."
+                  : "Add product"}
               </Button>
             </div>
           </div>

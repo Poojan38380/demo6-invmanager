@@ -21,21 +21,20 @@ export async function updateProductStock({
 }) {
   const session = await auth();
   if (!session?.user) {
-    throw new Error("Unauthorized");
+    throw new Error("Unauthorized. Login first.");
   }
-
-  if (
-    !data.productId ||
-    data.productId.length !== 24 ||
-    !/^[a-fA-F0-9]{24}$/.test(data.productId)
-  ) {
-    throw new Error("Invalid Product ID.");
-  }
-
-  const updaterId = session.user.id;
-
-  if (!updaterId) return redirect("/login");
   try {
+    if (
+      !data.productId ||
+      data.productId.length !== 24 ||
+      !/^[a-fA-F0-9]{24}$/.test(data.productId)
+    ) {
+      throw new Error("Invalid Product ID.");
+    }
+
+    const updaterId = session.user.id;
+
+    if (!updaterId) return redirect("/login");
     const [updater, product] = await Promise.all([
       prisma.user.findUnique({ where: { id: updaterId } }),
       prisma.product.findUnique({ where: { id: data.productId } }),

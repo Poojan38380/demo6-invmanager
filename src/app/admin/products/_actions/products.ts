@@ -72,7 +72,6 @@ interface addproductProps {
   sellingPrice?: number | undefined;
   vendorId?: string | undefined;
   categoryId?: string | undefined;
-  images?: File[] | undefined;
 }
 
 export async function addProduct(data: addproductProps, productImages: File[]) {
@@ -145,5 +144,101 @@ export async function addProduct(data: addproductProps, productImages: File[]) {
   } catch (error) {
     console.error("Error adding product:", error);
     return { success: false, error: "Failed to add product" };
+  }
+}
+
+interface editProductProps {
+  productId: string;
+  name: string;
+  bufferStock?: number | undefined;
+  unit: string;
+  shortDescription?: string | undefined;
+  longDescription?: string | undefined;
+  costPrice?: number | undefined;
+  sellingPrice?: number | undefined;
+  vendorId?: string | undefined;
+  categoryId?: string | undefined;
+  productImageUrls?: string[] | undefined;
+  productPrevImageUrls?: string[] | undefined;
+}
+export async function editProduct(data: editProductProps) {
+  const session = await auth();
+  if (!session?.user) {
+    throw new Error("Unauthorized. Login first.");
+  }
+  try {
+    if (
+      !data.productId ||
+      data.productId.length !== 24 ||
+      !/^[a-fA-F0-9]{24}$/.test(data.productId)
+    ) {
+      throw new Error("Invalid Product ID.");
+    }
+
+    const updaterId = session.user.id;
+
+    if (!updaterId) return redirect("/login");
+    const [updater, existingProduct] = await Promise.all([
+      prisma.user.findUnique({ where: { id: updaterId } }),
+      prisma.product.findUnique({ where: { id: data.productId } }),
+    ]);
+
+    if (!updater) {
+      throw new Error("User not found.");
+    }
+
+    if (!existingProduct) {
+      throw new Error("Product not found.");
+    }
+
+    await Promise.all([
+      prisma.product.update({
+        where: { id: data.productId },
+        data: {
+          name: data.name,
+          bufferStock: data.bufferStock,
+          shortDescription: data.shortDescription,
+          longDescription: data.longDescription,
+          costPrice: data.costPrice,
+          sellingPrice: data.sellingPrice,
+          unit: data.unit,
+          categoryId: data.categoryId,
+          vendorId: data.vendorId,
+        },
+      }),
+      // handleProductImages(productId, productPrevImageUrls, productImageUrls),
+    ]);
+
+    const notificationMessage = `Details of product ${existingProduct.name} has been updated by ${updater.username}`;
+
+    await sendTelegramMessage(notificationMessage);
+
+    revalidateTag("get-single-product-for-edit");
+    revalidateTag("get-products-for-table");
+    revalidatePath("/admin/products");
+    revalidatePath(`/admin/products/${existingProduct.id}`);
+
+    return { success: true, message: "Product edited successfully." };
+  } catch (error) {
+    console.error("Error adding product:", error);
+    return { success: false, error: "Failed to edit product" };
+  }
+}
+
+async function handleProductImages(
+  productId: string,
+  prevImageUrls: string[],
+  newImageUrls: string[]
+) {
+  const updatedProductImages = [...prevImageUrls, ...newImageUrls];
+
+  if (updatedProductImages.length > 0) {
+    await prisma.productImage.deleteMany({ where: { productId } });
+
+    const imageRecords = updatedProductImages.map((url) => ({
+      productId,
+      url,
+    }));
+    await prisma.productImage.createMany({ data: imageRecords });
   }
 }
