@@ -7,7 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { TransactionsDataTable } from "./_components/data-table";
+import { TransactionsDataTable } from "./_components/trans-data-table";
 import { TransactionForTable } from "@/types/dataTypes";
 import { TransactionTableColumns } from "./columns";
 

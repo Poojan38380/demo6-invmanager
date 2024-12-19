@@ -24,8 +24,8 @@ import {
 } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 
-import { DataTablePagination } from "@/components/ui/data-table/data-table-pagination";
 import { DataTableViewOptions } from "@/components/ui/data-table/data-table-column-visibility";
+import { TransactionsDataTablePagination } from "./trans-data-table-pagination";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -145,7 +145,7 @@ export function TransactionsDataTable<TData, TValue>({
         </Table>
       </div>
       <div className="mt-4">
-        <DataTablePagination table={table} />
+        <TransactionsDataTablePagination table={table} />
       </div>
     </div>
   );
