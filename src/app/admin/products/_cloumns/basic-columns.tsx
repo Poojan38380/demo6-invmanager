@@ -73,11 +73,7 @@ export const BasicColumns: ColumnDef<ProductWithOneImage>[] = [
             size="sm"
             className="opacity-50 h-2 w-2"
           >
-            <Link
-              href={`/admin/products/${product.id}`}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <Link href={`/admin/products/${product.id}`}>
               <Edit />
             </Link>
           </Button>
