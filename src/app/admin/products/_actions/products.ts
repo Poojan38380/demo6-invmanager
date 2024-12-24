@@ -230,9 +230,9 @@ export async function editProduct(
     revalidatePath(`/admin/products/${existingProduct.id}`);
 
     return { success: true, message: "Product edited successfully." };
-  } catch (error) {
-    console.error("Error adding product:", error);
-    return { success: false, error: "Failed to edit product" };
+  } catch (Error) {
+    console.error("Error adding product:", Error);
+    return { success: false, error: `Failed to edit product: ${Error}` };
   }
 }
 
