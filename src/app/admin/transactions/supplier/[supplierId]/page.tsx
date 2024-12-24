@@ -10,7 +10,7 @@ export default async function UserTransactionsPage({
   const { supplierId } = await params;
 
   const transactions = await getCachedTransactionsByVendorId(supplierId);
-  if (!transactions) return notFound();
+  if (!transactions || transactions.length === 0) return notFound();
   return (
     <TransactionLayout
       title={`Transactions from supplier: ${transactions[0].vendor?.companyName}`}

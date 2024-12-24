@@ -10,10 +10,13 @@ export default async function UserTransactionsPage({
   const { userId } = await params;
 
   const transactions = await getCachedTransactionsByUserId(userId);
-  if (!transactions) return notFound();
+  if (!transactions || transactions.length === 0) return notFound();
+
+  const username = transactions[0]?.user?.username ?? "Unknown User";
+
   return (
     <TransactionLayout
-      title={`Transactions by user: ${transactions[0].user.username}`}
+      title={`Transactions by user: ${username}`}
       transactions={transactions}
     />
   );

@@ -10,7 +10,7 @@ export default async function CustomerTransactionsPage({
   const { customerId } = await params;
 
   const transactions = await getCachedTransactionsByCustomerId(customerId);
-  if (!transactions) return notFound();
+  if (!transactions || transactions.length === 0) return notFound();
   return (
     <TransactionLayout
       title={`Transactions to customer: ${transactions[0].customer?.companyName}`}

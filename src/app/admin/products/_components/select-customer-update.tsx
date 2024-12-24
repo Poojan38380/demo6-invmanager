@@ -12,12 +12,12 @@ import { getCachedCustomers } from "../../_actions/selector-data";
 import { Customer } from "@prisma/client";
 
 interface CustomerSelectorforUpdaterProps {
-  onCustomerSelect: (customerId: string | undefined) => void;
+  onCustomerSelectAction: (customerId: string | undefined) => void;
   defaultValue?: string;
 }
 
 export function CustomerSelectorforUpdater({
-  onCustomerSelect,
+  onCustomerSelectAction,
   defaultValue,
 }: CustomerSelectorforUpdaterProps) {
   const [customers, setCustomers] = useState<Customer[]>([]);
@@ -48,7 +48,7 @@ export function CustomerSelectorforUpdater({
 
   const handleCustomerChange = (value: string) => {
     setSelectedCustomer(value);
-    onCustomerSelect(value === "none" ? undefined : value);
+    onCustomerSelectAction(value === "none" ? undefined : value);
   };
 
   if (error) return <p>Error: {error}</p>;

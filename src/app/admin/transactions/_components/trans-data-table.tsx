@@ -25,7 +25,7 @@ import {
 import { Input } from "@/components/ui/input";
 
 import { DataTableViewOptions } from "@/components/ui/data-table/data-table-column-visibility";
-import { TransactionsDataTablePagination } from "./trans-data-table-pagination";
+import { DataTablePagination } from "@/components/ui/data-table/data-table-pagination";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -91,7 +91,7 @@ export function TransactionsDataTable<TData, TValue>({
     <div>
       <div className="flex items-center justify-between pb-4 gap-2 max-768:px-6">
         <Input
-          placeholder="Search products..."
+          placeholder="Search in transactions..."
           value={globalFilter}
           onChange={(event) => setGlobalFilter(event.target.value)}
           className="max-w-60 rounded-full bg-card shadow-sm"
@@ -155,7 +155,7 @@ export function TransactionsDataTable<TData, TValue>({
         </Table>
       </div>
       <div className="mt-4">
-        <TransactionsDataTablePagination table={table} />
+        <DataTablePagination table={table} />
       </div>
     </div>
   );

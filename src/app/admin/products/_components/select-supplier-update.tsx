@@ -12,12 +12,12 @@ import { Vendor } from "@prisma/client";
 import { getCachedSuppliers } from "../../_actions/selector-data";
 
 interface SupplierSelectorforUpdaterProps {
-  onSupplierSelect: (supplierId: string | undefined) => void;
+  onSupplierSelectAction: (supplierId: string | undefined) => void;
   defaultValue?: string;
 }
 
 export function SupplierSelectorforUpdater({
-  onSupplierSelect,
+  onSupplierSelectAction,
   defaultValue,
 }: SupplierSelectorforUpdaterProps) {
   const [suppliers, setSuppliers] = useState<Vendor[]>([]);
@@ -48,7 +48,7 @@ export function SupplierSelectorforUpdater({
 
   const handleSupplierChange = (value: string) => {
     setSelectedSupplier(value);
-    onSupplierSelect(value === "none" ? undefined : value);
+    onSupplierSelectAction(value === "none" ? undefined : value);
   };
 
   if (error) return <p>Error: {error}</p>;

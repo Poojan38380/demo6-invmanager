@@ -184,12 +184,12 @@ export default function UpdateStock({ product }: { product: Product }) {
                   </div>
                   {isAdding ? (
                     <SupplierSelectorforUpdater
-                      onSupplierSelect={setVendorId}
+                      onSupplierSelectAction={setVendorId}
                       defaultValue={product.vendorId || "none"}
                     />
                   ) : (
                     <CustomerSelectorforUpdater
-                      onCustomerSelect={setCustomerId}
+                      onCustomerSelectAction={setCustomerId}
                     />
                   )}
                 </div>

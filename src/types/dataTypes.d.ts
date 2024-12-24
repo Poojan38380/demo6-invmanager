@@ -1,4 +1,4 @@
-import { Product, Transaction } from "@prisma/client";
+import { Product, Transaction, User } from "@prisma/client";
 
 export type ProductWithImages = Product & {
   productImages: {
@@ -20,4 +20,8 @@ export type TransactionForTable = Transaction & {
   vendor: {
     companyName: string;
   } | null;
+};
+
+export type UserWithCounts = User & {
+  _count: { products: number; transactions: number };
 };
