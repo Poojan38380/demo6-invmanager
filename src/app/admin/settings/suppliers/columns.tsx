@@ -15,10 +15,10 @@ export const SupplierColumns: ColumnDef<Vendor>[] = [
     ),
     cell: ({ row }) => {
       const companyName = row.original.companyName;
-      const customerId = row.original.id;
+      const supplierId = row.original.id;
       return (
         <Link
-          href={`/admin/transactions/product/${customerId}`}
+          href={`/admin/transactions/supplier/${supplierId}`}
           className="flex items-center gap-2 text-primary hover:underline hover:text-accent-foreground transition-colors"
         >
           <span className="font-medium">{companyName}</span>

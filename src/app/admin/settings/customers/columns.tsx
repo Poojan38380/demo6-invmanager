@@ -18,7 +18,7 @@ export const CustomerColumns: ColumnDef<Customer>[] = [
       const customerId = row.original.id;
       return (
         <Link
-          href={`/admin/transactions/product/${customerId}`}
+          href={`/admin/transactions/customer/${customerId}`}
           className="flex items-center gap-2 text-primary hover:underline hover:text-accent-foreground transition-colors"
         >
           <span className="font-medium">{companyName}</span>

@@ -17,18 +17,16 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-// import { signOut, useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 
 export function NavUser() {
   const { isMobile } = useSidebar();
-  // const { data: session, status } = useSession();
+  const { data: session, status } = useSession();
 
-  // if (status === "loading") {
-  //   return <SidebarMenu>Loading...</SidebarMenu>;
-  // }
-  // const user = session!.user;
-
-  const user = { profilePic: "", username: "", email: "" };
+  if (status === "loading") {
+    return <SidebarMenu>Loading...</SidebarMenu>;
+  }
+  const user = session!.user;
 
   return (
     <SidebarMenu>
@@ -74,7 +72,7 @@ export function NavUser() {
             <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={() => {
-                // signOut();
+                signOut();
               }}
             >
               <LogOut />
