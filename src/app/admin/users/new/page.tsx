@@ -15,12 +15,14 @@ import { Label } from "@/components/ui/label";
 import { addUser } from "../_actions/user-actions";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { Eye, EyeOff } from "lucide-react";
 
 export default function CreateUser() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -28,6 +30,10 @@ export default function CreateUser() {
     const loadingToast = toast.loading("Adding user...");
 
     try {
+      const isUsernameValid = (username: string) => /^[^\s]+$/.test(username);
+      if (!isUsernameValid(username)) {
+        throw new Error("Username must not contain spaces");
+      }
       const result = await addUser({ username, password });
       if (result.success) {
         router.push("/admin/users");
@@ -39,9 +45,12 @@ export default function CreateUser() {
       }
     } catch (error) {
       console.error(error);
-      toast.error("An unexpected error occurred", { id: loadingToast });
+      toast.error(`An unexpected error occurred: ${error}`, {
+        id: loadingToast,
+      });
     } finally {
       setLoading(false);
+      toast.dismiss(loadingToast);
     }
   };
 
@@ -68,13 +77,28 @@ export default function CreateUser() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
+              <div className="relative">
+                <Input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 hover:bg-transparent"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? (
+                    <EyeOff className="h-4 w-4" />
+                  ) : (
+                    <Eye className="h-4 w-4" />
+                  )}
+                </Button>
+              </div>
             </div>
           </CardContent>
           <CardFooter className="flex flex-col items-start space-y-2">
