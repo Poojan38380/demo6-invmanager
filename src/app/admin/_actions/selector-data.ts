@@ -23,6 +23,7 @@ export const getCachedCategories = cache(
 async function getSuppliers(): Promise<Vendor[]> {
   const suppliers = await prisma.vendor.findMany({
     orderBy: { createdAt: "desc" },
+    include: { _count: { select: { transactions: true } } },
   });
   return suppliers;
 }
@@ -45,6 +46,7 @@ export const getCachedCustomers = cache(
 async function getWarehouses(): Promise<Warehouse[]> {
   const warehouses = await prisma.warehouse.findMany({
     orderBy: { createdAt: "desc" },
+    include: { _count: { select: { products: true } } },
   });
   return warehouses;
 }

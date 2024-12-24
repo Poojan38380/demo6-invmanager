@@ -56,7 +56,7 @@ export default function CreateUser() {
 
   return (
     <div className="container mx-auto py-10">
-      <Card className="max-w-md mx-auto">
+      <Card className="max-w-md mx-auto shadow-md">
         <CardHeader>
           <CardTitle>Create New User</CardTitle>
           <CardDescription>
@@ -73,6 +73,7 @@ export default function CreateUser() {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 required
+                className="shadow-sm"
               />
             </div>
             <div className="space-y-2">
@@ -83,6 +84,7 @@ export default function CreateUser() {
                   type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  className="shadow-sm"
                   required
                 />
                 <Button
@@ -102,7 +104,7 @@ export default function CreateUser() {
             </div>
           </CardContent>
           <CardFooter className="flex flex-col items-start space-y-2">
-            <Button type="submit" disabled={loading}>
+            <Button type="submit" disabled={loading} className="shadow-sm">
               {loading ? "Creating..." : "Create User"}
             </Button>
           </CardFooter>
