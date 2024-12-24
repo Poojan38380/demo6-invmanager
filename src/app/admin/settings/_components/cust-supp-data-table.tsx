@@ -78,7 +78,7 @@ export function CustSuppDataTable<TData, TValue>({
     <div>
       <div className="flex items-center justify-between pb-4 gap-2 max-768:px-6">
         <Input
-          placeholder="Search in customers..."
+          placeholder="Search in customers/suppliers..."
           value={globalFilter}
           onChange={(event) => setGlobalFilter(event.target.value)}
           className="max-w-60 rounded-full bg-card shadow-sm"
