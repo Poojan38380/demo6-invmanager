@@ -8,17 +8,22 @@ import { CardContent, CardFooter } from "@/components/ui/card";
 import { Building2, User, Phone, Mail, MapPin } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { addSupplier } from "../_actions/cust-supp-actions";
+import { addSupplier, editSupplier } from "../_actions/cust-supp-actions";
+import { Vendor } from "@prisma/client";
 
-export default function SupplierForm() {
+export default function SupplierForm({
+  supplier,
+}: {
+  supplier?: Vendor | null;
+}) {
   const router = useRouter();
 
   const [formData, setFormData] = useState({
-    companyName: "",
-    contactName: "",
-    contactNumber: "",
-    email: "",
-    address: "",
+    companyName: supplier?.companyName || "",
+    contactName: supplier?.contactName || "",
+    contactNumber: supplier?.contactNumber || "",
+    email: supplier?.email || "",
+    address: supplier?.address || "",
   });
   const [loading, setLoading] = useState(false);
 
@@ -29,25 +34,51 @@ export default function SupplierForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    const loadingToast = toast.loading(`Creating supplier`); // Changed from "Updating stock"
-
-    try {
-      const result = await addSupplier(formData);
-
-      if (result.success) {
-        router.push("/admin/settings/suppliers");
-        toast.success("Supplier created successfully.", { id: loadingToast });
-      } else {
-        toast.error(result.error || "Failed to create supplier", {
-          id: loadingToast,
-        });
+    if (supplier) {
+      const loadingToast = toast.loading("Editing supplier...");
+      try {
+        const payload = {
+          supplierId: supplier.id,
+          ...formData,
+        };
+        console.log(payload);
+        const result = await editSupplier(payload);
+        if (result.success) {
+          router.push("/admin/settings/suppliers");
+          toast.success("Supplier edited successfully", { id: loadingToast });
+        } else {
+          toast.error(result.error || "Failed to edit supplier", {
+            id: loadingToast,
+          });
+        }
+      } catch (error) {
+        console.error(error);
+        toast.error("An unexpected error occurred", { id: loadingToast });
+      } finally {
+        setLoading(false);
+        toast.dismiss(loadingToast);
       }
-    } catch (error) {
-      console.error(error);
-      toast.error("An unexpected error occurred", { id: loadingToast });
-    } finally {
-      setLoading(false);
-      toast.dismiss(loadingToast);
+    } else {
+      const loadingToast = toast.loading(`Creating supplier`);
+
+      try {
+        const result = await addSupplier(formData);
+
+        if (result.success) {
+          router.push("/admin/settings/suppliers");
+          toast.success("Supplier created successfully.", { id: loadingToast });
+        } else {
+          toast.error(result.error || "Failed to create supplier", {
+            id: loadingToast,
+          });
+        }
+      } catch (error) {
+        console.error(error);
+        toast.error("An unexpected error occurred", { id: loadingToast });
+      } finally {
+        setLoading(false);
+        toast.dismiss(loadingToast);
+      }
     }
   };
 
@@ -96,7 +127,13 @@ export default function SupplierForm() {
           disabled={loading || !formData.companyName}
           className="w-full"
         >
-          {loading ? "Creating..." : "Create Supplier"}
+          {supplier
+            ? loading
+              ? "Editing..."
+              : "Edit supplier"
+            : loading
+            ? "Adding..."
+            : "Add supplier"}{" "}
         </Button>
       </CardFooter>
     </form>

@@ -1,9 +1,10 @@
 "use client";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { DataTableColumnHeader } from "@/components/ui/data-table/data-table-column-header";
 import { Vendor } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
-import { Mail, MapPin, Phone } from "lucide-react";
+import { Edit, Mail, MapPin, Phone } from "lucide-react";
 import Link from "next/link";
 
 export const SupplierColumns: ColumnDef<Vendor>[] = [
@@ -23,6 +24,21 @@ export const SupplierColumns: ColumnDef<Vendor>[] = [
         >
           <span className="font-medium">{companyName}</span>
         </Link>
+      );
+    },
+  },
+  {
+    accessorKey: "",
+    id: "edit-button",
+
+    cell: ({ row }) => {
+      const supplierId = row.original.id;
+      return (
+        <Button asChild size={"icon"} variant={"ghost"}>
+          <Link href={`/admin/settings/suppliers/${supplierId}`}>
+            <Edit />
+          </Link>
+        </Button>
       );
     },
   },

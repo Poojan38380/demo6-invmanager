@@ -8,17 +8,22 @@ import { CardContent, CardFooter } from "@/components/ui/card";
 import { Building2, User, Phone, Mail, MapPin } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { addCustomer } from "../_actions/cust-supp-actions";
+import { addCustomer, editCustomer } from "../_actions/cust-supp-actions";
+import { Customer } from "@prisma/client";
 
-export default function CustomerForm() {
+export default function CustomerForm({
+  customer,
+}: {
+  customer?: Customer | null;
+}) {
   const router = useRouter();
 
   const [formData, setFormData] = useState({
-    companyName: "",
-    contactName: "",
-    contactNumber: "",
-    email: "",
-    address: "",
+    companyName: customer?.companyName || "",
+    contactName: customer?.contactName || "",
+    contactNumber: customer?.contactNumber || "",
+    email: customer?.email || "",
+    address: customer?.address || "",
   });
   const [loading, setLoading] = useState(false);
 
@@ -29,25 +34,50 @@ export default function CustomerForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    const loadingToast = toast.loading(`Creating customer`); // Changed from "Updating stock"
-
-    try {
-      const result = await addCustomer(formData);
-
-      if (result.success) {
-        router.push("/admin/settings/customers");
-        toast.success("Customer created successfully.", { id: loadingToast });
-      } else {
-        toast.error(result.error || "Failed to create customer", {
-          id: loadingToast,
-        });
+    if (customer) {
+      const loadingToast = toast.loading("Editing customer...");
+      try {
+        const payload = {
+          ...formData,
+          customerId: customer.id,
+        };
+        const result = await editCustomer(payload);
+        if (result.success) {
+          toast.success("Customer edited successfully", { id: loadingToast });
+          router.push("/admin/settings/customers");
+        } else {
+          toast.error(result.error || "Failed to edit customer", {
+            id: loadingToast,
+          });
+        }
+      } catch (error) {
+        console.error(error);
+        toast.error("An unexpected error occurred", { id: loadingToast });
+      } finally {
+        setLoading(false);
+        toast.dismiss(loadingToast);
       }
-    } catch (error) {
-      console.error(error);
-      toast.error("An unexpected error occurred", { id: loadingToast });
-    } finally {
-      setLoading(false);
-      toast.dismiss(loadingToast);
+    } else {
+      const loadingToast = toast.loading(`Creating customer`); // Changed from "Updating stock"
+
+      try {
+        const result = await addCustomer(formData);
+
+        if (result.success) {
+          toast.success("Customer created successfully.", { id: loadingToast });
+          router.push("/admin/settings/customers");
+        } else {
+          toast.error(result.error || "Failed to create customer", {
+            id: loadingToast,
+          });
+        }
+      } catch (error) {
+        console.error(error);
+        toast.error("An unexpected error occurred", { id: loadingToast });
+      } finally {
+        setLoading(false);
+        toast.dismiss(loadingToast);
+      }
     }
   };
 
@@ -95,7 +125,13 @@ export default function CustomerForm() {
           disabled={loading || !formData.companyName}
           className="w-full"
         >
-          {loading ? "Creating..." : "Create customer"}
+          {customer
+            ? loading
+              ? "Editing..."
+              : "Edit customer"
+            : loading
+            ? "Adding..."
+            : "Add customer"}
         </Button>
       </CardFooter>
     </form>
