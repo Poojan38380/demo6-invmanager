@@ -18,7 +18,7 @@ export default function HomePage() {
                 Welcome to InvManager
               </h1>
               <p className="mx-auto max-w-[700px] text-gray-500 md:text-xl dark:text-gray-400">
-                We're building the future of web applications. Join us on this
+                We are building the future of web applications. Join us on this
                 exciting journey.
               </p>
             </div>
