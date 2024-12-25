@@ -146,7 +146,7 @@ export async function addProduct(data: addproductProps, productImages: File[]) {
     return { success: true, productId: product.id };
   } catch (error) {
     console.error("Error adding product:", error);
-    return { success: false, error: "Failed to add product" };
+    return { success: false, error: `Failed to add product: ${error}` };
   }
 }
 
