@@ -2,22 +2,18 @@
 import { auth } from "@/lib/auth";
 import { sendTelegramMessage } from "@/lib/send-telegram-message";
 import prisma from "@/prisma";
-import {
-  Category,
-  Customer,
-  MeasurementUnit,
-  Vendor,
-  Warehouse,
-} from "@prisma/client";
+import { CategoryWithCounts } from "@/types/dataTypes";
+import { Customer, MeasurementUnit, Vendor, Warehouse } from "@prisma/client";
 import {
   unstable_cache as cache,
   revalidatePath,
   revalidateTag,
 } from "next/cache";
 
-async function getCategories(): Promise<Category[]> {
+async function getCategories(): Promise<CategoryWithCounts[]> {
   const categories = await prisma.category.findMany({
     orderBy: { createdAt: "desc" },
+    include: { _count: { select: { products: true } } },
   });
   return categories;
 }

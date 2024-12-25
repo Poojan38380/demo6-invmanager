@@ -41,7 +41,6 @@ export default function SupplierForm({
           supplierId: supplier.id,
           ...formData,
         };
-        console.log(payload);
         const result = await editSupplier(payload);
         if (result.success) {
           router.push("/admin/settings/suppliers");
