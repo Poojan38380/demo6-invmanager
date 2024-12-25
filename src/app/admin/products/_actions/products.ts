@@ -51,7 +51,7 @@ async function getSingleProduct(id: string): Promise<ProductWithImages | null> {
   const product = await prisma.product.findUnique({
     where: { id },
     include: {
-      productImages: { select: { url: true } },
+      productImages: true,
     },
   });
   return product;
