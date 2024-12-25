@@ -51,7 +51,7 @@ const Header = () => {
               href="/"
               className="text-2xl font-bold text-primary hover:opacity-80 transition-opacity"
             >
-              Inv.Manage
+              InvManager
             </Link>
 
             {/* Desktop Navigation */}
