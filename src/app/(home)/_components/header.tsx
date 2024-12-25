@@ -1,13 +1,15 @@
 "use client";
 import { useState, useEffect, useCallback } from "react";
-import { Menu, X } from "lucide-react";
+import { LogOut, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ThemeToggleButton } from "@/components/theme/ThemeSelectorButton";
+import { signOut, useSession } from "next-auth/react";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const { status } = useSession();
 
   // Optimize scroll handler with useCallback
   const handleScroll = useCallback(() => {
@@ -65,11 +67,29 @@ const Header = () => {
                   {item.name}
                 </Link>
               ))}
+              {status === "authenticated" && (
+                <Link
+                  href={"/admin"}
+                  className="text-sm font-medium text-foreground hover:text-primary transition-colors"
+                >
+                  Dashboard
+                </Link>
+              )}
             </nav>
           </div>
           {/* Desktop Right Section */}
           <div className="hidden md:flex items-center space-x-4">
             <ThemeToggleButton />
+            {status === "authenticated" && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => signOut()}
+                className="gap-2"
+              >
+                <LogOut size={16} /> Logout
+              </Button>
+            )}
           </div>
 
           {/* Mobile Menu Toggle */}
@@ -101,6 +121,25 @@ const Header = () => {
                 {item.name}
               </Link>
             ))}
+            {status === "authenticated" && (
+              <>
+                <Link
+                  href="/admin"
+                  className="px-4 py-2 text-sm font-medium hover:bg-accent transition-colors"
+                  onClick={toggleMenu}
+                >
+                  Dashboard
+                </Link>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => signOut()}
+                  className="gap-2 justify-start"
+                >
+                  <LogOut size={16} /> Logout
+                </Button>
+              </>
+            )}
           </nav>
         </div>
       )}
