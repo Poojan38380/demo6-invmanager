@@ -1,4 +1,6 @@
 "use server";
+import { auth } from "@/lib/auth";
+import { sendTelegramMessage } from "@/lib/send-telegram-message";
 import prisma from "@/prisma";
 import {
   Category,
@@ -7,7 +9,11 @@ import {
   Vendor,
   Warehouse,
 } from "@prisma/client";
-import { unstable_cache as cache } from "next/cache";
+import {
+  unstable_cache as cache,
+  revalidatePath,
+  revalidateTag,
+} from "next/cache";
 
 async function getCategories(): Promise<Category[]> {
   const categories = await prisma.category.findMany({
@@ -61,3 +67,36 @@ async function getUnits(): Promise<MeasurementUnit[]> {
 }
 
 export const getCachedUnits = cache(async () => getUnits(), ["get-units"]);
+
+export async function createUnit(unitName: string) {
+  if (!unitName) {
+    throw new Error("Unit name is required");
+  }
+
+  const session = await auth();
+  if (!session?.user?.id) {
+    throw new Error("Unauthorized");
+  }
+
+  try {
+    const existingUnit = await prisma.measurementUnit.findUnique({
+      where: { name: unitName },
+    });
+    if (existingUnit)
+      throw new Error("Unit with the same name already exists.");
+    const newUnit = await prisma.measurementUnit.create({
+      data: { name: unitName },
+    });
+
+    const notificationMessage = `A new unit *${unitName}* has been created.`;
+
+    await sendTelegramMessage(notificationMessage);
+
+    revalidateTag("get-units");
+    revalidatePath("/admin/settings/units");
+    return { success: true, unitId: newUnit.id };
+  } catch (Error) {
+    console.log("Error creating unit");
+    return { success: false, error: `Failed to create new unit: ${Error}` };
+  }
+}
