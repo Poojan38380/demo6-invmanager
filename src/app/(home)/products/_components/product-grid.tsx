@@ -3,7 +3,6 @@
 import React from "react";
 import { motion } from "framer-motion";
 import ProductDisplayCard from "./products-display-card";
-import { Product } from "@prisma/client";
 import { ProductWithImages } from "@/types/dataTypes";
 
 interface ProductGridProps {
@@ -17,8 +16,7 @@ export default function ProductGrid({ products }: ProductGridProps) {
         <div className="max-w-md mx-auto">
           <h2 className="text-xl font-semibold mb-2">No Products Found</h2>
           <p className="text-muted-foreground">
-            We couldn't find any products at the moment. Please check back
-            later.
+            We couldnt find any products at the moment. Please check back later.
           </p>
         </div>
       </div>

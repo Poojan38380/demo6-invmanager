@@ -1,9 +1,13 @@
-import { Category, Product, Transaction, User } from "@prisma/client";
+import {
+  Category,
+  Product,
+  ProductImage,
+  Transaction,
+  User,
+} from "@prisma/client";
 
 export type ProductWithImages = Product & {
-  productImages: {
-    url: string;
-  }[];
+  productImages: ProductImage[];
 };
 
 export type TransactionForTable = Transaction & {
