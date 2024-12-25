@@ -1,5 +1,6 @@
 "use server";
 import { auth } from "@/lib/auth";
+import { sendTelegramMessage } from "@/lib/send-telegram-message";
 import prisma from "@/prisma";
 import { Customer, Vendor } from "@prisma/client";
 import {
@@ -54,6 +55,10 @@ export async function addSupplier(data: addSupplierProps) {
       data,
     });
 
+    const notificationMessage = `A new supplier ${newSupplier.companyName} has been created.`;
+
+    await sendTelegramMessage(notificationMessage);
+
     revalidateTag("get-suppliers");
     revalidateTag("get-single-supplier-for-edit");
     revalidatePath("/admin/settings/suppliers");
@@ -85,6 +90,10 @@ export async function addCustomer(data: addCustomerProps) {
     const newCustomer = await prisma.customer.create({
       data,
     });
+
+    const notificationMessage = `A new customer ${newCustomer.companyName} has been created.`;
+
+    await sendTelegramMessage(notificationMessage);
 
     revalidateTag("get-customers");
     revalidateTag("get-single-customer-for-edit");
