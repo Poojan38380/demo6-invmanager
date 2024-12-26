@@ -14,14 +14,10 @@ import {
 } from "@/components/ui/popover";
 import { CalendarIcon } from "lucide-react";
 import { DateRange } from "react-day-picker";
-import {
-  format,
-  startOfWeek,
-  endOfWeek,
-  startOfMonth,
-  endOfMonth,
-} from "date-fns";
+import { format, subDays } from "date-fns";
 import { cn } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
+
 export default function TransactionLayout({
   transactions,
   title,
@@ -59,24 +55,31 @@ export default function TransactionLayout({
   const setToday = () => {
     const today = new Date();
     setDateRange({ from: today, to: today });
-
     setIsCalendarOpen(false);
   };
 
-  const setThisWeek = () => {
+  const setLast7Days = () => {
     const today = new Date();
     setDateRange({
-      from: startOfWeek(today),
-      to: endOfWeek(today),
+      from: subDays(today, 6),
+      to: today,
+    });
+    setIsCalendarOpen(false);
+  };
+  const setLast14Days = () => {
+    const today = new Date();
+    setDateRange({
+      from: subDays(today, 13),
+      to: today,
     });
     setIsCalendarOpen(false);
   };
 
-  const setThisMonth = () => {
+  const setLast30Days = () => {
     const today = new Date();
     setDateRange({
-      from: startOfMonth(today),
-      to: endOfMonth(today),
+      from: subDays(today, 29),
+      to: today,
     });
     setIsCalendarOpen(false);
   };
@@ -95,7 +98,7 @@ export default function TransactionLayout({
                 )}
               >
                 {dateRange?.from && dateRange.to ? null : (
-                  <CalendarIcon className=" h-4 w-4 text-primary-foreground " />
+                  <CalendarIcon className="h-4 w-4 text-primary-foreground" />
                 )}
                 {dateRange?.from ? (
                   dateRange.to ? (
@@ -109,17 +112,36 @@ export default function TransactionLayout({
                 ) : null}
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-auto p-0" align="start">
-              <div className="flex justify-between p-3 border-b">
-                <Button variant="ghost" size="sm" onClick={setToday}>
+            <PopoverContent className="w-[300px]   mx-2" align="start">
+              <div className="flex flex-wrap  gap-2   p-3  border-b ">
+                <Badge
+                  variant={"outline"}
+                  onClick={setToday}
+                  className="cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors  "
+                >
                   Today
-                </Button>
-                <Button variant="ghost" size="sm" onClick={setThisWeek}>
-                  This Week
-                </Button>
-                <Button variant="ghost" size="sm" onClick={setThisMonth}>
-                  This Month
-                </Button>
+                </Badge>
+                <Badge
+                  variant={"outline"}
+                  onClick={setLast7Days}
+                  className="cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors  "
+                >
+                  Last 7 Days
+                </Badge>
+                <Badge
+                  variant={"outline"}
+                  onClick={setLast14Days}
+                  className="cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors  "
+                >
+                  Last 14 Days
+                </Badge>
+                <Badge
+                  variant={"outline"}
+                  onClick={setLast30Days}
+                  className="cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors  "
+                >
+                  Last 30 Days
+                </Badge>
               </div>
               <Calendar
                 initialFocus
@@ -131,16 +153,13 @@ export default function TransactionLayout({
                   if (newDateRange?.to) setIsCalendarOpen(false);
                 }}
                 numberOfMonths={1}
+                disabled={(date) => date > new Date()}
               />
             </PopoverContent>
           </Popover>
 
           {dateRange?.from && dateRange.to && (
-            <Button
-              onClick={clearFilter}
-              variant="outline"
-              className="rounded-full"
-            >
+            <Button onClick={clearFilter} variant="ghost">
               Clear
             </Button>
           )}
