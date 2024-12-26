@@ -12,7 +12,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, FilterX } from "lucide-react";
 import { DateRange } from "react-day-picker";
 import { format, subDays } from "date-fns";
 import { cn } from "@/lib/utils";
@@ -159,8 +159,8 @@ export default function TransactionLayout({
           </Popover>
 
           {dateRange?.from && dateRange.to && (
-            <Button onClick={clearFilter} variant="ghost">
-              Clear
+            <Button onClick={clearFilter} variant="destructive">
+              <FilterX />
             </Button>
           )}
         </div>
