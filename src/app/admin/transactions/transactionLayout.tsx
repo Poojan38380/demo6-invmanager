@@ -159,7 +159,7 @@ export default function TransactionLayout({
           </Popover>
 
           {dateRange?.from && dateRange.to && (
-            <Button onClick={clearFilter} variant="destructive">
+            <Button onClick={clearFilter} variant="destructive" size={"icon"}>
               <FilterX />
             </Button>
           )}
