@@ -89,25 +89,24 @@ export default function TransactionLayout({
           <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
             <PopoverTrigger asChild>
               <Button
-                variant="outline"
                 className={cn(
-                  "justify-start text-left font-normal",
+                  "items-center rounded-full",
                   !dateRange && "text-muted-foreground"
                 )}
               >
-                <CalendarIcon className="mr-2 h-4 w-4" />
+                {dateRange?.from && dateRange.to ? null : (
+                  <CalendarIcon className=" h-4 w-4 text-primary-foreground " />
+                )}
                 {dateRange?.from ? (
                   dateRange.to ? (
-                    <>
+                    <div>
                       {format(dateRange.from, "LLL dd, y")} -{" "}
                       {format(dateRange.to, "LLL dd, y")}
-                    </>
+                    </div>
                   ) : (
                     format(dateRange.from, "LLL dd, y")
                   )
-                ) : (
-                  <span>Pick a date range</span>
-                )}
+                ) : null}
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0" align="start">
@@ -136,9 +135,15 @@ export default function TransactionLayout({
             </PopoverContent>
           </Popover>
 
-          <Button onClick={clearFilter} variant="secondary">
-            Clear Filter
-          </Button>
+          {dateRange?.from && dateRange.to && (
+            <Button
+              onClick={clearFilter}
+              variant="outline"
+              className="rounded-full"
+            >
+              Clear
+            </Button>
+          )}
         </div>
       </CardHeader>
       <CardContent className="space-y-6">
