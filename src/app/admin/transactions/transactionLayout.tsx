@@ -12,7 +12,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { CalendarIcon, ChevronDownIcon } from "lucide-react";
+import { CalendarIcon } from "lucide-react";
 import { DateRange } from "react-day-picker";
 import {
   format,
@@ -20,7 +20,6 @@ import {
   endOfWeek,
   startOfMonth,
   endOfMonth,
-  isToday,
 } from "date-fns";
 import { cn } from "@/lib/utils";
 export default function TransactionLayout({
