@@ -89,7 +89,7 @@ export function TransactionsDataTable<TData, TValue>({
 
   return (
     <div>
-      <div className="flex items-center justify-between pb-4 gap-2 max-768:px-6">
+      <div className="flex items-center justify-between pb-4 gap-2 ">
         <Input
           placeholder="Search in transactions..."
           value={globalFilter}

@@ -56,45 +56,34 @@ export const TransactionTableColumns: ColumnDef<TransactionForTable>[] = [
       const stockBefore: number = row.original.stockBefore;
       const action: string = row.original.action;
       return (
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <div className="flex items-center gap-1">
-                <span className="text-muted-foreground text-xs">
-                  {action !== "CREATED" && formatNumber(stockBefore)}
-                </span>
-                <span
-                  className={
-                    action === "INCREASED"
-                      ? "text-success font-semibold"
-                      : action === "DECREASED"
-                      ? "text-destructive font-semibold"
-                      : "text-primary"
-                  }
-                >
-                  {action === "INCREASED"
-                    ? "+ "
-                    : action === "DECREASED"
-                    ? "- "
-                    : ""}
-
-                  {formatNumber(Math.abs(stockChange))}
-                </span>
-                {action === "INCREASED" ? (
-                  <ArrowUpIcon className="h-4 w-4 text-success" />
-                ) : action === "DECREASED" ? (
-                  <ArrowDownIcon className="h-4 w-4 text-destructive" />
-                ) : (
-                  <PlusCircle className="h-4 w-4 text-primary" />
-                )}
-              </div>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Previous stock: {formatNumber(stockBefore)}</p>
-              <p>New stock: {formatNumber(stockBefore + stockChange)}</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
+        <div className="flex items-center gap-1">
+          <span className="text-muted-foreground text-xs">
+            {action !== "CREATED" && formatNumber(stockBefore)}
+          </span>
+          <div
+            className={` flex gap-1  items-center
+             ${
+               action === "INCREASED"
+                 ? "text-success font-semibold"
+                 : action === "DECREASED"
+                 ? "text-destructive font-semibold"
+                 : "text-primary"
+             }
+            `}
+          >
+            <span>
+              {action === "INCREASED" ? "+" : action === "DECREASED" ? "-" : ""}
+            </span>
+            <span>{formatNumber(Math.abs(stockChange))}</span>
+          </div>
+          {action === "INCREASED" ? (
+            <ArrowUpIcon className="h-4 w-4 text-success" />
+          ) : action === "DECREASED" ? (
+            <ArrowDownIcon className="h-4 w-4 text-destructive" />
+          ) : (
+            <PlusCircle className="h-4 w-4 text-primary" />
+          )}
+        </div>
       );
     },
   },
