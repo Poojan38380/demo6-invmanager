@@ -43,6 +43,8 @@ body {
     --sidebar-ring: 217.2 91.2% 59.8%;
     --success: 142 76% 36%;
     --success-foreground: 210 40% 98%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 48 96% 89%;
   }
   .dark {
     --background: 240 10% 3.9%;
@@ -79,6 +81,8 @@ body {
     --sidebar-ring: 217.2 91.2% 59.8%;
     --success: 142 69% 58%;
     --success-foreground: 210 40% 98%;
+    --warning: 48 96% 89%;
+    --warning-foreground: 38 92% 50%;
   }
 }
 

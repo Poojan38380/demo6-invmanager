@@ -19,7 +19,14 @@ async function getTransactions(
       where: filter,
       orderBy: { createdAt: "desc" },
       include: {
-        product: { select: { name: true, unit: true } },
+        product: {
+          select: {
+            name: true,
+            unit: true,
+            costPrice: true,
+            sellingPrice: true,
+          },
+        },
         user: { select: { username: true } },
         customer: { select: { companyName: true } },
         vendor: { select: { companyName: true } },
