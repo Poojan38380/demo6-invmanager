@@ -1,10 +1,8 @@
 import DashboardOverviewCards from "./_components/dashboard/dashboard-overview-cards";
 import { getCachedProductsforTable } from "./products/_actions/products";
-import { getAllCachedTransactions } from "./transactions/_actions/getTransactions";
 
 export default async function AdminPage() {
   const products = await getCachedProductsforTable();
-  const transactions = await getAllCachedTransactions();
 
   return (
     <div className="p-6">
