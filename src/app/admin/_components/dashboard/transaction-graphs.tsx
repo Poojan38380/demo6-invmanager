@@ -52,7 +52,7 @@ export function TransactionGraphs({ transactions }: TransactionGraphsProps) {
   const dailyData = useMemo(
     () =>
       groupTransactionsByDate(transactions, startOfDay)
-        .slice(-30)
+        .slice(-14)
         .sort(
           (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
         ),
@@ -62,7 +62,7 @@ export function TransactionGraphs({ transactions }: TransactionGraphsProps) {
   const weeklyData = useMemo(
     () =>
       groupTransactionsByDate(transactions, startOfWeek)
-        .slice(-12)
+        .slice(-8)
         .sort(
           (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
         ),
@@ -72,7 +72,7 @@ export function TransactionGraphs({ transactions }: TransactionGraphsProps) {
   const monthlyData = useMemo(
     () =>
       groupTransactionsByDate(transactions, startOfMonth)
-        .slice(-12)
+        .slice(-6)
         .sort(
           (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
         ),
@@ -80,16 +80,18 @@ export function TransactionGraphs({ transactions }: TransactionGraphsProps) {
   );
 
   return (
-    <Card>
+    <Card className="w-full">
       <CardHeader>
-        <CardTitle>Transaction Activity</CardTitle>
-        <CardDescription>
+        <CardTitle className="text-xl sm:text-2xl">
+          Transaction Activity
+        </CardTitle>
+        <CardDescription className="text-sm sm:text-base">
           Overview of transaction activity over time
         </CardDescription>
       </CardHeader>
-      <CardContent>
-        <Tabs defaultValue="daily">
-          <TabsList>
+      <CardContent className="p-0">
+        <Tabs defaultValue="daily" className="w-full">
+          <TabsList className="grid w-full grid-cols-3 mb-4">
             <TabsTrigger value="daily">Daily</TabsTrigger>
             <TabsTrigger value="weekly">Weekly</TabsTrigger>
             <TabsTrigger value="monthly">Monthly</TabsTrigger>
@@ -102,17 +104,26 @@ export function TransactionGraphs({ transactions }: TransactionGraphsProps) {
                   color: "hsl(var(--chart-1))",
                 },
               }}
-              className="h-[300px]"
+              className="h-[200px] sm:h-[300px]"
             >
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={dailyData}>
+                <BarChart
+                  data={dailyData}
+                  margin={{ top: 20, right: 0, left: -20, bottom: 0 }}
+                >
                   <XAxis
                     dataKey="date"
                     tickFormatter={(value) => format(new Date(value), "MMM d")}
+                    tick={{ fontSize: 12 }}
+                    interval="preserveStartEnd"
                   />
-                  <YAxis />
+                  <YAxis tick={{ fontSize: 12 }} />
                   <Tooltip content={<ChartTooltipContent />} />
-                  <Bar dataKey="count" fill="var(--color-count)" />
+                  <Bar
+                    dataKey="count"
+                    fill="var(--color-count)"
+                    radius={[4, 4, 0, 0]}
+                  />
                 </BarChart>
               </ResponsiveContainer>
             </ChartContainer>
@@ -125,19 +136,26 @@ export function TransactionGraphs({ transactions }: TransactionGraphsProps) {
                   color: "hsl(var(--chart-2))",
                 },
               }}
-              className="h-[300px]"
+              className="h-[200px] sm:h-[300px]"
             >
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={weeklyData}>
+                <BarChart
+                  data={weeklyData}
+                  margin={{ top: 20, right: 0, left: -20, bottom: 0 }}
+                >
                   <XAxis
                     dataKey="date"
-                    tickFormatter={(value) =>
-                      `Week of ${format(new Date(value), "MMM d")}`
-                    }
+                    tickFormatter={(value) => format(new Date(value), "MMM d")}
+                    tick={{ fontSize: 12 }}
+                    interval="preserveStartEnd"
                   />
-                  <YAxis />
+                  <YAxis tick={{ fontSize: 12 }} />
                   <Tooltip content={<ChartTooltipContent />} />
-                  <Bar dataKey="count" fill="var(--color-count)" />
+                  <Bar
+                    dataKey="count"
+                    fill="var(--color-count)"
+                    radius={[4, 4, 0, 0]}
+                  />
                 </BarChart>
               </ResponsiveContainer>
             </ChartContainer>
@@ -150,19 +168,26 @@ export function TransactionGraphs({ transactions }: TransactionGraphsProps) {
                   color: "hsl(var(--chart-3))",
                 },
               }}
-              className="h-[300px]"
+              className="h-[200px] sm:h-[300px]"
             >
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={monthlyData}>
+                <BarChart
+                  data={monthlyData}
+                  margin={{ top: 20, right: 0, left: -20, bottom: 0 }}
+                >
                   <XAxis
                     dataKey="date"
-                    tickFormatter={(value) =>
-                      format(new Date(value), "MMM yyyy")
-                    }
+                    tickFormatter={(value) => format(new Date(value), "MMM yy")}
+                    tick={{ fontSize: 12 }}
+                    interval="preserveStartEnd"
                   />
-                  <YAxis />
+                  <YAxis tick={{ fontSize: 12 }} />
                   <Tooltip content={<ChartTooltipContent />} />
-                  <Bar dataKey="count" fill="var(--color-count)" />
+                  <Bar
+                    dataKey="count"
+                    fill="var(--color-count)"
+                    radius={[4, 4, 0, 0]}
+                  />
                 </BarChart>
               </ResponsiveContainer>
             </ChartContainer>
