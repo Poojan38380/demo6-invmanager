@@ -105,6 +105,7 @@ ${vendor ? `-Supplier: ${vendor.companyName}` : ""}
     revalidateTag("get-all-transactions");
     revalidatePath("/admin/products");
     revalidatePath("/admin/transactions");
+    revalidatePath("/admin");
 
     return { success: true, productId: product.id };
   } catch (error) {

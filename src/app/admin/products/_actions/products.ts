@@ -145,6 +145,8 @@ export async function addProduct(data: addproductProps, productImages: File[]) {
     revalidatePath("/admin/products");
     revalidatePath("/products");
     revalidatePath("/admin/transactions");
+    revalidatePath("/admin");
+
     return { success: true, productId: product.id };
   } catch (error) {
     console.error("Error adding product:", error);
@@ -229,8 +231,10 @@ export async function editProduct(
     revalidateTag("get-single-product-for-edit");
     revalidateTag("get-products-for-table");
     revalidateTag("get-products-for-display");
+    revalidateTag("get-all-transactions");
     revalidatePath("/admin/products");
     revalidatePath("/products");
+    revalidatePath("/admin");
     revalidatePath(`/admin/products/${existingProduct.id}`);
 
     return { success: true, message: "Product edited successfully." };
