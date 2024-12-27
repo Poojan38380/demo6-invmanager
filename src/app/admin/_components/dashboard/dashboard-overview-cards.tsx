@@ -28,7 +28,7 @@ const DashboardOverviewCards = ({
       // Check buffer stock conditions
       if (currentStock < bufferStock) {
         belowBufferCount++;
-      } else if (currentStock < bufferStock * approachingThreshold) {
+      } else if (currentStock <= bufferStock * approachingThreshold) {
         approachingBufferCount++;
       }
 
