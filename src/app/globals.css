@@ -1,6 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+html {
+  scroll-behavior: smooth;
+}
 
 body {
   font-family: Arial, Helvetica, sans-serif;
@@ -93,4 +96,24 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* Scrollbar width */
+::-webkit-scrollbar {
+  width: 7px; /* For vertical scrollbars */
+  height: 7px; /* For horizontal scrollbars */
+}
+
+/* Scrollbar track */
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888; /* Darker gray */
+}
+
+/* Scrollbar thumb on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555; /* Darker shade when hovered */
 }
