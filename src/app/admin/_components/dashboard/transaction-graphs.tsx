@@ -1,15 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
-import {
-  startOfDay,
-  startOfWeek,
-  startOfMonth,
-  format,
-  subDays,
-  subWeeks,
-  subMonths,
-} from "date-fns";
+import { startOfDay, startOfWeek, startOfMonth, format } from "date-fns";
 import {
   Bar,
   BarChart,
@@ -26,11 +18,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@/components/ui/chart";
+import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
 
 interface Transaction {
   createdAt: Date;

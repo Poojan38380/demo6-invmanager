@@ -3,17 +3,30 @@ import { TransactionGraphs } from "./_components/dashboard/transaction-graphs";
 import { getCachedProductsforTable } from "./products/_actions/products";
 import { getAllCachedTransactions } from "./transactions/_actions/getTransactions";
 
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+
 export default async function AdminPage() {
   const products = await getCachedProductsforTable();
   const transactions = await getAllCachedTransactions();
 
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-6">Overview</h1>
-      <div className="flex flex-col gap-4">
+    <Card className="border-none  shadow-none bg-background ">
+      <CardHeader>
+        <CardTitle>Overview</CardTitle>
+      </CardHeader>
+      <CardContent>
         <DashboardOverviewCards products={products} />
+      </CardContent>
+      <CardContent className="max-768:px-0">
         <TransactionGraphs transactions={transactions} />
-      </div>
-    </div>
+      </CardContent>
+      <CardFooter></CardFooter>
+    </Card>
   );
 }
