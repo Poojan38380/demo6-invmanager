@@ -165,7 +165,7 @@ export default function TransactionLayout({
           )}
         </div>
       </CardHeader>
-      <CardContent className="space-y-6">
+      <CardContent className="space-y-6 max-768:px-0">
         <TransactionsDataTable
           columns={TransactionTableColumns}
           data={filteredTransactions}

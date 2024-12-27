@@ -40,7 +40,7 @@ function CategoryList({ categories }: { categories: CategoryWithCounts[] }) {
           </Link>
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="max-768:px-0">
         {!categories ? (
           <div className="flex justify-center items-center py-20">
             <Loader size={40} className="animate-spin text-primary" />

@@ -1,4 +1,5 @@
 "use client";
+
 import {
   Collapsible,
   CollapsibleContent,
@@ -12,6 +13,7 @@ import {
   SidebarMenuItem,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
@@ -21,6 +23,7 @@ import { PrimaryNavItems } from "../../_menus/primaryNavMenu";
 
 export function PrimaryNav() {
   const pathname = usePathname();
+  const { setOpenMobile } = useSidebar();
 
   return (
     <SidebarGroup className="space-y-2 p-2 ">
@@ -64,7 +67,11 @@ export function PrimaryNav() {
               <CollapsibleContent className="pl-6 mt-1 border-l border-border">
                 <ul>
                   {item.items?.map((subItem) => (
-                    <SidebarMenuSubItem key={subItem.title} className="w-full">
+                    <SidebarMenuSubItem
+                      key={subItem.title}
+                      className="w-full"
+                      onClick={() => setOpenMobile(false)}
+                    >
                       <SidebarMenuSubButton asChild>
                         <Link
                           href={subItem.url}

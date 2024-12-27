@@ -46,7 +46,7 @@ export default function UserList({ initialUsers }: UserListProps) {
           </Button>
         </div>
       </CardHeader>
-      <CardContent className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <CardContent className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-768:px-0">
         {users.map((user) => (
           <Card key={user.id} className="hover:shadow-md transition-shadow">
             <CardHeader className="pb-2">
