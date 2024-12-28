@@ -40,7 +40,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export default function TransactionActionChart({
+export default function TransactionActionGraph({
   transactions,
 }: {
   transactions: TransactionForTable[];

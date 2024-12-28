@@ -1,5 +1,6 @@
 import DashboardOverviewCards from "./_components/dashboard/dashboard-overview-cards";
-import TransactionGraphs from "./_components/dashboard/transaction-graphs";
+import TransactionActionGraph from "./_components/dashboard/transaction-action-graph";
+import TransactionRevenueGraph from "./_components/dashboard/transaction-revenue-graph";
 import { getCachedProductsforTable } from "./products/_actions/products";
 import { getAllCachedTransactions } from "./transactions/_actions/getTransactions";
 
@@ -24,7 +25,10 @@ export default async function AdminPage() {
         <DashboardOverviewCards products={products} />
       </CardContent>
       <CardContent className="max-768:px-0">
-        <TransactionGraphs transactions={transactions} />
+        <TransactionRevenueGraph transactions={transactions} />
+      </CardContent>
+      <CardContent className="max-768:px-0">
+        <TransactionActionGraph transactions={transactions} />
       </CardContent>
       <CardFooter></CardFooter>
     </Card>
