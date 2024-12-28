@@ -21,7 +21,6 @@ import {
 } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { SupplierSelectorforUpdater } from "./select-supplier-update";
 import { CustomerSelectorforUpdater } from "./select-customer-update";
@@ -165,7 +164,7 @@ export default function UpdateStock({ product }: { product: Product }) {
             </div>
 
             <div className="space-y-4 ">
-              <div className="grid grid-cols-2 max-425:grid-cols-1 gap-4 items-end">
+              <div className="grid grid-cols-2 gap-2 items-end">
                 <div className="flex gap-2 items-center">
                   {isAdding ? <Truck /> : <Store />}
                   <Input
@@ -176,7 +175,6 @@ export default function UpdateStock({ product }: { product: Product }) {
                     value={stockValue}
                     onChange={(e) => handleStockChange(Number(e.target.value))}
                   />
-                  {product.unit}
                 </div>
                 <div>
                   {isAdding ? (
@@ -214,18 +212,12 @@ export default function UpdateStock({ product }: { product: Product }) {
               </div>
 
               <div>
-                <Label
-                  htmlFor="note"
-                  className="text-sm font-medium mb-2 block"
-                >
-                  Note
-                </Label>
                 <Textarea
                   id="note"
-                  placeholder="Add details about this stock update..."
+                  placeholder="Optional note..."
                   value={note}
                   onChange={(e) => setNote(e.target.value)}
-                  className="resize-none"
+                  className="border-none shadow-sm"
                   rows={3}
                 />
               </div>

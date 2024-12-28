@@ -29,15 +29,15 @@ import { ArrowDownIcon, ArrowUpIcon, MinusIcon } from "lucide-react";
 
 const chartConfig = {
   moneyEarned: {
-    label: "Money Earned",
+    label: "Sell",
     color: "hsl(var(--success))",
   },
   moneySpent: {
-    label: "Money Spent",
+    label: "Purchase",
     color: "hsl(var(--destructive))",
   },
   netProfit: {
-    label: "Net Profit",
+    label: "Profit",
     color: "hsl(var(--chart-4))",
   },
 } satisfies ChartConfig;
@@ -68,7 +68,7 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({
             key={key}
             className="flex items-center justify-between gap-4 py-1"
           >
-            {config.label === "Net Profit" ? null : (
+            {config.label === "Profit" ? null : (
               <>
                 <span className="flex items-center gap-2">
                   <div
