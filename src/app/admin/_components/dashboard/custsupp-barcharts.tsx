@@ -14,7 +14,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { PieChart, Pie, Cell, Legend } from "recharts";
+import { BarChart, Bar, YAxis, CartesianGrid, Cell } from "recharts";
 import {
   Select,
   SelectContent,
@@ -22,71 +22,96 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { formatCurrency } from "@/lib/formatter";
 
-const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884D8"];
+const colorPalette = [
+  "#3498db",
+  "#2ecc71",
+  "#e74c3c",
+  "#f39c12",
+  "#9b59b6",
+  "#1abc9c",
+  "#d35400",
+  "#34495e",
+];
 
-export default function CustSuppPieCharts({
+export default function CustSuppBarCharts({
   transactions,
 }: {
   transactions: TransactionForTable[];
 }) {
   const [timeRange, setTimeRange] = useState("30d");
+
   const { vendorData, customerData } = processTransactionData(
     transactions,
     timeRange
   );
 
-  const renderPieChart = (
+  const renderBarChart = (
     data: { name: string; value: number }[],
     title: string
   ) => (
-    <Card className="w-full shadow-md rounded-2xl border-none">
+    <Card className="w-full shadow-lg rounded-2xl border-none ">
       <CardHeader>
-        <CardTitle>{title}</CardTitle>
-        <CardDescription>Distribution of transaction amounts</CardDescription>
+        <CardTitle className="text-2xl font-bold">{title}</CardTitle>
+        <CardDescription className="text-gray-500 dark:text-gray-400">
+          Distribution of transaction amounts
+        </CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
         <ChartContainer
           config={{
             ...Object.fromEntries(
               data.map((item, index) => [
                 item.name,
-                { label: item.name, color: COLORS[index % COLORS.length] },
+                {
+                  label: item.name,
+                  color: colorPalette[index % colorPalette.length],
+                },
               ])
             ),
           }}
-          className="aspect-auto h-[300px] w-full"
+          className="aspect-auto h-[400px] w-full"
         >
-          <PieChart>
-            <Pie
-              data={data}
-              cx="50%"
-              cy="50%"
-              outerRadius={80}
-              fill="#8884d8"
-              dataKey="value"
-            >
+          <BarChart accessibilityLayer layout="vertical" data={data}>
+            <CartesianGrid horizontal={false} />
+            <YAxis
+              type="category"
+              dataKey="name"
+              tickLine={false}
+              axisLine={false}
+            />
+
+            <ChartTooltip
+              content={
+                <ChartTooltipContent
+                  formatter={(value) => formatCurrency(Number(value))}
+                />
+              }
+            />
+            <Bar dataKey="value" radius={[0, 5, 5, 0]}>
               {data.map((entry, index) => (
                 <Cell
                   key={`cell-${index}`}
-                  fill={COLORS[index % COLORS.length]}
+                  fill={colorPalette[index % colorPalette.length]}
                 />
               ))}
-            </Pie>
-            <ChartTooltip content={<ChartTooltipContent />} />
-            <Legend />
-          </PieChart>
+            </Bar>
+          </BarChart>
         </ChartContainer>
       </CardContent>
     </Card>
   );
 
   return (
-    <div className="space-y-4">
-      <div className="flex justify-end">
+    <div className="space-y-6 py-6">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-4 sm:space-y-0">
+        <div>
+          <h2 className="text-3xl font-bold ">Customer/Supplier Analysis</h2>
+        </div>
         <Select value={timeRange} onValueChange={setTimeRange}>
           <SelectTrigger
-            className="w-[180px] rounded-md"
+            className="w-[180px] rounded-md bg-white dark:bg-gray-700 shadow-sm"
             aria-label="Select time range"
           >
             <SelectValue placeholder="Select time range" />
@@ -100,14 +125,14 @@ export default function CustSuppPieCharts({
           </SelectContent>
         </Select>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {renderPieChart(vendorData, "Purchases from Vendors")}
-        {renderPieChart(customerData, "Sales to Customers")}
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {renderBarChart(vendorData, "Purchases from Suppliers")}
+        {renderBarChart(customerData, "Sales to Customers")}
       </div>
     </div>
   );
 }
-
 export function processTransactionData(
   transactions: TransactionForTable[],
   timeRange: string

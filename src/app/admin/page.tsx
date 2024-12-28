@@ -1,4 +1,4 @@
-import CustSuppPieCharts from "./_components/dashboard/custsupp-piecharts";
+import CustSuppBarCharts from "./_components/dashboard/custsupp-barcharts";
 import DashboardOverviewCards from "./_components/dashboard/dashboard-overview-cards";
 import TransactionActionGraph from "./_components/dashboard/transaction-action-graph";
 import TransactionRevenueGraph from "./_components/dashboard/transaction-revenue-graph";
@@ -29,10 +29,10 @@ export default async function AdminPage() {
         <TransactionRevenueGraph transactions={transactions} />
       </CardContent>
       <CardContent className="max-768:px-0">
-        <TransactionActionGraph transactions={transactions} />
+        <CustSuppBarCharts transactions={transactions} />
       </CardContent>
       <CardContent className="max-768:px-0">
-        <CustSuppPieCharts transactions={transactions} />
+        <TransactionActionGraph transactions={transactions} />
       </CardContent>
       <CardFooter></CardFooter>
     </Card>
