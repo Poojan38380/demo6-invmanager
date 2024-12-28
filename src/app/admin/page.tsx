@@ -1,7 +1,6 @@
-import CustSuppBarCharts from "./_components/dashboard/custsupp-barcharts";
 import DashboardOverviewCards from "./_components/dashboard/dashboard-overview-cards";
-import TransactionActionGraph from "./_components/dashboard/transaction-action-graph";
-import TransactionRevenueGraph from "./_components/dashboard/transaction-revenue-graph";
+
+import DashboardAnalytics from "./dash-analytics";
 import { getCachedProductsforTable } from "./products/_actions/products";
 import { getAllCachedTransactions } from "./transactions/_actions/getTransactions";
 
@@ -25,15 +24,7 @@ export default async function AdminPage() {
       <CardContent>
         <DashboardOverviewCards products={products} />
       </CardContent>
-      <CardContent className="max-768:px-0">
-        <TransactionRevenueGraph transactions={transactions} />
-      </CardContent>
-      <CardContent className="max-768:px-0">
-        <CustSuppBarCharts transactions={transactions} />
-      </CardContent>
-      <CardContent className="max-768:px-0">
-        <TransactionActionGraph transactions={transactions} />
-      </CardContent>
+      <DashboardAnalytics transactions={transactions} />
       <CardFooter></CardFooter>
     </Card>
   );

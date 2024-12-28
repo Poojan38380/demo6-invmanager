@@ -7,13 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+
 import {
   ChartConfig,
   ChartContainer,
@@ -23,7 +17,7 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { TransactionForTable } from "@/types/dataTypes";
-import React, { useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import { Line, LineChart, CartesianGrid, XAxis } from "recharts";
 
 const chartConfig = {
@@ -45,43 +39,31 @@ export default function TransactionActionGraph({
 }: {
   transactions: TransactionForTable[];
 }) {
-  const [timeRange, setTimeRange] = useState<string>("30d");
-
   const processedData = useMemo(() => {
-    const now = new Date();
-    const timeRangeInDays = parseInt(timeRange);
-    const startDate = new Date(
-      now.getTime() - timeRangeInDays * 24 * 60 * 60 * 1000
-    );
-
-    const groupedData = transactions
-      .filter((transaction) => new Date(transaction.createdAt) >= startDate)
-      .reduce((acc, transaction) => {
-        const date = new Date(transaction.createdAt)
-          .toISOString()
-          .split("T")[0];
-        if (!acc[date]) {
-          acc[date] = { date, increased: 0, decreased: 0 };
-        }
-        switch (transaction.action) {
-          case "INCREASED":
-            acc[date].increased++;
-            break;
-          case "DECREASED":
-            acc[date].decreased++;
-            break;
-        }
-        return acc;
-      }, {} as Record<string, { date: string; increased: number; decreased: number }>);
+    const groupedData = transactions.reduce((acc, transaction) => {
+      const date = new Date(transaction.createdAt).toISOString().split("T")[0];
+      if (!acc[date]) {
+        acc[date] = { date, increased: 0, decreased: 0 };
+      }
+      switch (transaction.action) {
+        case "INCREASED":
+          acc[date].increased++;
+          break;
+        case "DECREASED":
+          acc[date].decreased++;
+          break;
+      }
+      return acc;
+    }, {} as Record<string, { date: string; increased: number; decreased: number }>);
 
     return Object.values(groupedData).sort((a, b) =>
       a.date.localeCompare(b.date)
     );
-  }, [transactions, timeRange]);
+  }, [transactions]);
 
   return (
     <Card className="w-full  shadow-md rounded-2xl border-none">
-      <CardHeader className="flex items-center gap-4 space-y-0 border-b py-8 sm:flex-row">
+      <CardHeader className=" border-b py-8 ">
         <div className="grid flex-1 gap-1">
           <CardTitle className="text-2xl font-bold">
             Transaction Trends
@@ -90,21 +72,6 @@ export default function TransactionActionGraph({
             Showing transaction action trends over time
           </CardDescription>
         </div>
-        <Select value={timeRange} onValueChange={setTimeRange}>
-          <SelectTrigger
-            className="w-[180px] rounded-md sm:ml-auto"
-            aria-label="Select time range"
-          >
-            <SelectValue placeholder="Select time range" />
-          </SelectTrigger>
-          <SelectContent className="rounded-md">
-            <SelectItem value="1d">Today</SelectItem>
-            <SelectItem value="7d">Last 7 days</SelectItem>
-            <SelectItem value="14d">Last 14 days</SelectItem>
-            <SelectItem value="30d">Last 30 days</SelectItem>
-            <SelectItem value="90d">Last 3 months</SelectItem>
-          </SelectContent>
-        </Select>
       </CardHeader>
       <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6  ">
         <ChartContainer

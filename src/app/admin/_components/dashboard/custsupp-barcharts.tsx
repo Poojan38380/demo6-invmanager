@@ -1,6 +1,4 @@
-"use client";
-
-import React, { useState } from "react";
+import React from "react";
 import { TransactionForTable } from "@/types/dataTypes";
 import {
   Card,
@@ -14,14 +12,8 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { BarChart, Bar, YAxis, CartesianGrid, Cell } from "recharts";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { BarChart, Bar, YAxis, Cell, XAxis } from "recharts";
+
 import { formatCurrency } from "@/lib/formatter";
 
 const colorPalette = [
@@ -40,23 +32,16 @@ export default function CustSuppBarCharts({
 }: {
   transactions: TransactionForTable[];
 }) {
-  const [timeRange, setTimeRange] = useState("30d");
-
-  const { vendorData, customerData } = processTransactionData(
-    transactions,
-    timeRange
-  );
+  const { vendorData, customerData } = processTransactionData(transactions);
 
   const renderBarChart = (
     data: { name: string; value: number }[],
     title: string
   ) => (
-    <Card className="w-full shadow-lg rounded-2xl border-none ">
+    <Card className=" shadow-md rounded-2xl border-none ">
       <CardHeader>
-        <CardTitle className="text-2xl font-bold">{title}</CardTitle>
-        <CardDescription className="text-gray-500 dark:text-gray-400">
-          Distribution of transaction amounts
-        </CardDescription>
+        <CardTitle>{title}</CardTitle>
+        <CardDescription>Distribution of transaction amounts</CardDescription>
       </CardHeader>
       <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
         <ChartContainer
@@ -74,22 +59,24 @@ export default function CustSuppBarCharts({
           className="aspect-auto h-[350px] w-full"
         >
           <BarChart accessibilityLayer layout="vertical" data={data}>
-            <CartesianGrid horizontal={false} />
             <YAxis
-              type="category"
               dataKey="name"
+              type="category"
               tickLine={false}
               axisLine={false}
+              width={80}
             />
+            <XAxis type="number" dataKey="value" hide />
 
             <ChartTooltip
+              cursor={false}
               content={
                 <ChartTooltipContent
                   formatter={(value) => formatCurrency(Number(value))}
                 />
               }
             />
-            <Bar dataKey="value" radius={[0, 5, 5, 0]}>
+            <Bar dataKey="value" radius={5}>
               {data.map((entry, index) => (
                 <Cell
                   key={`cell-${index}`}
@@ -104,62 +91,31 @@ export default function CustSuppBarCharts({
   );
 
   return (
-    <div className="space-y-4">
-      <div className="flex justify-end">
-        <Select value={timeRange} onValueChange={setTimeRange}>
-          <SelectTrigger
-            className="w-[180px] rounded-md"
-            aria-label="Select time range"
-          >
-            <SelectValue placeholder="Select time range" />
-          </SelectTrigger>
-          <SelectContent className="rounded-md">
-            <SelectItem value="1d">Today</SelectItem>
-            <SelectItem value="7d">Last 7 days</SelectItem>
-            <SelectItem value="14d">Last 14 days</SelectItem>
-            <SelectItem value="30d">Last 30 days</SelectItem>
-            <SelectItem value="90d">Last 3 months</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {renderBarChart(vendorData, "Purchases from Suppliers")}
-        {renderBarChart(customerData, "Sales to Customers")}
-      </div>
+    <div className="grid grid-cols-2 max-1024:grid-cols-1 gap-4">
+      {renderBarChart(vendorData, "Purchases from Suppliers")}
+      {renderBarChart(customerData, "Sales to Customers")}
     </div>
   );
 }
-export function processTransactionData(
-  transactions: TransactionForTable[],
-  timeRange: string
-) {
+export function processTransactionData(transactions: TransactionForTable[]) {
   const vendorData: { [key: string]: number } = {};
   const customerData: { [key: string]: number } = {};
 
-  const currentDate = new Date();
-  const filterDate = new Date(
-    currentDate.getTime() -
-      getDaysFromTimeRange(timeRange) * 24 * 60 * 60 * 1000
-  );
-
-  transactions
-    .filter((transaction) => new Date(transaction.createdAt) >= filterDate)
-    .forEach((transaction) => {
-      if (transaction.vendor) {
-        const amount = Math.abs(
-          transaction.stockChange * (transaction.product.costPrice || 0)
-        );
-        vendorData[transaction.vendor.companyName] =
-          (vendorData[transaction.vendor.companyName] || 0) + amount;
-      } else if (transaction.customer) {
-        const amount = Math.abs(
-          transaction.stockChange * (transaction.product.sellingPrice || 0)
-        );
-        customerData[transaction.customer.companyName] =
-          (customerData[transaction.customer.companyName] || 0) + amount;
-      }
-    });
+  transactions.forEach((transaction) => {
+    if (transaction.vendor) {
+      const amount = Math.abs(
+        transaction.stockChange * (transaction.product.costPrice || 0)
+      );
+      vendorData[transaction.vendor.companyName] =
+        (vendorData[transaction.vendor.companyName] || 0) + amount;
+    } else if (transaction.customer) {
+      const amount = Math.abs(
+        transaction.stockChange * (transaction.product.sellingPrice || 0)
+      );
+      customerData[transaction.customer.companyName] =
+        (customerData[transaction.customer.companyName] || 0) + amount;
+    }
+  });
 
   return {
     vendorData: Object.entries(vendorData)
@@ -169,21 +125,4 @@ export function processTransactionData(
       .map(([name, value]) => ({ name, value }))
       .sort((a, b) => b.value - a.value),
   };
-}
-
-function getDaysFromTimeRange(timeRange: string): number {
-  switch (timeRange) {
-    case "90d":
-      return 90;
-    case "30d":
-      return 30;
-    case "7d":
-      return 7;
-    case "14d":
-      return 14;
-    case "1d":
-      return 1;
-    default:
-      return 90;
-  }
 }
