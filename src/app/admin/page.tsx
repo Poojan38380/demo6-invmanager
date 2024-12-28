@@ -1,3 +1,4 @@
+import CustSuppPieCharts from "./_components/dashboard/custsupp-piecharts";
 import DashboardOverviewCards from "./_components/dashboard/dashboard-overview-cards";
 import TransactionActionGraph from "./_components/dashboard/transaction-action-graph";
 import TransactionRevenueGraph from "./_components/dashboard/transaction-revenue-graph";
@@ -29,6 +30,9 @@ export default async function AdminPage() {
       </CardContent>
       <CardContent className="max-768:px-0">
         <TransactionActionGraph transactions={transactions} />
+      </CardContent>
+      <CardContent className="max-768:px-0">
+        <CustSuppPieCharts transactions={transactions} />
       </CardContent>
       <CardFooter></CardFooter>
     </Card>
