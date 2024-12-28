@@ -1,5 +1,5 @@
 import DashboardOverviewCards from "./_components/dashboard/dashboard-overview-cards";
-import { TransactionGraphs } from "./_components/dashboard/transaction-graphs";
+import TransactionGraphs from "./_components/dashboard/transaction-graphs";
 import { getCachedProductsforTable } from "./products/_actions/products";
 import { getAllCachedTransactions } from "./transactions/_actions/getTransactions";
 

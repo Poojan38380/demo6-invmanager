@@ -1,15 +1,5 @@
 "use client";
 
-import { useMemo } from "react";
-import { startOfDay, startOfWeek, startOfMonth, format } from "date-fns";
-import {
-  Bar,
-  BarChart,
-  ResponsiveContainer,
-  XAxis,
-  YAxis,
-  Tooltip,
-} from "recharts";
 import {
   Card,
   CardContent,
@@ -17,182 +7,173 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartLegend,
+  ChartLegendContent,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart";
+import { TransactionForTable } from "@/types/dataTypes";
+import React, { useMemo, useState } from "react";
+import { Line, LineChart, CartesianGrid, XAxis } from "recharts";
 
-interface Transaction {
-  createdAt: Date;
-  action: "CREATED" | "UPDATED" | "DELETED" | "INCREASED" | "DECREASED";
-}
+const chartConfig = {
+  transactions: {
+    label: "Transactions",
+  },
+  increased: {
+    label: "INCREASED",
+    color: "hsl(var(--chart-1))",
+  },
+  decreased: {
+    label: "DECREASED",
+    color: "hsl(var(--chart-2))",
+  },
+  created: {
+    label: "CREATED",
+    color: "hsl(var(--chart-3))",
+  },
+} satisfies ChartConfig;
 
-interface TransactionGraphsProps {
-  transactions: Transaction[];
-}
+export default function TransactionActionChart({
+  transactions,
+}: {
+  transactions: TransactionForTable[];
+}) {
+  const [timeRange, setTimeRange] = useState<string>("30d");
 
-function groupTransactionsByDate(
-  transactions: Transaction[],
-  groupingFn: (date: Date) => Date
-) {
-  const grouped = transactions.reduce((acc, transaction) => {
-    const key = format(
-      groupingFn(new Date(transaction.createdAt)),
-      "yyyy-MM-dd"
+  const processedData = useMemo(() => {
+    const now = new Date();
+    const timeRangeInDays = parseInt(timeRange);
+    const startDate = new Date(
+      now.getTime() - timeRangeInDays * 24 * 60 * 60 * 1000
     );
-    if (!acc[key]) {
-      acc[key] = 0;
-    }
-    acc[key]++;
-    return acc;
-  }, {} as Record<string, number>);
 
-  return Object.entries(grouped).map(([date, count]) => ({ date, count }));
-}
+    const groupedData = transactions
+      .filter((transaction) => new Date(transaction.createdAt) >= startDate)
+      .reduce((acc, transaction) => {
+        const date = new Date(transaction.createdAt)
+          .toISOString()
+          .split("T")[0];
+        if (!acc[date]) {
+          acc[date] = { date, increased: 0, decreased: 0, created: 0 };
+        }
+        switch (transaction.action) {
+          case "INCREASED":
+            acc[date].increased++;
+            break;
+          case "DECREASED":
+            acc[date].decreased++;
+            break;
+          case "CREATED":
+            acc[date].created++;
+            break;
+        }
+        return acc;
+      }, {} as Record<string, { date: string; increased: number; decreased: number; created: number }>);
 
-export function TransactionGraphs({ transactions }: TransactionGraphsProps) {
-  const dailyData = useMemo(
-    () =>
-      groupTransactionsByDate(transactions, startOfDay)
-        .slice(-14)
-        .sort(
-          (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
-        ),
-    [transactions]
-  );
-
-  const weeklyData = useMemo(
-    () =>
-      groupTransactionsByDate(transactions, startOfWeek)
-        .slice(-8)
-        .sort(
-          (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
-        ),
-    [transactions]
-  );
-
-  const monthlyData = useMemo(
-    () =>
-      groupTransactionsByDate(transactions, startOfMonth)
-        .slice(-6)
-        .sort(
-          (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
-        ),
-    [transactions]
-  );
+    return Object.values(groupedData).sort((a, b) =>
+      a.date.localeCompare(b.date)
+    );
+  }, [transactions, timeRange]);
 
   return (
     <Card className="w-full">
-      <CardHeader>
-        <CardTitle className="text-xl sm:text-2xl">
-          Transaction Activity
-        </CardTitle>
-        <CardDescription className="text-sm sm:text-base">
-          Overview of transaction activity over time
-        </CardDescription>
+      <CardHeader className="flex items-center gap-4 space-y-0 border-b py-8 sm:flex-row">
+        <div className="grid flex-1 gap-1">
+          <CardTitle className="text-2xl font-bold">
+            Transaction Actions
+          </CardTitle>
+          <CardDescription className="text-sm text-muted-foreground">
+            Showing transaction action trends over time
+          </CardDescription>
+        </div>
+        <Select value={timeRange} onValueChange={setTimeRange}>
+          <SelectTrigger
+            className="w-[180px] rounded-md sm:ml-auto"
+            aria-label="Select time range"
+          >
+            <SelectValue placeholder="Select time range" />
+          </SelectTrigger>
+          <SelectContent className="rounded-md">
+            <SelectItem value="90d">Last 3 months</SelectItem>
+            <SelectItem value="30d">Last 30 days</SelectItem>
+            <SelectItem value="7d">Last 7 days</SelectItem>
+          </SelectContent>
+        </Select>
       </CardHeader>
-      <CardContent className="p-0">
-        <Tabs defaultValue="daily" className="w-full">
-          <TabsList className="grid w-full grid-cols-3 mb-4">
-            <TabsTrigger value="daily">Daily</TabsTrigger>
-            <TabsTrigger value="weekly">Weekly</TabsTrigger>
-            <TabsTrigger value="monthly">Monthly</TabsTrigger>
-          </TabsList>
-          <TabsContent value="daily">
-            <ChartContainer
-              config={{
-                count: {
-                  label: "Transactions",
-                  color: "hsl(var(--chart-1))",
-                },
+      <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
+        <ChartContainer
+          config={chartConfig}
+          className="aspect-auto h-[300px] w-full"
+        >
+          <LineChart data={processedData} margin={{ top: 5, bottom: 5 }}>
+            <CartesianGrid strokeDasharray="3 3" vertical={false} />
+            <XAxis
+              dataKey="date"
+              tickLine={false}
+              axisLine={false}
+              padding={{ left: 10, right: 10 }}
+              tickFormatter={(value) => {
+                const date = new Date(value);
+                return date.toLocaleDateString("en-US", {
+                  month: "short",
+                  day: "numeric",
+                });
               }}
-              className="h-[200px] sm:h-[300px]"
-            >
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart
-                  data={dailyData}
-                  margin={{ top: 20, right: 0, left: -20, bottom: 0 }}
-                >
-                  <XAxis
-                    dataKey="date"
-                    tickFormatter={(value) => format(new Date(value), "MMM d")}
-                    tick={{ fontSize: 12 }}
-                    interval="preserveStartEnd"
-                  />
-                  <YAxis tick={{ fontSize: 12 }} />
-                  <Tooltip content={<ChartTooltipContent />} />
-                  <Bar
-                    dataKey="count"
-                    fill="var(--color-count)"
-                    radius={[4, 4, 0, 0]}
-                  />
-                </BarChart>
-              </ResponsiveContainer>
-            </ChartContainer>
-          </TabsContent>
-          <TabsContent value="weekly">
-            <ChartContainer
-              config={{
-                count: {
-                  label: "Transactions",
-                  color: "hsl(var(--chart-2))",
-                },
-              }}
-              className="h-[200px] sm:h-[300px]"
-            >
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart
-                  data={weeklyData}
-                  margin={{ top: 20, right: 0, left: -20, bottom: 0 }}
-                >
-                  <XAxis
-                    dataKey="date"
-                    tickFormatter={(value) => format(new Date(value), "MMM d")}
-                    tick={{ fontSize: 12 }}
-                    interval="preserveStartEnd"
-                  />
-                  <YAxis tick={{ fontSize: 12 }} />
-                  <Tooltip content={<ChartTooltipContent />} />
-                  <Bar
-                    dataKey="count"
-                    fill="var(--color-count)"
-                    radius={[4, 4, 0, 0]}
-                  />
-                </BarChart>
-              </ResponsiveContainer>
-            </ChartContainer>
-          </TabsContent>
-          <TabsContent value="monthly">
-            <ChartContainer
-              config={{
-                count: {
-                  label: "Transactions",
-                  color: "hsl(var(--chart-3))",
-                },
-              }}
-              className="h-[200px] sm:h-[300px]"
-            >
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart
-                  data={monthlyData}
-                  margin={{ top: 20, right: 0, left: -20, bottom: 0 }}
-                >
-                  <XAxis
-                    dataKey="date"
-                    tickFormatter={(value) => format(new Date(value), "MMM yy")}
-                    tick={{ fontSize: 12 }}
-                    interval="preserveStartEnd"
-                  />
-                  <YAxis tick={{ fontSize: 12 }} />
-                  <Tooltip content={<ChartTooltipContent />} />
-                  <Bar
-                    dataKey="count"
-                    fill="var(--color-count)"
-                    radius={[4, 4, 0, 0]}
-                  />
-                </BarChart>
-              </ResponsiveContainer>
-            </ChartContainer>
-          </TabsContent>
-        </Tabs>
+            />
+
+            <ChartTooltip
+              content={
+                <ChartTooltipContent
+                  labelFormatter={(value) => {
+                    return new Date(value).toLocaleDateString("en-US", {
+                      weekday: "long",
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    });
+                  }}
+                  indicator="line"
+                />
+              }
+            />
+            <Line
+              type="monotone"
+              dataKey="increased"
+              stroke={chartConfig.increased.color}
+              strokeWidth={2}
+              dot={false}
+              activeDot={{ r: 8 }}
+            />
+            <Line
+              type="monotone"
+              dataKey="decreased"
+              stroke={chartConfig.decreased.color}
+              strokeWidth={2}
+              dot={false}
+              activeDot={{ r: 8 }}
+            />
+            <Line
+              type="monotone"
+              dataKey="created"
+              stroke={chartConfig.created.color}
+              strokeWidth={2}
+              dot={false}
+              activeDot={{ r: 8 }}
+            />
+            <ChartLegend content={<ChartLegendContent />} />
+          </LineChart>
+        </ChartContainer>
       </CardContent>
     </Card>
   );
