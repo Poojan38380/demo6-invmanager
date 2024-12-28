@@ -17,7 +17,7 @@ export default function AdminLayout({
     <SidebarProvider>
       <AppSidebar />
       <SidebarInset className="overflow-x-auto   ">
-        <header className="flex  border-b h-14 shrink-0 items-center gap-2">
+        <header className="flex  shadow-sm z-10 border-b h-14  items-center ">
           <div className="flex items-center gap-2 px-4 w-full">
             <SidebarTrigger className=" scale-125" />
             <Separator orientation="vertical" className="mr-2 h-4" />
