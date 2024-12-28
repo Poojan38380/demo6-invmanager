@@ -31,16 +31,12 @@ const chartConfig = {
     label: "Transactions",
   },
   increased: {
-    label: "INCREASED",
+    label: "Added",
     color: "hsl(var(--chart-1))",
   },
   decreased: {
-    label: "DECREASED",
+    label: "Removed",
     color: "hsl(var(--chart-2))",
-  },
-  created: {
-    label: "CREATED",
-    color: "hsl(var(--chart-3))",
   },
 } satisfies ChartConfig;
 
@@ -65,7 +61,7 @@ export default function TransactionActionChart({
           .toISOString()
           .split("T")[0];
         if (!acc[date]) {
-          acc[date] = { date, increased: 0, decreased: 0, created: 0 };
+          acc[date] = { date, increased: 0, decreased: 0 };
         }
         switch (transaction.action) {
           case "INCREASED":
@@ -74,12 +70,9 @@ export default function TransactionActionChart({
           case "DECREASED":
             acc[date].decreased++;
             break;
-          case "CREATED":
-            acc[date].created++;
-            break;
         }
         return acc;
-      }, {} as Record<string, { date: string; increased: number; decreased: number; created: number }>);
+      }, {} as Record<string, { date: string; increased: number; decreased: number }>);
 
     return Object.values(groupedData).sort((a, b) =>
       a.date.localeCompare(b.date)
@@ -87,11 +80,11 @@ export default function TransactionActionChart({
   }, [transactions, timeRange]);
 
   return (
-    <Card className="w-full">
+    <Card className="w-full  shadow-md rounded-2xl border-none">
       <CardHeader className="flex items-center gap-4 space-y-0 border-b py-8 sm:flex-row">
         <div className="grid flex-1 gap-1">
           <CardTitle className="text-2xl font-bold">
-            Transaction Actions
+            Transaction Trends
           </CardTitle>
           <CardDescription className="text-sm text-muted-foreground">
             Showing transaction action trends over time
@@ -111,10 +104,10 @@ export default function TransactionActionChart({
           </SelectContent>
         </Select>
       </CardHeader>
-      <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
+      <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6  ">
         <ChartContainer
           config={chartConfig}
-          className="aspect-auto h-[300px] w-full"
+          className="aspect-auto h-[300px] w-full "
         >
           <LineChart data={processedData} margin={{ top: 5, bottom: 5 }}>
             <CartesianGrid strokeDasharray="3 3" vertical={false} />
@@ -122,10 +115,9 @@ export default function TransactionActionChart({
               dataKey="date"
               tickLine={false}
               axisLine={false}
-              padding={{ left: 10, right: 10 }}
               tickFormatter={(value) => {
                 const date = new Date(value);
-                return date.toLocaleDateString("en-US", {
+                return date.toLocaleDateString("en-IN", {
                   month: "short",
                   day: "numeric",
                 });
@@ -136,11 +128,10 @@ export default function TransactionActionChart({
               content={
                 <ChartTooltipContent
                   labelFormatter={(value) => {
-                    return new Date(value).toLocaleDateString("en-US", {
-                      weekday: "long",
-                      year: "numeric",
-                      month: "long",
+                    return new Date(value).toLocaleDateString("en-IN", {
+                      weekday: "short",
                       day: "numeric",
+                      month: "short",
                     });
                   }}
                   indicator="line"
@@ -153,7 +144,7 @@ export default function TransactionActionChart({
               stroke={chartConfig.increased.color}
               strokeWidth={2}
               dot={false}
-              activeDot={{ r: 8 }}
+              activeDot={{ r: 3 }}
             />
             <Line
               type="monotone"
@@ -161,15 +152,7 @@ export default function TransactionActionChart({
               stroke={chartConfig.decreased.color}
               strokeWidth={2}
               dot={false}
-              activeDot={{ r: 8 }}
-            />
-            <Line
-              type="monotone"
-              dataKey="created"
-              stroke={chartConfig.created.color}
-              strokeWidth={2}
-              dot={false}
-              activeDot={{ r: 8 }}
+              activeDot={{ r: 3 }}
             />
             <ChartLegend content={<ChartLegendContent />} />
           </LineChart>

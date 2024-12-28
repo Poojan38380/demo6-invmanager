@@ -50,7 +50,7 @@ const DashboardOverviewCards = ({
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
       {/* Total Inventory Value */}
-      <Card>
+      <Card className="shadow-md rounded-2xl border-none">
         <CardHeader className="flex flex-row items-center justify-between pb-2">
           <CardTitle className="text-sm font-medium">Inventory Value</CardTitle>
           <Package className="h-4 w-4 text-gray-500" />
@@ -66,7 +66,7 @@ const DashboardOverviewCards = ({
       </Card>
 
       {/* Potential Revenue */}
-      <Card>
+      <Card className="shadow-md rounded-2xl border-none">
         <CardHeader className="flex flex-row items-center justify-between pb-2">
           <CardTitle className="text-sm font-medium">
             Potential Revenue
@@ -83,7 +83,7 @@ const DashboardOverviewCards = ({
         </CardContent>
       </Card>
       {/* Approaching Buffer Stock Warning */}
-      <Card className="bg-warning/10">
+      <Card className="bg-warning/10 shadow-md rounded-2xl border-none">
         <CardHeader className="flex flex-row items-center justify-between pb-2">
           <CardTitle className="text-sm font-medium">
             Approaching Buffer
@@ -101,7 +101,7 @@ const DashboardOverviewCards = ({
       </Card>
 
       {/* Below Buffer Stock Alert */}
-      <Card className="bg-destructive/20">
+      <Card className="bg-destructive/30 shadow-md rounded-2xl border-none">
         <CardHeader className="flex flex-row items-center justify-between pb-2">
           <CardTitle className="text-sm font-medium">
             Below Buffer Stock
