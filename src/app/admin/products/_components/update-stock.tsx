@@ -179,9 +179,6 @@ export default function UpdateStock({ product }: { product: Product }) {
                   {product.unit}
                 </div>
                 <div>
-                  <div className="text-right w-full text-sm mb-2">
-                    {isAdding ? "Supplier " : "Customer "}(Optional)
-                  </div>
                   {isAdding ? (
                     <SupplierSelectorforUpdater
                       onSupplierSelectAction={setVendorId}
@@ -195,9 +192,8 @@ export default function UpdateStock({ product }: { product: Product }) {
                 </div>
               </div>
 
-              <div className="bg-gray-50 p-4 rounded-lg space-y-2 shadow-sm">
-                <div className="flex items-center justify-between">
-                  <span className=" text-sm font-medium">New Stock:</span>
+              <div>
+                <div className="flex items-center justify-end">
                   <span
                     className={`text-lg font-bold ${
                       isBelowBuffer ? "text-red-600" : ""

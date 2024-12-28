@@ -76,7 +76,7 @@ export function SelectCategory({
             <SelectContent>
               {isLoading ? (
                 <SelectItem value="loading" disabled>
-                  Loading suppliers...
+                  Loading categories...
                 </SelectItem>
               ) : error ? (
                 <SelectItem value="error" disabled>
