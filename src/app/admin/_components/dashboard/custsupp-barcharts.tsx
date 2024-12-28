@@ -71,7 +71,7 @@ export default function CustSuppBarCharts({
               ])
             ),
           }}
-          className="aspect-auto h-[400px] w-full"
+          className="aspect-auto h-[350px] w-full"
         >
           <BarChart accessibilityLayer layout="vertical" data={data}>
             <CartesianGrid horizontal={false} />
@@ -104,14 +104,11 @@ export default function CustSuppBarCharts({
   );
 
   return (
-    <div className="space-y-6 py-6">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-4 sm:space-y-0">
-        <div>
-          <h2 className="text-3xl font-bold ">Customer/Supplier Analysis</h2>
-        </div>
+    <div className="space-y-4">
+      <div className="flex justify-end">
         <Select value={timeRange} onValueChange={setTimeRange}>
           <SelectTrigger
-            className="w-[180px] rounded-md bg-white dark:bg-gray-700 shadow-sm"
+            className="w-[180px] rounded-md"
             aria-label="Select time range"
           >
             <SelectValue placeholder="Select time range" />
@@ -126,7 +123,7 @@ export default function CustSuppBarCharts({
         </Select>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {renderBarChart(vendorData, "Purchases from Suppliers")}
         {renderBarChart(customerData, "Sales to Customers")}
       </div>
