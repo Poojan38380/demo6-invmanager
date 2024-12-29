@@ -7,7 +7,6 @@ import {
   Line,
   LineChart,
   XAxis,
-  CartesianGrid,
   TooltipProps,
   Legend,
   ReferenceLine,
