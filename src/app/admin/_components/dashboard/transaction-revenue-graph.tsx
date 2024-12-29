@@ -192,9 +192,11 @@ export default function TransactionRevenueGraph({
               type="monotone"
               dataKey="netProfit"
               stroke={chartConfig.netProfit.color}
-              strokeWidth={2}
               dot={false}
-              activeDot={{ r: 4, strokeWidth: 2 }}
+              activeDot={{ r: 4, strokeWidth: 1 }}
+              strokeWidth={2} // Thinner line for subtlety
+              strokeOpacity={0.9} // Lower opacity
+              strokeDasharray="10 10" // Dashed line style
             />
             <ChartLegend content={<ChartLegendContent />} />
           </LineChart>
