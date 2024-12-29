@@ -10,6 +10,7 @@ import {
   CartesianGrid,
   TooltipProps,
   Legend,
+  ReferenceLine,
 } from "recharts";
 import {
   ChartConfig,
@@ -107,6 +108,12 @@ export default function TransactionChart({
               strokeWidth={2}
               dot={false}
             />
+            <ReferenceLine
+              y={0}
+              stroke="hsl(var(--muted-foreground))"
+              strokeDasharray="1 1"
+            />
+
             <Legend />
             <Line
               type="monotone"
