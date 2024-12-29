@@ -81,7 +81,6 @@ export function PrimaryNav() {
                               ? "bg-primary/10 text-primary font-semibold"
                               : "text-muted-foreground hover:bg-accent/50 hover:text-foreground"
                           )}
-                          prefetch={true}
                         >
                           <span className="font-normal">{subItem.title}</span>
                         </Link>
