@@ -23,23 +23,50 @@ export type ProductWithOneImage = Product & {
   category: {
     name: string;
   } | null;
+  lastMonthSales: number;
 };
 
 async function getProductsforTable(): Promise<ProductWithOneImage[]> {
+  const oneMonthAgo = new Date();
+  oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+
   const products = await prisma.product.findMany({
     orderBy: { updatedAt: "desc" },
     include: {
       vendor: {
         select: { companyName: true },
       },
+
       category: { select: { name: true } },
       productImages: {
         take: 1,
         select: { url: true },
       },
+      transactions: {
+        where: {
+          action: "DECREASED",
+          createdAt: {
+            gte: oneMonthAgo,
+          },
+        },
+        select: {
+          stockChange: true,
+        },
+      },
     },
   });
-  return products;
+  const productsWithSales = products.map((product) => {
+    const lastMonthSales = product.transactions.reduce(
+      (total, transaction) => total + Math.abs(transaction.stockChange),
+      0
+    );
+    return {
+      ...product,
+      lastMonthSales,
+    };
+  });
+
+  return productsWithSales;
 }
 
 export const getCachedProductsforTable = cache(

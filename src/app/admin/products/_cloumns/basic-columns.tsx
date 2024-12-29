@@ -25,8 +25,13 @@ export const BasicColumns: ColumnDef<ProductWithOneImage>[] = [
 
     cell: ({ row }) => {
       const productName: string = row.getValue("name");
+      const productId = row.original.id;
+
       return (
-        <div className="flex items-center gap-2">
+        <Link
+          href={`/admin/transactions/product/${productId}`}
+          className="flex items-center gap-2"
+        >
           <Avatar className="">
             <AvatarImage src={row.original.productImages[0]?.url} />
             <AvatarFallback>
@@ -34,7 +39,7 @@ export const BasicColumns: ColumnDef<ProductWithOneImage>[] = [
             </AvatarFallback>
           </Avatar>
           <span>{productName}</span>
-        </div>
+        </Link>
       );
     },
   },
@@ -80,6 +85,23 @@ export const BasicColumns: ColumnDef<ProductWithOneImage>[] = [
               <Pen className="text-xs" />
             </Link>
           </Button>
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: "lastMonthSales",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Last Month Demand" />
+    ),
+    cell: ({ row }) => {
+      const lastMonthSales: number = row.original.lastMonthSales;
+      const unit: string = row.original.unit || "pcs";
+
+      return (
+        <div className="flex items-center gap-1 text-xs text-muted-foreground ">
+          {formatNumber(lastMonthSales)}
+          <span>{unit}</span>
         </div>
       );
     },
