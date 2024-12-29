@@ -3,7 +3,14 @@
 import React, { useMemo } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { TransactionForTable } from "@/types/dataTypes";
-import { Line, LineChart, XAxis, CartesianGrid, TooltipProps } from "recharts";
+import {
+  Line,
+  LineChart,
+  XAxis,
+  CartesianGrid,
+  TooltipProps,
+  Legend,
+} from "recharts";
 import {
   ChartConfig,
   ChartContainer,
@@ -17,6 +24,10 @@ const chartConfig = {
     label: "Stock Level",
     color: "hsl(var(--chart-4))",
   },
+  demand: {
+    label: "Demand (Units Decreased)",
+    color: "hsl(var(--chart-2))",
+  },
 } satisfies ChartConfig;
 
 const actionColors = {
@@ -25,7 +36,7 @@ const actionColors = {
   CREATED: "hsl(var(--primary))",
 };
 
-export default function EnhancedTransactionChart({
+export default function TransactionChart({
   transactions,
 }: {
   transactions: TransactionForTable[];
@@ -39,6 +50,7 @@ export default function EnhancedTransactionChart({
       date: string;
       stock: number;
       stockChange: number;
+      demand: number;
       actions: string[];
     }
 
@@ -55,11 +67,18 @@ export default function EnhancedTransactionChart({
           date,
           stock: transaction.stockAfter,
           stockChange: transaction.stockChange,
+          demand:
+            transaction.action === "DECREASED"
+              ? Math.abs(transaction.stockChange)
+              : 0,
           actions: [transaction.action],
         };
       } else {
         dailyData[date].stock = transaction.stockAfter;
         dailyData[date].stockChange += transaction.stockChange;
+        if (transaction.action === "DECREASED") {
+          dailyData[date].demand += Math.abs(transaction.stockChange);
+        }
         dailyData[date].actions.push(transaction.action);
       }
     });
@@ -84,8 +103,18 @@ export default function EnhancedTransactionChart({
             <Line
               type="monotone"
               dataKey="stock"
-              stroke="var(--color-stock)"
+              stroke={chartConfig.stock.color}
               strokeWidth={2}
+              dot={false}
+            />
+            <Legend />
+            <Line
+              type="monotone"
+              dataKey="demand"
+              stroke={chartConfig.demand.color}
+              strokeWidth={1} // Thinner line for subtlety
+              strokeOpacity={0.7} // Lower opacity
+              strokeDasharray="10 10" // Dashed line style
               dot={false}
             />
           </LineChart>
@@ -103,6 +132,7 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({
   active,
   payload,
   label,
+  chartConfig,
 }) => {
   if (active && payload && payload.length) {
     const data = payload[0].payload;
@@ -111,27 +141,54 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({
       netChange > 0 ? "INCREASED" : netChange < 0 ? "DECREASED" : "NO_CHANGE";
 
     return (
-      <div className="bg-card flex flex-col gap-1 p-4 text-right rounded-md shadow-md border border-border">
-        <p className="font-semibold text-left text-muted-foreground">{label}</p>
+      <div className="bg-card flex flex-col gap-1 p-4 rounded-md shadow-md border border-border">
+        <p className="font-semibold text-muted-foreground">{label}</p>
+        <div className="flex flex-col gap-2">
+          {/* Stock */}
+          <div className="flex items-center gap-1 justify-between">
+            <div className="flex items-center gap-1">
+              <span
+                style={{
+                  backgroundColor: chartConfig.stock.color,
+                }}
+                className="w-3 h-3 rounded-full"
+              />
+              Stock:{" "}
+              <span className="font-bold">{formatNumber(data.stock)}</span>
+            </div>
+            <div className="flex gap-2">
+              <span
+                style={{
+                  color: actionColors[action as keyof typeof actionColors],
+                }}
+                className="flex gap-1 items-center justify-end"
+              >
+                {action === "INCREASED" ? (
+                  <ArrowUp size={14} />
+                ) : action === "DECREASED" ? (
+                  <ArrowDown size={14} />
+                ) : null}
+                {formatNumber(Math.abs(netChange))}
+              </span>
+            </div>
+          </div>
 
-        <p>
-          Stock: <span className="font-bold">{formatNumber(data.stock)}</span>
-        </p>
-        <span
-          style={{
-            color: actionColors[action as keyof typeof actionColors],
-          }}
-          className="flex gap-1 items-center justify-end"
-        >
-          {action === "INCREASED" ? (
-            <ArrowUp size={14} />
-          ) : action === "DECREASED" ? (
-            <ArrowDown size={14} />
-          ) : null}
-          {formatNumber(Math.abs(netChange))}
-        </span>
+          {/* Demand */}
+          <div className="flex items-center gap-2">
+            <span
+              style={{
+                backgroundColor: chartConfig.demand.color,
+              }}
+              className="w-3 h-3 rounded-full"
+            />
+            Demand:{" "}
+            <span className="font-bold">{formatNumber(data.demand)}</span>
+          </div>
+        </div>
+
         <p className="text-xs text-muted-foreground">
-          {data.actions.length} transaction{data.actions.length > 1 ? "s" : ""}
+          {data.actions.length} transaction
+          {data.actions.length > 1 ? "s" : ""}
         </p>
       </div>
     );
