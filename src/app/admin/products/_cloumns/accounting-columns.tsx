@@ -83,7 +83,7 @@ export const AccountingColumns: ColumnDef<ProductWithOneImage>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader
         column={column}
-        title="Raw price"
+        title="Cost price"
         className="justify-end"
       />
     ),
@@ -100,7 +100,7 @@ export const AccountingColumns: ColumnDef<ProductWithOneImage>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader
         column={column}
-        title="Total Raw"
+        title="Total Cost"
         className="justify-end"
       />
     ),
@@ -108,7 +108,7 @@ export const AccountingColumns: ColumnDef<ProductWithOneImage>[] = [
     cell: ({ row }) => {
       const totalValue = row.getValue("totalValue");
       return (
-        <div className="text-right ">
+        <div className="text-right  ">
           {formatCurrency(totalValue as number)}
         </div>
       );
@@ -136,7 +136,7 @@ export const AccountingColumns: ColumnDef<ProductWithOneImage>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader
         column={column}
-        title="Total Final"
+        title="Total Sell"
         className="justify-end"
       />
     ),
@@ -151,22 +151,6 @@ export const AccountingColumns: ColumnDef<ProductWithOneImage>[] = [
     },
   },
 
-  {
-    accessorKey: "vendor.companyName",
-    id: "supplier",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Supplier" />
-    ),
-    cell: ({ row }) => <span>{row.original.vendor?.companyName ?? null}</span>,
-  },
-  {
-    accessorKey: "category.name",
-    id: "category",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Category" />
-    ),
-    cell: ({ row }) => <span>{row.original.category?.name ?? null}</span>,
-  },
   {
     accessorKey: "updatedAt",
     id: "updated-at-accounting",
