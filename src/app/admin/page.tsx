@@ -4,13 +4,7 @@ import DashboardAnalytics from "./dash-analytics";
 import { getCachedProductsforTable } from "./products/_actions/products";
 import { getAllCachedTransactions } from "./transactions/_actions/getTransactions";
 
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default async function AdminPage() {
   const products = await getCachedProductsforTable();
@@ -25,7 +19,6 @@ export default async function AdminPage() {
         <DashboardOverviewCards products={products} />
       </CardContent>
       <DashboardAnalytics transactions={transactions} />
-      <CardFooter></CardFooter>
     </Card>
   );
 }

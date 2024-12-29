@@ -3,7 +3,6 @@ import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { TransactionForTable } from "@/types/dataTypes";
 import TransactionRevenueGraph from "./_components/dashboard/transaction-revenue-graph";
 import CustSuppBarCharts from "./_components/dashboard/custsupp-barcharts";
-import TransactionActionGraph from "./_components/dashboard/transaction-action-graph";
 import {
   Select,
   SelectContent,
@@ -55,9 +54,9 @@ export default function DashboardAnalytics({
       <CardContent className="max-768:px-0">
         <CustSuppBarCharts transactions={filteredTransactions} />
       </CardContent>
-      <CardContent className="max-768:px-0">
+      {/* <CardContent className="max-768:px-0">
         <TransactionActionGraph transactions={filteredTransactions} />
-      </CardContent>
+      </CardContent> */}
     </>
   );
 }

@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { DataTableColumnHeader } from "@/components/ui/data-table/data-table-column-header";
 import { formatDateYYMMDDHHMM } from "@/lib/format-date";
 import { ColumnDef } from "@tanstack/react-table";
-import { Edit, Package } from "lucide-react";
+import { Edit, Package, Pen } from "lucide-react";
 import { ProductWithOneImage } from "../_actions/products";
 import { formatNumber } from "@/lib/formatter";
 import UpdateStock from "../_components/update-stock";
@@ -69,12 +69,12 @@ export const BasicColumns: ColumnDef<ProductWithOneImage>[] = [
           <UpdateStock product={product} />
           <Button
             asChild
-            variant="ghost"
-            size="sm"
-            className="opacity-50 h-2 w-2"
+            variant="outline"
+            size="icon"
+            className=" bg-card shadow-md opacity-50"
           >
-            <Link href={`/admin/products/${product.id}`}>
-              <Edit />
+            <Link href={`/admin/products/${product.id}`} className="w-6  h-6">
+              <Pen className="text-xs" />
             </Link>
           </Button>
         </div>

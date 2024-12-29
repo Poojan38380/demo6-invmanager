@@ -115,7 +115,7 @@ export default function UpdateStock({ product }: { product: Product }) {
       <DrawerTrigger asChild>
         <Button
           variant="outline"
-          className=" rounded-full bg-card shadow-sm "
+          className=" rounded-full bg-card shadow-md  "
           size="sm"
         >
           <ArrowUpDown className="" />
