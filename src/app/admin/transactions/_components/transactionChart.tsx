@@ -99,7 +99,6 @@ export default function TransactionChart({
             <ChartTooltip
               content={<CustomTooltip chartConfig={chartConfig} />}
             />
-            <CartesianGrid vertical={false} />
 
             <Line
               type="monotone"
