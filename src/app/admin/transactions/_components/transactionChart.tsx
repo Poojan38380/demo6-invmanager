@@ -126,9 +126,7 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({
             <ArrowUp size={14} />
           ) : action === "DECREASED" ? (
             <ArrowDown size={14} />
-          ) : (
-            <PlusCircle size={14} />
-          )}
+          ) : null}
           {Math.abs(netChange)}
         </span>
         <p className="text-xs text-muted-foreground">
