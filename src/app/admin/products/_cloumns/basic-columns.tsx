@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { DataTableColumnHeader } from "@/components/ui/data-table/data-table-column-header";
 import { formatDateYYMMDDHHMM } from "@/lib/format-date";
 import { ColumnDef } from "@tanstack/react-table";
-import { Package, Pen } from "lucide-react";
+import { ChartNoAxesCombined, Package, Pen } from "lucide-react";
 import { ProductWithOneImage } from "../_actions/products";
 import { formatNumber } from "@/lib/formatter";
 import UpdateStock from "../_components/update-stock";
@@ -83,6 +83,19 @@ export const BasicColumns: ColumnDef<ProductWithOneImage>[] = [
           >
             <Link href={`/admin/products/${product.id}`} className="w-6  h-6">
               <Pen className="text-xs" />
+            </Link>
+          </Button>
+          <Button
+            asChild
+            variant="outline"
+            size="icon"
+            className=" bg-card shadow-md opacity-50"
+          >
+            <Link
+              href={`/admin/transactions/product/${product.id}`}
+              className="w-6  h-6"
+            >
+              <ChartNoAxesCombined className="text-xs" />
             </Link>
           </Button>
         </div>

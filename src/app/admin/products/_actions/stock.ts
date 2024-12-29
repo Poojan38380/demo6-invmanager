@@ -105,9 +105,15 @@ ${vendor ? `-Supplier: ${vendor.companyName}` : ""}
     revalidateTag("get-all-transactions");
     revalidatePath("/admin/products");
     revalidatePath("/admin/transactions");
+    revalidatePath(`/admin/transactions/product/${data.productId}`);
+    revalidatePath(`/admin/transactions/user/${updater.id}`);
+    if (data.customerId)
+      revalidatePath(`/admin/transactions/customer/${data.customerId}`);
+    if (data.vendorId)
+      revalidatePath(`/admin/transactions/supplier/${data.vendorId}`);
     revalidatePath("/admin");
 
-    return { success: true, productId: product.id };
+    return { success: true, productId: data.productId };
   } catch (error) {
     console.error("Error updating stock:", error);
     return { success: false, error: "Failed to update product stock" };
