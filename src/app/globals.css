@@ -23,7 +23,7 @@ body {
     --secondary-foreground: 222.2 47.4% 11.2%;
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
+    --accent: 210 40% 77%;
     --accent-foreground: 222.2 47.4% 11.2%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
@@ -50,9 +50,9 @@ body {
     --warning-foreground: 48 96% 89%;
   }
   .dark {
-    --background: 240 10% 3.9%;
+    --background: 240 10% 3%;
     --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
+    --card: 222.2 84% 7%;
     --card-foreground: 210 40% 98%;
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
@@ -74,7 +74,7 @@ body {
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
-    --sidebar-background: 240 5.9% 11%;
+    --sidebar-background: 240 5.9% 7%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
     --sidebar-primary-foreground: 0 0% 100%;
@@ -106,11 +106,11 @@ body {
 
 /* Scrollbar track */
 ::-webkit-scrollbar-track {
-  background: transparent;
+  background: hsl(var(--sidebar-background));
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #888; /* Darker gray */
+  background: hsl(var(--accent)); /* Darker gray */
 }
 
 /* Scrollbar thumb on hover */
