@@ -34,8 +34,14 @@ export default function EnhancedTransactionChart({
       (a, b) =>
         new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
     );
+    interface DailyDataEntry {
+      date: string;
+      stock: number;
+      stockChange: number;
+      actions: string[];
+    }
 
-    const dailyData: { [key: string]: any } = {};
+    const dailyData: { [key: string]: DailyDataEntry } = {};
 
     sortedTransactions.forEach((transaction) => {
       const date = new Date(transaction.createdAt).toLocaleDateString("en-IN", {
