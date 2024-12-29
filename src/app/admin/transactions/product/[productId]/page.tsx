@@ -15,6 +15,7 @@ export default async function ProductTransactionsPage({
     <TransactionLayout
       title={`Transactions on product: ${transactions[0].product.name}`}
       transactions={transactions}
+      displayChart
     />
   );
 }

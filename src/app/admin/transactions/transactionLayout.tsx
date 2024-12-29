@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { TransactionsDataTable } from "./_components/trans-data-table";
 import { TransactionForTable } from "@/types/dataTypes";
@@ -17,13 +17,16 @@ import { DateRange } from "react-day-picker";
 import { format, subDays } from "date-fns";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
+import TransactionChart from "./_components/transactionChart";
 
 export default function TransactionLayout({
   transactions,
   title,
+  displayChart = false,
 }: {
   transactions: TransactionForTable[];
   title: string;
+  displayChart?: boolean;
 }) {
   const [filteredTransactions, setFilteredTransactions] =
     useState(transactions);
@@ -84,9 +87,14 @@ export default function TransactionLayout({
     setIsCalendarOpen(false);
   };
 
+  // Create a deep copy of filteredTransactions for TransactionChart
+  const chartTransactions = useMemo(() => {
+    return JSON.parse(JSON.stringify(filteredTransactions));
+  }, [filteredTransactions]);
+
   return (
     <Card className="border-none shadow-none bg-background">
-      <CardHeader className="py-4 flex flex-row flex-wrap items-center gap-4 justify-between">
+      <CardHeader className="py-4 flex flex-row  items-center gap-4 justify-between">
         <CardTitle className="text-2xl font-bold">{title}</CardTitle>
         <div className="flex items-center gap-4">
           <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
@@ -165,6 +173,11 @@ export default function TransactionLayout({
           )}
         </div>
       </CardHeader>
+      {displayChart && (
+        <CardContent className="max-768:px-0">
+          <TransactionChart transactions={chartTransactions} />
+        </CardContent>
+      )}
       <CardContent className="space-y-6 max-768:px-0">
         <TransactionsDataTable
           columns={TransactionTableColumns}

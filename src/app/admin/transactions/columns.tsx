@@ -109,6 +109,7 @@ export const TransactionTableColumns: ColumnDef<TransactionForTable>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Time" />
     ),
+
     cell: ({ row }) => {
       const createdAt: Date = row.getValue("createdAt");
       return (
