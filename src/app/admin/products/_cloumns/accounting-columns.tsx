@@ -51,14 +51,19 @@ export const AccountingColumns: ColumnDef<ProductWithOneImage>[] = [
       <DataTableColumnHeader column={column} title="Stock" />
     ),
     cell: ({ row }) => {
-      const { stock, bufferStock = 0, unit = "pcs" } = row.original;
+      const stock: number = row.getValue("stock");
+      const bufferStock: number = row.original.bufferStock || 0;
+      const threshold = 1.1;
+      const unit: string = row.original.unit || "pcs";
+      let badgeVariant: "default" | "warning" | "destructive" = "default";
+      if (stock < bufferStock) {
+        badgeVariant = "destructive";
+      } else if (stock <= bufferStock * threshold) {
+        badgeVariant = "warning";
+      }
       return (
         <div className="flex items-center gap-1">
-          <Badge
-            variant={stock < (bufferStock ?? 0) ? "destructive" : "default"}
-          >
-            {formatNumber(stock)}
-          </Badge>
+          <Badge variant={badgeVariant}>{formatNumber(stock)}</Badge>
           <span>{unit}</span>
         </div>
       );

@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AlertCircle, TrendingUp, Package, AlertTriangle } from "lucide-react";
 import { ProductWithOneImage } from "../../products/_actions/products";
 import { formatCurrency } from "@/lib/formatter";
+import Link from "next/link";
 
 const DashboardOverviewCards = ({
   products,
@@ -28,7 +29,10 @@ const DashboardOverviewCards = ({
       // Check buffer stock conditions
       if (currentStock < bufferStock) {
         belowBufferCount++;
-      } else if (currentStock <= bufferStock * approachingThreshold) {
+      } else if (
+        currentStock <= bufferStock * approachingThreshold &&
+        currentStock >= bufferStock
+      ) {
         approachingBufferCount++;
       }
 
@@ -83,40 +87,45 @@ const DashboardOverviewCards = ({
         </CardContent>
       </Card>
       {/* Approaching Buffer Stock Warning */}
-      <Card className="bg-warning/10 shadow-md rounded-2xl border-none">
-        <CardHeader className="flex flex-row items-center justify-between pb-2">
-          <CardTitle className="text-sm font-medium">
-            Approaching Buffer
-          </CardTitle>
-          <AlertTriangle className="h-4 w-4 text-yellow-500" />
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold text-yellow-600">
-            {metrics.approachingBufferCount}
-          </div>
-          <p className="text-xs text-yellow-600 mt-1">
-            Products nearing buffer stock level
-          </p>
-        </CardContent>
-      </Card>
+
+      <Link href={"/admin/products/warning"} target="_blank">
+        <Card className="bg-warning/10 shadow-md rounded-2xl border-none hover:shadow-lg hover:scale-105 transition-all">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium">
+              Approaching Buffer
+            </CardTitle>
+            <AlertTriangle className="h-4 w-4 text-yellow-500" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-yellow-600">
+              {metrics.approachingBufferCount}
+            </div>
+            <p className="text-xs text-yellow-600 mt-1">
+              Products nearing buffer stock level
+            </p>
+          </CardContent>
+        </Card>
+      </Link>
 
       {/* Below Buffer Stock Alert */}
-      <Card className="bg-destructive/30 shadow-md rounded-2xl border-none">
-        <CardHeader className="flex flex-row items-center justify-between pb-2">
-          <CardTitle className="text-sm font-medium">
-            Below Buffer Stock
-          </CardTitle>
-          <AlertCircle className="h-4 w-4 text-red-500" />
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold text-red-600">
-            {metrics.belowBufferCount}
-          </div>
-          <p className="text-xs text-red-600 mt-1">
-            Products requiring immediate attention
-          </p>
-        </CardContent>
-      </Card>
+      <Link href={"/admin/products/critical"} target="_blank">
+        <Card className="bg-destructive/30 shadow-md rounded-2xl border-none  hover:shadow-lg hover:scale-105 transition-all">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium">
+              Below Buffer Stock
+            </CardTitle>
+            <AlertCircle className="h-4 w-4 text-red-500" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-red-600">
+              {metrics.belowBufferCount}
+            </div>
+            <p className="text-xs text-red-600 mt-1">
+              Products requiring immediate attention
+            </p>
+          </CardContent>
+        </Card>{" "}
+      </Link>
     </div>
   );
 };
