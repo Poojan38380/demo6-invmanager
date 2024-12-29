@@ -35,18 +35,29 @@ export default function EnhancedTransactionChart({
         new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
     );
 
-    return sortedTransactions.map((transaction) => {
-      return {
-        date: new Date(transaction.createdAt).toLocaleDateString("en-IN", {
-          month: "short",
-          day: "numeric",
-        }),
-        stock: transaction.stockAfter,
-        stockChange: transaction.stockChange,
-        action: transaction.action,
-        note: transaction.note,
-      };
+    const dailyData: { [key: string]: any } = {};
+
+    sortedTransactions.forEach((transaction) => {
+      const date = new Date(transaction.createdAt).toLocaleDateString("en-IN", {
+        month: "short",
+        day: "numeric",
+      });
+
+      if (!dailyData[date]) {
+        dailyData[date] = {
+          date,
+          stock: transaction.stockAfter,
+          stockChange: transaction.stockChange,
+          actions: [transaction.action],
+        };
+      } else {
+        dailyData[date].stock = transaction.stockAfter;
+        dailyData[date].stockChange += transaction.stockChange;
+        dailyData[date].actions.push(transaction.action);
+      }
     });
+
+    return Object.values(dailyData);
   }, [transactions]);
 
   return (
@@ -57,17 +68,7 @@ export default function EnhancedTransactionChart({
           className="aspect-auto h-[300px] w-full"
         >
           <LineChart accessibilityLayer data={chartData}>
-            <XAxis
-              dataKey="date"
-              tickLine={false}
-              axisLine={false}
-              tickFormatter={(value) =>
-                new Date(value).toLocaleDateString("en-IN", {
-                  month: "short",
-                  day: "numeric",
-                })
-              }
-            />
+            <XAxis dataKey="date" tickLine={false} axisLine={false} />
             <ChartTooltip
               content={<CustomTooltip chartConfig={chartConfig} />}
             />
@@ -98,6 +99,10 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({
 }) => {
   if (active && payload && payload.length) {
     const data = payload[0].payload;
+    const netChange = data.stockChange;
+    const action =
+      netChange > 0 ? "INCREASED" : netChange < 0 ? "DECREASED" : "NO_CHANGE";
+
     return (
       <div className="bg-card flex flex-col gap-1 p-4 text-right rounded-md shadow-md border border-border">
         <p className="font-semibold text-left text-muted-foreground">{label}</p>
@@ -107,24 +112,22 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({
         </p>
         <span
           style={{
-            color: actionColors[data.action as keyof typeof actionColors],
+            color: actionColors[action as keyof typeof actionColors],
           }}
           className="flex gap-1 items-center justify-end"
         >
-          {data.action === "INCREASED" ? (
+          {action === "INCREASED" ? (
             <ArrowUp size={14} />
-          ) : data.action === "DECREASED" ? (
+          ) : action === "DECREASED" ? (
             <ArrowDown size={14} />
           ) : (
             <PlusCircle size={14} />
           )}
-          {data.stockChange}
+          {Math.abs(netChange)}
         </span>
-        {data.note && (
-          <p className="text-muted-foreground text-left font-semibold">
-            {data.note}
-          </p>
-        )}
+        <p className="text-xs text-muted-foreground">
+          {data.actions.length} transaction{data.actions.length > 1 ? "s" : ""}
+        </p>
       </div>
     );
   }
