@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { DataTableColumnHeader } from "@/components/ui/data-table/data-table-column-header";
 import { formatDateYYMMDDHHMM } from "@/lib/format-date";
 import { ColumnDef } from "@tanstack/react-table";
-import { Edit, Package, Pen } from "lucide-react";
+import { Package, Pen } from "lucide-react";
 import { ProductWithOneImage } from "../_actions/products";
 import { formatNumber } from "@/lib/formatter";
 import UpdateStock from "../_components/update-stock";
