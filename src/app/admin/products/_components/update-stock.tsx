@@ -139,23 +139,19 @@ export default function UpdateStock({ product }: { product: Product }) {
                 type="button"
                 variant={isAdding ? "default" : "ghost"}
                 onClick={() => handleModeChange(true)}
-                className={`transition-all bg-green-200 h-12   hover:rounded-full  ${
-                  isAdding
-                    ? "shadow-md bg-primary rounded-full"
-                    : " dark:text-muted-foreground"
+                className={`  h-12 rounded-full   ${
+                  isAdding ? "shadow-md bg-primary" : " text-muted-foreground"
                 }`}
               >
-                <Plus className="" />
+                <Plus />
                 Add Stock
               </Button>
               <Button
                 type="button"
                 variant={!isAdding ? "default" : "ghost"}
                 onClick={() => handleModeChange(false)}
-                className={`transition-all duration-300  bg-red-100 h-12 hover:rounded-full  ${
-                  !isAdding
-                    ? "shadow-md bg-primary rounded-full"
-                    : "dark:text-muted-foreground"
+                className={` h-12 rounded-full  ${
+                  !isAdding ? "shadow-md bg-primary " : "text-muted-foreground"
                 }`}
               >
                 <Minus className="" />
