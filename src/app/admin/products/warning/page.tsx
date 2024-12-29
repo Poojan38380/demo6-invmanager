@@ -7,8 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
+
 import { ProductDataTable } from "../_components/data-table";
 import { BasicColumns } from "../_cloumns/basic-columns";
 
