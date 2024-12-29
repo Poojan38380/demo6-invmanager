@@ -9,7 +9,8 @@ import {
   ChartContainer,
   ChartTooltip,
 } from "@/components/ui/chart";
-import { ArrowDown, ArrowUp, PlusCircle } from "lucide-react";
+import { ArrowDown, ArrowUp } from "lucide-react";
+import { formatNumber } from "@/lib/formatter";
 
 const chartConfig = {
   stock: {
@@ -114,7 +115,7 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({
         <p className="font-semibold text-left text-muted-foreground">{label}</p>
 
         <p>
-          Stock: <span className="font-bold">{data.stock}</span>
+          Stock: <span className="font-bold">{formatNumber(data.stock)}</span>
         </p>
         <span
           style={{
@@ -127,7 +128,7 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({
           ) : action === "DECREASED" ? (
             <ArrowDown size={14} />
           ) : null}
-          {Math.abs(netChange)}
+          {formatNumber(Math.abs(netChange))}
         </span>
         <p className="text-xs text-muted-foreground">
           {data.actions.length} transaction{data.actions.length > 1 ? "s" : ""}
