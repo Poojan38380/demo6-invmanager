@@ -10,6 +10,7 @@
 !.yarn/releases
 !.yarn/versions
 
+workbox-*.js
 
 *.env
 sw.js
