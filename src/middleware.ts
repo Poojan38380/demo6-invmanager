@@ -11,7 +11,7 @@ export default auth((req) => {
     }
 
     if (!session.user) {
-      return NextResponse.redirect(new URL("/unauthorized", req.url));
+      return NextResponse.redirect(new URL("/login", req.url));
     }
   }
 });
