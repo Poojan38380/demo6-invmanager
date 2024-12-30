@@ -75,13 +75,38 @@ export const getCachedProductsforTable = cache(
 );
 
 async function getSingleProduct(id: string): Promise<ProductWithImages | null> {
+  const oneMonthAgo = new Date();
+  oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+
   const product = await prisma.product.findUnique({
     where: { id },
     include: {
       productImages: true,
+      transactions: {
+        where: {
+          action: "DECREASED",
+          createdAt: {
+            gte: oneMonthAgo,
+          },
+        },
+        select: {
+          stockChange: true,
+        },
+      },
     },
   });
-  return product;
+
+  if (!product) return null;
+
+  const lastMonthSales = product.transactions.reduce(
+    (sum, transaction) => sum + Math.abs(transaction.stockChange),
+    0
+  );
+
+  return {
+    ...product,
+    lastMonthSales,
+  };
 }
 
 export const getCachedSingleProduct = cache(
@@ -195,7 +220,7 @@ interface editProductProps {
   vendorId?: string | undefined;
   categoryId?: string | undefined;
   productPrevImageUrls: string[];
-  qtyInBox: number | undefined;
+  qtyInBox?: number;
 }
 export async function editProduct(
   data: editProductProps,

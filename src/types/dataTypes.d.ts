@@ -8,6 +8,7 @@ import {
 
 export type ProductWithImages = Product & {
   productImages: ProductImage[];
+  lastMonthSales?: number;
 };
 
 export type TransactionForTable = Transaction & {

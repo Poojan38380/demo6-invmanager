@@ -4,6 +4,7 @@ import { ProductFormValues } from "./ProductForm";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -19,9 +20,11 @@ import { ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export default function AdditionalFields({
+  lastMonthSales,
   form,
 }: {
   form: UseFormReturn<ProductFormValues>;
+  lastMonthSales?: number;
 }) {
   return (
     <Collapsible className="w-full group/collapsible" asChild>
@@ -53,10 +56,14 @@ export default function AdditionalFields({
                         field.onChange(parseInt(e.target.value, 10))
                       }
                       placeholder="Min. stock"
-                      className="w-full"
                     />
                   </FormControl>
                   <FormMessage />
+                  {lastMonthSales && (
+                    <FormDescription>
+                      Last 30 days demand : {lastMonthSales} units.
+                    </FormDescription>
+                  )}
                 </FormItem>
               )}
             />
@@ -64,7 +71,7 @@ export default function AdditionalFields({
               control={form.control}
               name="qtyInBox"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="grow">
                   <FormLabel>Items in a box</FormLabel>
                   <FormControl>
                     <Input
@@ -74,7 +81,6 @@ export default function AdditionalFields({
                         field.onChange(parseInt(e.target.value, 10))
                       }
                       placeholder="Items in a box"
-                      className="w-full"
                     />
                   </FormControl>
                   <FormMessage />

@@ -37,7 +37,10 @@ const ProductformSchema = z.object({
   unit: z.string(),
   vendorId: z.string().optional(),
   categoryId: z.string().optional(),
-  qtyInBox: z.number().min(0, { message: "Quantity in box must be positive" }),
+  qtyInBox: z
+    .number()
+    .min(1, { message: "Quantity in box must be greater than 0." })
+    .optional(),
 });
 
 export type ProductFormValues = z.infer<typeof ProductformSchema>;
@@ -128,7 +131,10 @@ export default function ProductForm({
               form={form}
               canStockChange={product ? false : true}
             />
-            <AdditionalFields form={form} />
+            <AdditionalFields
+              lastMonthSales={product?.lastMonthSales}
+              form={form}
+            />
             <Card>
               <CardHeader>
                 <CardTitle>Media</CardTitle>
