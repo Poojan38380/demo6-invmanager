@@ -54,9 +54,6 @@ export default function DashboardAnalytics({
       <CardContent className="max-768:px-0">
         <CustSuppBarCharts transactions={filteredTransactions} />
       </CardContent>
-      {/* <CardContent className="max-768:px-0">
-        <TransactionActionGraph transactions={filteredTransactions} />
-      </CardContent> */}
     </>
   );
 }

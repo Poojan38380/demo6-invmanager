@@ -146,7 +146,7 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({
         <p className="font-semibold text-muted-foreground">{label}</p>
         <div className="flex flex-col gap-2">
           {/* Stock */}
-          <div className="flex items-center gap-1 justify-between">
+          <div className="flex items-center gap-3 justify-between">
             <div className="flex items-center gap-1">
               <span
                 style={{
@@ -155,14 +155,16 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({
                 className="w-3 h-3 rounded-full"
               />
               Stock:{" "}
-              <span className="font-bold">{formatNumber(data.stock)}</span>
+              <span className="font-bold font-mono">
+                {formatNumber(data.stock)}
+              </span>
             </div>
-            <div className="flex gap-2">
+            <div>
               <span
                 style={{
                   color: actionColors[action as keyof typeof actionColors],
                 }}
-                className="flex gap-1 items-center justify-end"
+                className="flex  items-center justify-end font-mono  text-xs font-extralight  "
               >
                 {action === "INCREASED" ? (
                   <ArrowUp size={14} />
@@ -183,7 +185,9 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({
               className="w-3 h-3 rounded-full"
             />
             Demand:{" "}
-            <span className="font-bold">{formatNumber(data.demand)}</span>
+            <span className="font-bold font-mono">
+              {formatNumber(data.demand)}
+            </span>
           </div>
         </div>
 

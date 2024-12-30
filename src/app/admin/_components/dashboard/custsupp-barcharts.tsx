@@ -72,6 +72,7 @@ export default function CustSuppBarCharts({
               cursor={false}
               content={
                 <ChartTooltipContent
+                  className="font-mono"
                   formatter={(value) => formatCurrency(Number(value))}
                 />
               }
