@@ -59,11 +59,11 @@ export default function AdditionalFields({
                     />
                   </FormControl>
                   <FormMessage />
-                  {lastMonthSales && (
+                  {lastMonthSales ? (
                     <FormDescription>
                       Last 30 days demand : {lastMonthSales} units.
                     </FormDescription>
-                  )}
+                  ) : null}
                 </FormItem>
               )}
             />

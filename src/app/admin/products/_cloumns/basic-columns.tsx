@@ -66,11 +66,11 @@ export const BasicColumns: ColumnDef<ProductWithOneImage>[] = [
             <Badge variant={badgeVariant}>{formatNumber(stock)}</Badge>
             <span>{unit}</span>
           </div>
-          {qtyInBox && (
+          {qtyInBox && stock / qtyInBox ? (
             <div className="text-xs text-muted-foreground ">
               {stock / qtyInBox} boxes
             </div>
-          )}
+          ) : null}
         </div>
       );
     },

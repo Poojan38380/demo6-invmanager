@@ -26,6 +26,7 @@ import { SupplierSelectorforUpdater } from "./select-supplier-update";
 import { CustomerSelectorforUpdater } from "./select-customer-update";
 import { updateProductStock } from "../_actions/stock";
 import { Product } from "@prisma/client";
+import { formatNumber } from "@/lib/formatter";
 
 export default function UpdateStock({ product }: { product: Product }) {
   const router = useRouter();
@@ -171,7 +172,13 @@ export default function UpdateStock({ product }: { product: Product }) {
                     value={stockValue}
                     onChange={(e) => handleStockChange(Number(e.target.value))}
                   />
+                  {stockChange && product.qtyInBox ? (
+                    <p className="text-xs text-muted-foreground">
+                      {formatNumber(stockChange / product.qtyInBox)} box
+                    </p>
+                  ) : null}
                 </div>
+
                 <div>
                   {isAdding ? (
                     <SupplierSelectorforUpdater
