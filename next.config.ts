@@ -2,7 +2,9 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   reactStrictMode: true, // Optional: Enable React's strict mode
-
+  experimental: {
+    middlewarePrefetch: "strict",
+  },
   images: {
     remotePatterns: [
       {
