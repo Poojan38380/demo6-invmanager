@@ -38,12 +38,12 @@ export default function ProductInfoCard({
             </FormItem>
           )}
         />
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="flex gap-2 items-center">
           <FormField
             control={form.control}
             name="stock"
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="grow">
                 <FormLabel>Stock</FormLabel>
                 <FormControl>
                   <Input
@@ -67,48 +67,6 @@ export default function ProductInfoCard({
               <FormItem>
                 <FormLabel>Unit</FormLabel>
                 <UnitSelector form={form} />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="bufferStock"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Min. Stock</FormLabel>
-                <FormControl>
-                  <Input
-                    type="number"
-                    {...field}
-                    onChange={(e) =>
-                      field.onChange(parseInt(e.target.value, 10))
-                    }
-                    placeholder="Min. stock"
-                    className="w-full"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="qtyInBox"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Items in a box</FormLabel>
-                <FormControl>
-                  <Input
-                    type="number"
-                    {...field}
-                    onChange={(e) =>
-                      field.onChange(parseInt(e.target.value, 10))
-                    }
-                    placeholder="Items in a box"
-                    className="w-full"
-                  />
-                </FormControl>
-                <FormMessage />
               </FormItem>
             )}
           />

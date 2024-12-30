@@ -17,6 +17,7 @@ import { SupplierSelector } from "@/app/admin/_components/select-supplier";
 import { SelectCategory } from "@/app/admin/_components/select-category";
 import { ImageUploader } from "./image-uploader";
 import { ProductWithImages } from "@/types/dataTypes";
+import AdditionalFields from "./additional-fields";
 
 const ProductformSchema = z.object({
   name: z.string().min(2, {
@@ -127,6 +128,7 @@ export default function ProductForm({
               form={form}
               canStockChange={product ? false : true}
             />
+            <AdditionalFields form={form} />
             <Card>
               <CardHeader>
                 <CardTitle>Media</CardTitle>
