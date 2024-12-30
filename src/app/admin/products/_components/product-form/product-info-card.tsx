@@ -28,42 +28,32 @@ export default function ProductInfoCard({
             <FormItem>
               <FormLabel>Product Name*</FormLabel>
               <FormControl>
-                <Input placeholder="Enter product name" {...field} />
+                <Input
+                  placeholder="Enter product name"
+                  {...field}
+                  className="w-full"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <div className="flex gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <FormField
             control={form.control}
             name="stock"
             render={({ field }) => (
-              <FormItem className="grow">
+              <FormItem>
                 <FormLabel>Stock</FormLabel>
                 <FormControl>
                   <Input
                     type="number"
                     disabled={!canStockChange}
                     {...field}
-                    onChange={(e) => field.onChange(parseInt(e.target.value))}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="bufferStock"
-            render={({ field }) => (
-              <FormItem className="grow">
-                <FormLabel>Min. Stock</FormLabel>
-                <FormControl>
-                  <Input
-                    type="number"
-                    {...field}
-                    onChange={(e) => field.onChange(parseInt(e.target.value))}
+                    onChange={(e) =>
+                      field.onChange(parseInt(e.target.value, 10))
+                    }
+                    className="w-full"
                   />
                 </FormControl>
                 <FormMessage />
@@ -77,6 +67,48 @@ export default function ProductInfoCard({
               <FormItem>
                 <FormLabel>Unit</FormLabel>
                 <UnitSelector form={form} />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="bufferStock"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Min. Stock</FormLabel>
+                <FormControl>
+                  <Input
+                    type="number"
+                    {...field}
+                    onChange={(e) =>
+                      field.onChange(parseInt(e.target.value, 10))
+                    }
+                    placeholder="Min. stock"
+                    className="w-full"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="qtyInBox"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Items in a box</FormLabel>
+                <FormControl>
+                  <Input
+                    type="number"
+                    {...field}
+                    onChange={(e) =>
+                      field.onChange(parseInt(e.target.value, 10))
+                    }
+                    placeholder="Items in a box"
+                    className="w-full"
+                  />
+                </FormControl>
+                <FormMessage />
               </FormItem>
             )}
           />

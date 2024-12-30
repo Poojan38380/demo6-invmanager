@@ -100,6 +100,7 @@ interface addproductProps {
   sellingPrice?: number | undefined;
   vendorId?: string | undefined;
   categoryId?: string | undefined;
+  qtyInBox?: number | undefined;
 }
 
 export async function addProduct(data: addproductProps, productImages: File[]) {
@@ -136,6 +137,7 @@ export async function addProduct(data: addproductProps, productImages: File[]) {
         vendorId: data.vendorId,
         categoryId: data.categoryId,
         creatorId,
+        qtyInBox: data.qtyInBox,
         productImages: {
           create: productImageUrls?.map((url: string) => ({ url })) || [],
         },
@@ -193,6 +195,7 @@ interface editProductProps {
   vendorId?: string | undefined;
   categoryId?: string | undefined;
   productPrevImageUrls: string[];
+  qtyInBox: number | undefined;
 }
 export async function editProduct(
   data: editProductProps,
@@ -242,6 +245,7 @@ export async function editProduct(
           unit: data.unit,
           categoryId: data.categoryId,
           vendorId: data.vendorId,
+          qtyInBox: data.qtyInBox,
         },
       }),
       handleProductImages(

@@ -40,6 +40,8 @@ model Product {
   costPrice    Float?
   sellingPrice Float?
 
+  qtyInBox Int?
+
   unit String? @default("pcs")
 
   creator   User   @relation("createdProducts", fields: [creatorId], references: [id])

@@ -7,13 +7,13 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 
 interface ImageUploaderProps {
-  onImagesChange: (images: File[]) => void;
+  onImagesChangeAction: (images: File[]) => void;
   existingImages?: string[]; // Accept URLs of existing images
   onRemoveExistingImage?: (updatedUrls: string[]) => void; // Callback for updating parent state
 }
 
 export function ImageUploader({
-  onImagesChange,
+  onImagesChangeAction,
   existingImages = [],
   onRemoveExistingImage,
 }: ImageUploaderProps) {
@@ -40,7 +40,7 @@ export function ImageUploader({
 
       setImages((prevImages) => {
         const updatedImages = [...prevImages, ...newImages];
-        onImagesChange(updatedImages);
+        onImagesChangeAction(updatedImages);
         return updatedImages;
       });
     }
@@ -57,7 +57,7 @@ export function ImageUploader({
   const removeImage = (index: number) => {
     const newImages = images.filter((_, i) => i !== index);
     setImages(newImages);
-    onImagesChange(newImages);
+    onImagesChangeAction(newImages);
   };
 
   return (

@@ -50,6 +50,7 @@ export const BasicColumns: ColumnDef<ProductWithOneImage>[] = [
     ),
     cell: ({ row }) => {
       const stock: number = row.getValue("stock");
+      const qtyInBox: number | null = row.original.qtyInBox;
       const bufferStock: number = row.original.bufferStock || 0;
       const threshold = 1.1;
       const unit: string = row.original.unit || "pcs";
@@ -60,9 +61,16 @@ export const BasicColumns: ColumnDef<ProductWithOneImage>[] = [
         badgeVariant = "warning";
       }
       return (
-        <div className="flex items-center gap-1">
-          <Badge variant={badgeVariant}>{formatNumber(stock)}</Badge>
-          <span>{unit}</span>
+        <div className="flex flex-col gap-2">
+          <div className="flex items-center gap-1">
+            <Badge variant={badgeVariant}>{formatNumber(stock)}</Badge>
+            <span>{unit}</span>
+          </div>
+          {qtyInBox && (
+            <div className="text-xs text-muted-foreground ">
+              {stock / qtyInBox} boxes
+            </div>
+          )}
         </div>
       );
     },
