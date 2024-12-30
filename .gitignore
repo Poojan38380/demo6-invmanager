@@ -12,7 +12,7 @@
 
 
 *.env
-
+sw.js
 # testing
 /coverage
 
