@@ -36,6 +36,7 @@ export const TransactionTableColumns: ColumnDef<TransactionForTable>[] = [
       const productId = row.original.productId;
       return (
         <Link
+          prefetch={false}
           href={`/admin/transactions/product/${productId}`}
           className="flex items-center gap-2 text-primary hover:underline hover:text-accent-foreground transition-colors"
         >
@@ -142,6 +143,7 @@ export const TransactionTableColumns: ColumnDef<TransactionForTable>[] = [
       const userId = row.original.userId;
       return (
         <Link
+          prefetch={false}
           href={`/admin/transactions/user/${userId}`}
           className="flex items-center gap-2 text-primary hover:underline hover:text-accent-foreground transition-colors"
         >
@@ -175,6 +177,7 @@ export const TransactionTableColumns: ColumnDef<TransactionForTable>[] = [
       if (customerOrVendor)
         return (
           <Link
+            prefetch={false}
             href={`/admin/transactions/${customerOrVendor.type}/${customerOrVendor.id}`}
             className="flex items-center gap-2 text-primary hover:underline hover:text-accent-foreground transition-colors"
           >

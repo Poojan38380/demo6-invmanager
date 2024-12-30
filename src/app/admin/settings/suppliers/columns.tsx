@@ -19,6 +19,7 @@ export const SupplierColumns: ColumnDef<Vendor>[] = [
       const supplierId = row.original.id;
       return (
         <Link
+          prefetch={false}
           href={`/admin/transactions/supplier/${supplierId}`}
           className="flex items-center gap-2 text-primary hover:underline hover:text-accent-foreground transition-colors"
         >
@@ -35,7 +36,10 @@ export const SupplierColumns: ColumnDef<Vendor>[] = [
       const supplierId = row.original.id;
       return (
         <Button asChild size={"icon"} variant={"ghost"}>
-          <Link href={`/admin/settings/suppliers/${supplierId}`}>
+          <Link
+            prefetch={false}
+            href={`/admin/settings/suppliers/${supplierId}`}
+          >
             <Edit />
           </Link>
         </Button>
@@ -56,7 +60,7 @@ export const SupplierColumns: ColumnDef<Vendor>[] = [
       const email = row.original.email;
       if (email)
         return (
-          <Link href={`mailto:${email}`}>
+          <Link prefetch={false} href={`mailto:${email}`}>
             <Badge variant="secondary" className="font-normal">
               <Mail className="h-3 w-3 mr-1" />
               {email}
@@ -73,7 +77,7 @@ export const SupplierColumns: ColumnDef<Vendor>[] = [
       const contactNumber = row.original.contactNumber;
       if (contactNumber)
         return (
-          <Link href={`tel:${contactNumber}`}>
+          <Link prefetch={false} href={`tel:${contactNumber}`}>
             <Badge variant="outline" className="font-normal">
               <Phone className="h-3 w-3 mr-1" />
               {contactNumber}

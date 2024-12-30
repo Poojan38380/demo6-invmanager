@@ -21,6 +21,7 @@ export const CustomerColumns: ColumnDef<Customer>[] = [
         <Link
           href={`/admin/transactions/customer/${customerId}`}
           className="flex items-center gap-2 text-primary hover:underline hover:text-accent-foreground transition-colors"
+          prefetch={false}
         >
           <span className="font-medium">{companyName}</span>
         </Link>
@@ -35,7 +36,10 @@ export const CustomerColumns: ColumnDef<Customer>[] = [
       const customerId = row.original.id;
       return (
         <Button asChild size={"icon"} variant={"ghost"}>
-          <Link href={`/admin/settings/customers/${customerId}`}>
+          <Link
+            prefetch={false}
+            href={`/admin/settings/customers/${customerId}`}
+          >
             <Edit />
           </Link>
         </Button>
@@ -55,7 +59,7 @@ export const CustomerColumns: ColumnDef<Customer>[] = [
       const email = row.original.email;
       if (email)
         return (
-          <Link href={`mailto:${email}`}>
+          <Link prefetch={false} href={`mailto:${email}`}>
             <Badge variant="secondary" className="font-normal">
               <Mail className="h-3 w-3 mr-1" />
               {email}
@@ -72,7 +76,7 @@ export const CustomerColumns: ColumnDef<Customer>[] = [
       const contactNumber = row.original.contactNumber;
       if (contactNumber)
         return (
-          <Link href={`tel:${contactNumber}`}>
+          <Link prefetch={false} href={`tel:${contactNumber}`}>
             <Badge variant="outline" className="font-normal">
               <Phone className="h-3 w-3 mr-1" />
               {contactNumber}

@@ -31,6 +31,7 @@ export const BasicColumns: ColumnDef<ProductWithOneImage>[] = [
         <Link
           href={`/admin/transactions/product/${productId}`}
           className="flex items-center gap-2"
+          prefetch={false}
         >
           <Avatar className="">
             <AvatarImage src={row.original.productImages[0]?.url} />
@@ -89,7 +90,11 @@ export const BasicColumns: ColumnDef<ProductWithOneImage>[] = [
             size="icon"
             className=" bg-card shadow-md opacity-50"
           >
-            <Link href={`/admin/products/${product.id}`} className="w-6  h-6">
+            <Link
+              href={`/admin/products/${product.id}`}
+              prefetch={false}
+              className="w-6  h-6"
+            >
               <Pen className="text-xs" />
             </Link>
           </Button>
@@ -102,6 +107,7 @@ export const BasicColumns: ColumnDef<ProductWithOneImage>[] = [
             <Link
               href={`/admin/transactions/product/${product.id}`}
               className="w-6  h-6"
+              prefetch={false}
             >
               <ChartNoAxesCombined className="text-xs" />
             </Link>

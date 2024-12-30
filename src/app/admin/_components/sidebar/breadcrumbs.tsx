@@ -23,7 +23,9 @@ export function BreadCrumbs() {
     return (
       <BreadcrumbItem key={href} className="flex items-center">
         <BreadcrumbLink asChild>
-          <Link href={href}>{label}</Link>
+          <Link href={href} prefetch={false}>
+            {label}
+          </Link>
         </BreadcrumbLink>
         {index < pathSegments.length - 1 && "/"}
       </BreadcrumbItem>
@@ -35,7 +37,9 @@ export function BreadCrumbs() {
       <BreadcrumbList className="flex">
         <BreadcrumbItem className="flex items-center">
           <BreadcrumbLink asChild>
-            <Link href="/admin">Admin</Link>
+            <Link prefetch={false} href="/admin">
+              Admin
+            </Link>
           </BreadcrumbLink>
           {pathSegments.length > 0 && "/"}
         </BreadcrumbItem>

@@ -6,6 +6,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { SecondaryNavItems } from "../../_menus/secondaryNavMenu";
+import Link from "next/link";
 
 export function SecondaryNav() {
   return (
@@ -15,10 +16,10 @@ export function SecondaryNav() {
         {SecondaryNavItems.map((item) => (
           <SidebarMenuItem key={item.name}>
             <SidebarMenuButton asChild>
-              <a href={item.url}>
+              <Link href={item.url} prefetch={false}>
                 <item.icon />
                 <span className="font-semibold">{item.name}</span>
-              </a>
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         ))}

@@ -74,6 +74,7 @@ export function PrimaryNav() {
                     >
                       <SidebarMenuSubButton asChild>
                         <Link
+                          prefetch={false}
                           href={subItem.url}
                           className={cn(
                             "w-full block px-3 py-2 rounded-md transition-colors duration-200",

@@ -17,7 +17,7 @@ export function BottomNav({ ...props }) {
           {BottomNavItems.map((item) => (
             <SidebarMenuItem key={item.title}>
               <SidebarMenuButton asChild size="sm">
-                <Link href={item.url} target="_blank">
+                <Link href={item.url} target="_blank" prefetch={false}>
                   <item.icon />
                   <span>{item.title}</span>
                 </Link>

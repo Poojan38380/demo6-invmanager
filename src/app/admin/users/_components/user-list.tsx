@@ -52,7 +52,10 @@ export default function UserList({ initialUsers }: UserListProps) {
             <CardHeader className="pb-2">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <Link href={`/admin/transactions/user/${user.id}`}>
+                  <Link
+                    prefetch={false}
+                    href={`/admin/transactions/user/${user.id}`}
+                  >
                     <Avatar className="h-12 w-12">
                       <AvatarImage src={user.profilePic} alt={user.username} />
                       <AvatarFallback>
@@ -63,6 +66,7 @@ export default function UserList({ initialUsers }: UserListProps) {
                   <div>
                     <CardTitle className="text-lg">
                       <Link
+                        prefetch={false}
                         href={`/admin/transactions/user/${user.id}`}
                         className="hover:underline"
                       >
@@ -82,6 +86,7 @@ export default function UserList({ initialUsers }: UserListProps) {
             <CardContent>
               <div className="grid grid-cols-2 gap-2 text-sm">
                 <Link
+                  prefetch={false}
                   href={`/admin/transactions/user/${user.id}`}
                   className="flex items-center gap-2 text-muted-foreground hover:font-semibold hover:underline"
                 >
