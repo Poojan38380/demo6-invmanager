@@ -64,10 +64,10 @@ export default function LoginForm() {
         return;
       }
 
+      router.push("/admin");
       toast.success("Login Successful", {
         description: "Welcome to your Inventory Management dashboard!",
       });
-      router.push("/admin");
     } catch (error) {
       console.error("Unexpected error during login:", error);
       toast.error("Error", {

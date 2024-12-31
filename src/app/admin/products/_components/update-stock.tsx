@@ -95,9 +95,9 @@ export default function UpdateStock({ product }: { product: Product }) {
       });
 
       if (result.success) {
-        toast.success("Stock updated successfully", { id: loadingToast });
         setOpen(false);
         router.refresh();
+        toast.success("Stock updated successfully", { id: loadingToast });
       } else {
         toast.error(result.error || "Failed to update stock", {
           id: loadingToast,

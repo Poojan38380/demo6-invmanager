@@ -33,9 +33,9 @@ function CreateUnitForm() {
     try {
       const result = await createUnit(FormData.unitName);
       if (result.success) {
-        toast.success("Unit created successfully", { id: loadingToast });
         form.reset();
         router.refresh();
+        toast.success("Unit created successfully", { id: loadingToast });
       } else {
         toast.error(result.error || "Failed to create unit", {
           id: loadingToast,

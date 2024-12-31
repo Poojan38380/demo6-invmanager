@@ -43,8 +43,8 @@ export default function CustomerForm({
         };
         const result = await editCustomer(payload);
         if (result.success) {
-          toast.success("Customer edited successfully", { id: loadingToast });
           router.push("/admin/settings/customers");
+          toast.success("Customer edited successfully", { id: loadingToast });
         } else {
           toast.error(result.error || "Failed to edit customer", {
             id: loadingToast,
@@ -64,8 +64,8 @@ export default function CustomerForm({
         const result = await addCustomer(formData);
 
         if (result.success) {
-          toast.success("Customer created successfully.", { id: loadingToast });
           router.push("/admin/settings/customers");
+          toast.success("Customer created successfully.", { id: loadingToast });
         } else {
           toast.error(result.error || "Failed to create customer", {
             id: loadingToast,
