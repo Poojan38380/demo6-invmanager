@@ -30,11 +30,13 @@ import { DataTablePagination } from "@/components/ui/data-table/data-table-pagin
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  displayProductName?: boolean;
 }
 
 export function TransactionsDataTable<TData, TValue>({
   columns,
   data,
+  displayProductName = true,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -42,9 +44,7 @@ export function TransactionsDataTable<TData, TValue>({
   );
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({
-      sellingPrice: false,
-      totalFinalValue: false,
-      bufferStock: false,
+      product: displayProductName ? true : false,
     });
   const [rowSelection, setRowSelection] = React.useState({});
   const [globalFilter, setGlobalFilter] = React.useState("");

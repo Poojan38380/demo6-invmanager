@@ -23,10 +23,12 @@ export default function TransactionLayout({
   transactions,
   title,
   displayChart = false,
+  displayProductName = true,
 }: {
   transactions: TransactionForTable[];
   title: string;
   displayChart?: boolean;
+  displayProductName?: boolean;
 }) {
   const [filteredTransactions, setFilteredTransactions] =
     useState(transactions);
@@ -180,6 +182,7 @@ export default function TransactionLayout({
       )}
       <CardContent className="space-y-6 max-768:px-0">
         <TransactionsDataTable
+          displayProductName={displayProductName}
           columns={TransactionTableColumns}
           data={filteredTransactions}
         />

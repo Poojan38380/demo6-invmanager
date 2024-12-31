@@ -13,6 +13,7 @@ export default async function ProductTransactionsPage({
   if (!transactions || transactions.length === 0) return notFound();
   return (
     <TransactionLayout
+      displayProductName={false}
       title={`Transactions on product: ${transactions[0].product.name}`}
       transactions={transactions}
       displayChart

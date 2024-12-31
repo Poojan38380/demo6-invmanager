@@ -84,12 +84,13 @@ export async function createUnit(unitName: string) {
       data: { name: unitName },
     });
 
-    const notificationMessage = `A new unit *${unitName}* has been created.`;
+    const notificationMessage = `A new unit *${unitName}* has been created by *${session.user.username}*.`;
 
     await sendTelegramMessage(notificationMessage);
 
     revalidateTag("get-units");
     revalidatePath("/admin/settings/units");
+    revalidatePath("/admin/products/new");
     return { success: true, unitId: newUnit.id };
   } catch (Error) {
     console.log("Error creating unit");
