@@ -29,8 +29,9 @@ model Product {
   updatedAt  DateTime @updatedAt
   isArchived Boolean  @default(false)
 
-  name  String
-  stock Float  @default(0)
+  name        String
+  stock       Float   @default(0)
+  hasVariants Boolean @default(false)
 
   SKU              String?
   shortDescription String?
@@ -54,8 +55,22 @@ model Product {
   vendor      Vendor?    @relation(fields: [vendorId], references: [id])
   vendorId    String?    @db.ObjectId
 
-  transactions  Transaction[]
-  productImages ProductImage[]
+  transactions    Transaction[]
+  productImages   ProductImage[]
+  productVariants ProductVariant[] // New relation for variants
+}
+
+model ProductVariant {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  variantName  String
+  variantStock Float    @default(0)
+
+  Product   Product @relation(fields: [productId], references: [id])
+  productId String  @db.ObjectId
+
+  transactions Transaction[]
 }
 
 model Transaction {
@@ -74,10 +89,12 @@ model Transaction {
   user      User    @relation(fields: [userId], references: [id])
   userId    String  @db.ObjectId
 
-  customer   Customer? @relation(fields: [customerId], references: [id])
-  customerId String?   @db.ObjectId
-  vendor     Vendor?   @relation(fields: [vendorId], references: [id])
-  vendorId   String?   @db.ObjectId
+  customer         Customer?       @relation(fields: [customerId], references: [id])
+  customerId       String?         @db.ObjectId
+  vendor           Vendor?         @relation(fields: [vendorId], references: [id])
+  vendorId         String?         @db.ObjectId
+  productVariant   ProductVariant? @relation(fields: [productVariantId], references: [id])
+  productVariantId String?         @db.ObjectId
 }
 
 enum TransactionAction {
@@ -153,10 +170,4 @@ model Warehouse {
   location String
 
   products Product[]
-}
-
-model Notification {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt DateTime @default(now())
-  message   String
 }

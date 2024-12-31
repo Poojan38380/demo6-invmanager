@@ -1,4 +1,3 @@
-import React from "react";
 import { UseFormReturn } from "react-hook-form";
 import { ProductFormValues } from "./ProductForm";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -41,7 +40,7 @@ export default function AdditionalFields({
           </CardHeader>
         </CollapsibleTrigger>
         <CollapsibleContent>
-          <CardContent className="space-y-5">
+          <CardContent className="space-y-6">
             <FormField
               control={form.control}
               name="bufferStock"

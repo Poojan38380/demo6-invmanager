@@ -119,7 +119,7 @@ export const BasicColumns: ColumnDef<ProductWithOneImage>[] = [
   {
     accessorKey: "lastMonthSales",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Last Month Demand" />
+      <DataTableColumnHeader column={column} title="Last 30 days Demand" />
     ),
     cell: ({ row }) => {
       const lastMonthSales: number = row.original.lastMonthSales;

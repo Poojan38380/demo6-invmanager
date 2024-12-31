@@ -18,6 +18,14 @@ import { SelectCategory } from "@/app/admin/_components/select-category";
 import { ImageUploader } from "./image-uploader";
 import { ProductWithImages } from "@/types/dataTypes";
 import AdditionalFields from "./additional-fields";
+import VariantCard from "./variant-card";
+
+const VariantSchema = z.object({
+  variantName: z.string().min(1, {
+    message: "Variant name must be at least 1 character.",
+  }),
+  variantStock: z.number().default(0),
+});
 
 const ProductformSchema = z.object({
   name: z.string().min(2, {
@@ -41,6 +49,7 @@ const ProductformSchema = z.object({
     .number()
     .min(1, { message: "Quantity in box must be greater than 0." })
     .optional(),
+  productVariants: z.array(VariantSchema).optional(), // Variants are optional for products without variants
 });
 
 export type ProductFormValues = z.infer<typeof ProductformSchema>;
@@ -54,7 +63,6 @@ export default function ProductForm({
   const [productPrevImageUrls, setProductPrevImageUrls] = useState<string[]>(
     product?.productImages?.map((image) => image.url) || []
   );
-
   const router = useRouter();
 
   const form = useForm<ProductFormValues>({
@@ -71,6 +79,7 @@ export default function ProductForm({
       vendorId: product?.vendorId || undefined,
       categoryId: product?.categoryId || undefined,
       qtyInBox: product?.qtyInBox || undefined,
+      productVariants: product?.productVariants,
     },
   });
 
@@ -135,6 +144,7 @@ export default function ProductForm({
               lastMonthSales={product?.lastMonthSales}
               form={form}
             />
+            {product ? null : <VariantCard form={form} />}
             <Card>
               <CardHeader>
                 <CardTitle>Media</CardTitle>

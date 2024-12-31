@@ -53,6 +53,7 @@ async function getProductsforTable(): Promise<ProductWithOneImage[]> {
           stockChange: true,
         },
       },
+      productVariants: true,
     },
   });
   const productsWithSales = products.map((product) => {
@@ -82,6 +83,7 @@ async function getSingleProduct(id: string): Promise<ProductWithImages | null> {
     where: { id },
     include: {
       productImages: true,
+      productVariants: true,
       transactions: {
         where: {
           action: "DECREASED",
@@ -113,7 +115,10 @@ export const getCachedSingleProduct = cache(
   async (id: string): Promise<ProductWithImages | null> => getSingleProduct(id),
   ["get-single-product-for-edit"]
 );
-
+interface addVariantProps {
+  variantName: string;
+  variantStock: number;
+}
 interface addproductProps {
   name: string;
   stock: number;
@@ -126,6 +131,7 @@ interface addproductProps {
   vendorId?: string | undefined;
   categoryId?: string | undefined;
   qtyInBox?: number | undefined;
+  productVariants?: addVariantProps[];
 }
 
 export async function addProduct(data: addproductProps, productImages: File[]) {
@@ -159,6 +165,7 @@ export async function addProduct(data: addproductProps, productImages: File[]) {
         costPrice: data.costPrice,
         sellingPrice: data.sellingPrice,
         unit: data.unit,
+        hasVariants: data.productVariants && data.productVariants?.length > 0,
         vendorId: data.vendorId,
         categoryId: data.categoryId,
         creatorId,
@@ -181,15 +188,45 @@ export async function addProduct(data: addproductProps, productImages: File[]) {
       },
     });
 
+    if (data.productVariants && data.productVariants.length > 0) {
+      for (const variant of data.productVariants) {
+        // Create variant
+        const createdVariant = await prisma.productVariant.create({
+          data: {
+            variantName: variant.variantName,
+            variantStock: variant.variantStock,
+            productId: product.id,
+          },
+        });
+
+        // Create transaction for each variant
+        await prisma.transaction.create({
+          data: {
+            action: "CREATED",
+            stockBefore: 0,
+            stockChange: variant.variantStock,
+            stockAfter: variant.variantStock,
+            productId: product.id,
+            productVariantId: createdVariant.id,
+            userId: creatorId,
+            vendorId: data.vendorId,
+          },
+        });
+      }
+    }
+
     const notificationMessage = `A new product has been created by ${
       creator?.username
     }:
     - Product Name: ${data.name} 
     - Initial Stock: ${data.stock}
-    - Buffer Stock: ${data.bufferStock || "N/A"}
-    - Cost Price: ${data.costPrice || "N/A"}
-    - Selling Price: ${data.sellingPrice || "N/A"}
-    `;
+     ${
+       data.productVariants
+         ? `\nVariants:\n${data.productVariants
+             .map((v) => `- ${v.variantName}: Initial Stock ${v.variantStock}`)
+             .join("\n")}`
+         : ""
+     }`;
 
     await sendTelegramMessage(notificationMessage);
 

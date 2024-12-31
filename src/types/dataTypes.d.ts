@@ -2,6 +2,7 @@ import {
   Category,
   Product,
   ProductImage,
+  ProductVariant,
   Transaction,
   User,
 } from "@prisma/client";
@@ -9,6 +10,7 @@ import {
 export type ProductWithImages = Product & {
   productImages: ProductImage[];
   lastMonthSales?: number;
+  productVariants?: ProductVariant[];
 };
 
 export type TransactionForTable = Transaction & {
