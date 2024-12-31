@@ -41,7 +41,7 @@ export default function AdditionalFields({
           </CardHeader>
         </CollapsibleTrigger>
         <CollapsibleContent>
-          <CardContent className="space-y-6">
+          <CardContent className="space-y-5">
             <FormField
               control={form.control}
               name="bufferStock"
