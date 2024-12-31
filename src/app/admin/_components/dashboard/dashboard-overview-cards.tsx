@@ -92,7 +92,7 @@ const DashboardOverviewCards = ({
         <Card className="bg-warning/10 shadow-md rounded-2xl border-none hover:shadow-lg hover:scale-105 transition-all">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">
-              Approaching Buffer
+              Approaching Min. Stock
             </CardTitle>
             <AlertTriangle className="h-4 w-4 text-yellow-500" />
           </CardHeader>
@@ -101,31 +101,33 @@ const DashboardOverviewCards = ({
               {metrics.approachingBufferCount}
             </div>
             <p className="text-xs text-yellow-600 mt-1">
-              Products nearing buffer stock level
+              Products nearing minimum stock level
             </p>
           </CardContent>
         </Card>
       </Link>
 
       {/* Below Buffer Stock Alert */}
-      <Link href={"/admin/products/critical"} target="_blank">
-        <Card className="bg-destructive/30 shadow-md rounded-2xl border-none  hover:shadow-lg hover:scale-105 transition-all">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">
-              Below Buffer Stock
-            </CardTitle>
-            <AlertCircle className="h-4 w-4 text-red-500" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-red-600">
-              {metrics.belowBufferCount}
-            </div>
-            <p className="text-xs text-red-600 mt-1">
-              Products requiring immediate attention
-            </p>
-          </CardContent>
-        </Card>{" "}
-      </Link>
+      {metrics.belowBufferCount > 0 ? (
+        <Link href={"/admin/products/critical"} target="_blank">
+          <Card className="bg-destructive/30 shadow-md rounded-2xl border-none  hover:shadow-lg hover:scale-105 transition-all">
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium">
+                Below Min. Stock
+              </CardTitle>
+              <AlertCircle className="h-4 w-4 text-red-500" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-red-600">
+                {metrics.belowBufferCount}
+              </div>
+              <p className="text-xs text-red-600 mt-1">
+                Products requiring immediate attention
+              </p>
+            </CardContent>
+          </Card>
+        </Link>
+      ) : null}
     </div>
   );
 };
