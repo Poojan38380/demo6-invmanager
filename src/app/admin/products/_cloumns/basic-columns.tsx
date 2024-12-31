@@ -5,42 +5,65 @@ import { Badge } from "@/components/ui/badge";
 import { DataTableColumnHeader } from "@/components/ui/data-table/data-table-column-header";
 import { formatDateYYMMDDHHMM } from "@/lib/format-date";
 import { ColumnDef } from "@tanstack/react-table";
-import { ChartNoAxesCombined, Package, Pen } from "lucide-react";
+import { ChartNoAxesCombined, ChevronRight, Package, Pen } from "lucide-react";
 import { ProductWithOneImage } from "../_actions/products";
 import { formatNumber } from "@/lib/formatter";
 import UpdateStock from "../_components/update-stock";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { useState } from "react";
+import { ProductVariant } from "@prisma/client";
 
 export const BasicColumns: ColumnDef<ProductWithOneImage>[] = [
   {
     accessorKey: "name",
     header: ({ column }) => (
-      <DataTableColumnHeader
-        column={column}
-        title="Product"
-        className="justify-center"
-      />
+      <DataTableColumnHeader column={column} title="Product" />
     ),
-
     cell: ({ row }) => {
       const productName: string = row.getValue("name");
-      const productId = row.original.id;
+      const hasVariants = row.original.hasVariants;
+      const [isExpanded, setIsExpanded] = useState(false);
 
       return (
-        <Link
-          href={`/admin/transactions/product/${productId}`}
-          className="flex items-center gap-2"
-          prefetch={false}
-        >
-          <Avatar className="">
-            <AvatarImage src={row.original.productImages[0]?.url} />
-            <AvatarFallback>
-              <Package className="h-5 w-5 text-muted-foreground" />
-            </AvatarFallback>
-          </Avatar>
-          <span>{productName}</span>
-        </Link>
+        <div>
+          <div
+            className={`flex items-center gap-2 ${
+              hasVariants ? "cursor-pointer" : ""
+            }`}
+            onClick={() => hasVariants && setIsExpanded(!isExpanded)}
+          >
+            {hasVariants && (
+              <ChevronRight
+                className={`transform transition ${
+                  isExpanded ? "rotate-90" : ""
+                }`}
+              />
+            )}
+            <Avatar>
+              <AvatarImage src={row.original.productImages[0]?.url} />
+              <AvatarFallback>
+                <Package className="h-5 w-5 text-muted-foreground" />
+              </AvatarFallback>
+            </Avatar>
+            <span>{productName}</span>
+          </div>
+          {isExpanded &&
+            hasVariants &&
+            row.original.productVariants?.map((variant: ProductVariant) => (
+              <div
+                key={variant.id}
+                className="ml-8 mt-2 flex items-center gap-4 border-l pl-4 text-sm"
+              >
+                <span className="text-muted-foreground">
+                  {variant.variantName}
+                </span>
+                <Badge variant="default">
+                  {formatNumber(variant.variantStock)}
+                </Badge>
+              </div>
+            ))}
+        </div>
       );
     },
   },

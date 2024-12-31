@@ -2,7 +2,7 @@
 
 import { auth } from "@/lib/auth";
 import prisma from "@/prisma";
-import { Product } from "@prisma/client";
+import { Product, ProductVariant } from "@prisma/client";
 import {
   unstable_cache as cache,
   revalidatePath,
@@ -24,6 +24,7 @@ export type ProductWithOneImage = Product & {
     name: string;
   } | null;
   lastMonthSales: number;
+  productVariants?: ProductVariant[];
 };
 
 async function getProductsforTable(): Promise<ProductWithOneImage[]> {
