@@ -31,6 +31,8 @@ export async function createCategory(name: string) {
 
     revalidateTag("get-categories");
     revalidatePath("/admin/products/categories");
+    revalidatePath("/admin/products/new");
+
     return { success: true, categoryId: newCategory.id };
   } catch (Error) {
     console.log("Error creating category");
@@ -60,6 +62,7 @@ export async function editCategory(data: EditCategoryPayload) {
 
     revalidateTag("get-categories");
     revalidatePath("/admin/products/categories");
+    revalidatePath("/admin/products/new");
     return { success: true, categoryId: updatedCategory.id };
   } catch (Error) {
     console.log("Error editing category");
