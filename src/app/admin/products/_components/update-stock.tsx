@@ -171,7 +171,7 @@ export default function UpdateStock({ product }: { product: Product }) {
                       onChange={(e) =>
                         handleAddStockChange(Number(e.target.value))
                       }
-                      className="text-lg h-12 bg-success/40 border-none shadow-sm"
+                      className="text-xl font-black h-12 bg-success/40 border-none shadow-sm"
                     />
                   </div>
                   {addStockValue > 0 && product.qtyInBox ? (
@@ -216,7 +216,7 @@ export default function UpdateStock({ product }: { product: Product }) {
                       onChange={(e) =>
                         handleRemoveStockChange(Number(e.target.value))
                       }
-                      className="text-lg h-12 bg-destructive/40 border-none shadow-sm"
+                      className="text-xl font-black h-12 bg-destructive/40 border-none shadow-sm"
                     />
                   </div>
                   {removeStockValue > 0 && product.qtyInBox ? (

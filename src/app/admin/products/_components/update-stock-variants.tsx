@@ -203,7 +203,7 @@ export default function UpdateStockVariants({
                           onChange={(e) =>
                             handleAddStockChange(Number(e.target.value))
                           }
-                          className="text-lg h-12 bg-success/40 border-none shadow-sm"
+                          className="text-xl font-black h-12 bg-success/40 border-none shadow-sm"
                         />
                       </div>
                     </div>
@@ -248,7 +248,7 @@ export default function UpdateStockVariants({
                           onChange={(e) =>
                             handleRemoveStockChange(Number(e.target.value))
                           }
-                          className="text-lg h-12 bg-destructive/40 border-none shadow-sm"
+                          className="text-xl font-black h-12 bg-destructive/40 border-none shadow-sm"
                         />
                       </div>
                     </div>
