@@ -115,12 +115,11 @@ export default function UpdateStock({ product }: { product: Product }) {
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
         <Button
-          variant="outline"
-          className=" rounded-full bg-card shadow-md  "
-          size="sm"
+          variant={"outline"}
+          size="icon"
+          className="h-9 w-9 p-1 bg-card shadow-lg "
         >
-          <ArrowUpDown className="" />
-          <span className="max-768:hidden">Stock</span>
+          <ArrowUpDown />
         </Button>
       </DrawerTrigger>
       <DrawerContent className="bg-background">
