@@ -4,7 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { DataTableColumnHeader } from "@/components/ui/data-table/data-table-column-header";
 import { formatDateYYMMDDHHMM } from "@/lib/format-date";
-import { ColumnDef } from "@tanstack/react-table";
+import { ColumnDef, Row } from "@tanstack/react-table";
 import { ChartNoAxesCombined, ChevronRight, Package, Pen } from "lucide-react";
 import { ProductWithOneImage } from "../_actions/products";
 import { formatNumber } from "@/lib/formatter";
@@ -20,52 +20,7 @@ export const BasicColumns: ColumnDef<ProductWithOneImage>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Product" />
     ),
-    cell: ({ row }) => {
-      const productName: string = row.getValue("name");
-      const hasVariants = row.original.hasVariants;
-      const [isExpanded, setIsExpanded] = useState(false);
-
-      return (
-        <div>
-          <div
-            className={`flex items-center gap-2 ${
-              hasVariants ? "cursor-pointer" : ""
-            }`}
-            onClick={() => hasVariants && setIsExpanded(!isExpanded)}
-          >
-            {hasVariants && (
-              <ChevronRight
-                className={`transform transition ${
-                  isExpanded ? "rotate-90" : ""
-                }`}
-              />
-            )}
-            <Avatar>
-              <AvatarImage src={row.original.productImages[0]?.url} />
-              <AvatarFallback>
-                <Package className="h-5 w-5 text-muted-foreground" />
-              </AvatarFallback>
-            </Avatar>
-            <span>{productName}</span>
-          </div>
-          {isExpanded &&
-            hasVariants &&
-            row.original.productVariants?.map((variant: ProductVariant) => (
-              <div
-                key={variant.id}
-                className="ml-8 mt-2 flex items-center gap-4 border-l pl-4 text-sm"
-              >
-                <span className="text-muted-foreground">
-                  {variant.variantName}
-                </span>
-                <Badge variant="default">
-                  {formatNumber(variant.variantStock)}
-                </Badge>
-              </div>
-            ))}
-        </div>
-      );
-    },
+    cell: ({ row }) => <ProductNameCell row={row} />,
   },
   {
     accessorKey: "stock",
@@ -194,3 +149,46 @@ export const BasicColumns: ColumnDef<ProductWithOneImage>[] = [
     ),
   },
 ];
+
+const ProductNameCell = ({ row }: { row: Row<ProductWithOneImage> }) => {
+  const productName: string = row.getValue("name");
+  const hasVariants = row.original.hasVariants;
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  return (
+    <div>
+      <div
+        className={`flex items-center gap-2 ${
+          hasVariants ? "cursor-pointer" : ""
+        }`}
+        onClick={() => hasVariants && setIsExpanded(!isExpanded)}
+      >
+        {hasVariants && (
+          <ChevronRight
+            className={`transform transition ${isExpanded ? "rotate-90" : ""}`}
+          />
+        )}
+        <Avatar>
+          <AvatarImage src={row.original.productImages[0]?.url} />
+          <AvatarFallback>
+            <Package className="h-5 w-5 text-muted-foreground" />
+          </AvatarFallback>
+        </Avatar>
+        <span>{productName}</span>
+      </div>
+      {isExpanded &&
+        hasVariants &&
+        row.original.productVariants?.map((variant: ProductVariant) => (
+          <div
+            key={variant.id}
+            className="ml-8 mt-2 flex items-center gap-4 border-l pl-4 text-sm"
+          >
+            <span className="text-muted-foreground">{variant.variantName}</span>
+            <Badge variant="default">
+              {formatNumber(variant.variantStock)}
+            </Badge>
+          </div>
+        ))}
+    </div>
+  );
+};
