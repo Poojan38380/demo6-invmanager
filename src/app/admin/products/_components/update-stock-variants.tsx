@@ -49,7 +49,7 @@ export default function UpdateStockVariants({
   const [error, setError] = useState("");
 
   const selectedVariant = useMemo(() => {
-    return product.productVariants!.find((v) => v.id === selectedVariantId);
+    return product.productVariants.find((v) => v.id === selectedVariantId);
   }, [selectedVariantId, product.productVariants]);
 
   const stockChange = useMemo(() => {

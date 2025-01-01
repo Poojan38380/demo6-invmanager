@@ -27,6 +27,7 @@ export const BasicColumns: ColumnDef<ProductWithOneImage>[] = [
 
     cell: ({ row }) => {
       const productName: string = row.getValue("name");
+
       return (
         <div className="flex items-center gap-2">
           <Avatar className="">
@@ -55,25 +56,23 @@ export const BasicColumns: ColumnDef<ProductWithOneImage>[] = [
         );
 
         return (
-          <div className="space-y-3 w-full ">
+          <div className="space-y-3 ">
             {product.productVariants?.map((variant) => (
               <div
                 key={variant.id}
-                className="group flex items-center justify-between gap-3"
+                className=" flex items-center justify-between gap-2"
               >
                 <span className="text-sm   truncate">
                   {variant.variantName}
                 </span>
-                <Badge className="px-2 py-1 font-medium">
-                  {formatNumber(variant.variantStock)}
-                </Badge>
+                <Badge>{formatNumber(variant.variantStock)}</Badge>
               </div>
             ))}
-            <Separator className="my-2" />
-            <div className="flex items-center justify-end text-muted-foreground text-sm">
-              <span>
+            <Separator />
+            <div className="flex justify-end text-muted-foreground text-sm">
+              <Badge variant={"outline"}>
                 {formatNumber(totalVariantStock || 0)} {product.unit}
-              </span>
+              </Badge>
             </div>
           </div>
         );
@@ -98,10 +97,7 @@ export const BasicColumns: ColumnDef<ProductWithOneImage>[] = [
       return (
         <div className="flex flex-col gap-1.5">
           <div className="flex items-center gap-1">
-            <Badge
-              variant={getBadgeVariant(stock, bufferStock, threshold)}
-              className="px-2 py-1 font-medium"
-            >
+            <Badge variant={getBadgeVariant(stock, bufferStock, threshold)}>
               {formatNumber(stock)}
             </Badge>
             <span className="text-sm text-muted-foreground">{unit}</span>

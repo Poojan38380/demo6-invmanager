@@ -9,6 +9,7 @@ type TransactionFilter = {
   userId?: string;
   vendorId?: string;
   customerId?: string;
+  productVariantId?: string;
 };
 
 async function getTransactions(
@@ -27,6 +28,7 @@ async function getTransactions(
             sellingPrice: true,
           },
         },
+        productVariant: { select: { variantName: true } },
         user: { select: { username: true } },
         customer: { select: { companyName: true } },
         vendor: { select: { companyName: true } },
@@ -48,6 +50,9 @@ export const cacheTransactionsFn = cache(getTransactions, [
 export const getAllCachedTransactions = async () => cacheTransactionsFn({});
 export const getCachedTransactionsByProductId = async (productId: string) =>
   cacheTransactionsFn({ productId });
+export const getCachedTransactionsByVariantId = async (
+  productVariantId: string
+) => cacheTransactionsFn({ productVariantId });
 export const getCachedTransactionsByUserId = async (userId: string) =>
   cacheTransactionsFn({ userId });
 export const getCachedTransactionsByVendorId = async (vendorId: string) =>
