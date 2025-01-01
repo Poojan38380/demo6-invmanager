@@ -1,7 +1,14 @@
 import React, { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { ArrowUpDown, TriangleAlert, Info, Truck, Store } from "lucide-react";
+import {
+  ArrowUpDown,
+  TriangleAlert,
+  Info,
+  Truck,
+  Store,
+  PlusCircle,
+} from "lucide-react";
 import {
   Drawer,
   DrawerClose,
@@ -20,6 +27,7 @@ import { updateProductStock } from "../_actions/stock";
 import { Product } from "@prisma/client";
 import { formatNumber } from "@/lib/formatter";
 import { Label } from "@/components/ui/label";
+import Link from "next/link";
 
 export default function UpdateStock({ product }: { product: Product }) {
   const router = useRouter();
@@ -150,7 +158,9 @@ export default function UpdateStock({ product }: { product: Product }) {
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-2 items-end">
                 <div className="flex gap-2 items-center">
-                  <Truck className="text-success" />
+                  <div className="mt-5">
+                    <Truck className="text-success" />
+                  </div>
                   <div className="flex flex-col gap-1">
                     <Label htmlFor="addStock">Add stock</Label>
                     <Input
@@ -172,16 +182,30 @@ export default function UpdateStock({ product }: { product: Product }) {
                 </div>
                 <div className="flex flex-col gap-1">
                   <Label>Supplier</Label>
-                  <SupplierSelectorforUpdater
-                    onSupplierSelectAction={setVendorId}
-                    defaultValue={product.vendorId || "none"}
-                  />
+                  <div className="flex items-center gap-2">
+                    <SupplierSelectorforUpdater
+                      onSupplierSelectAction={setVendorId}
+                      defaultValue={product.vendorId || "none"}
+                    />
+                    <Button asChild variant="ghost" size="icon" className="  ">
+                      <Link
+                        href={`/admin/settings/suppliers/new`}
+                        className="w-6  h-6"
+                        prefetch={false}
+                        target="_blank"
+                      >
+                        <PlusCircle className="text-xs" />
+                      </Link>
+                    </Button>
+                  </div>
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-2 items-end">
                 <div className="flex gap-2 items-center">
-                  <Store className="text-destructive" />
+                  <div className="mt-5">
+                    <Store className="text-destructive" />
+                  </div>
                   <div className="flex flex-col gap-1">
                     <Label htmlFor="removeStock">Remove stock</Label>
                     <Input
@@ -202,10 +226,22 @@ export default function UpdateStock({ product }: { product: Product }) {
                   ) : null}
                 </div>
                 <div className="flex flex-col">
-                  <Label>Customer</Label>
-                  <CustomerSelectorforUpdater
-                    onCustomerSelectAction={setCustomerId}
-                  />
+                  <Label>Customer</Label>{" "}
+                  <div className="flex items-center gap-2">
+                    <CustomerSelectorforUpdater
+                      onCustomerSelectAction={setCustomerId}
+                    />
+                    <Button asChild variant="ghost" size="icon" className="  ">
+                      <Link
+                        href={`/admin/settings/customers/new`}
+                        className="w-6  h-6"
+                        prefetch={false}
+                        target="_blank"
+                      >
+                        <PlusCircle className="text-xs" />
+                      </Link>
+                    </Button>{" "}
+                  </div>
                 </div>
               </div>
 
@@ -216,7 +252,7 @@ export default function UpdateStock({ product }: { product: Product }) {
                       isBelowBuffer ? "text-red-600" : ""
                     }`}
                   >
-                    New Stock: {newStock} {product.unit}
+                    New: {newStock} {product.unit}
                   </span>
                 </div>
 

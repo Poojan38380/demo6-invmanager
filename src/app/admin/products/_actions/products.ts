@@ -24,7 +24,7 @@ export type ProductWithOneImage = Product & {
     name: string;
   } | null;
   lastMonthSales: number;
-  productVariants?: ProductVariant[];
+  productVariants: ProductVariant[];
 };
 
 async function getProductsforTable(): Promise<ProductWithOneImage[]> {

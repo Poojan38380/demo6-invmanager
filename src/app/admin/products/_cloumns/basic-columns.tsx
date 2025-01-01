@@ -12,6 +12,7 @@ import UpdateStock from "../_components/update-stock";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Separator } from "@/components/ui/separator";
+import UpdateStockVariants from "../_components/update-stock-variants";
 
 export const BasicColumns: ColumnDef<ProductWithOneImage>[] = [
   {
@@ -122,7 +123,11 @@ export const BasicColumns: ColumnDef<ProductWithOneImage>[] = [
       const product = row.original;
       return (
         <div className="flex items-center justify-center gap-2">
-          <UpdateStock product={product} />
+          {product.hasVariants ? (
+            <UpdateStockVariants product={product} />
+          ) : (
+            <UpdateStock product={product} />
+          )}
           <Button
             asChild
             variant="outline"

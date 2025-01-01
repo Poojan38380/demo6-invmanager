@@ -10,7 +10,7 @@ import {
 export type ProductWithImages = Product & {
   productImages: ProductImage[];
   lastMonthSales?: number;
-  productVariants?: ProductVariant[];
+  productVariants: ProductVariant[];
 };
 
 export type TransactionForTable = Transaction & {
