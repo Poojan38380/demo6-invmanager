@@ -318,7 +318,7 @@ export async function editProduct(
       ),
     ]);
 
-    const notificationMessage = `Details of product ${existingProduct.name} has been updated by ${updater.username}`;
+    const notificationMessage = `Details of product: *${existingProduct.name}* has been updated by user: *${updater.username}*`;
 
     await sendTelegramMessage(notificationMessage);
 
