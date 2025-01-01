@@ -7,7 +7,7 @@ import { unstable_cache as cache } from "next/cache";
 async function getProductsforDisplay(): Promise<ProductWithImages[]> {
   const products = await prisma.product.findMany({
     orderBy: { updatedAt: "desc" },
-    include: { productImages: true },
+    include: { productImages: true, productVariants: true },
   });
   return products;
 }
@@ -15,5 +15,5 @@ async function getProductsforDisplay(): Promise<ProductWithImages[]> {
 export const getCachedProductsforDisplay = cache(
   async () => getProductsforDisplay(),
   ["get-products-for-display"],
-  { revalidate: 7200 } // Revalidate every 2 hours
+  { revalidate: 60 * 60 * 12 } // Revalidate every 12 hours
 );

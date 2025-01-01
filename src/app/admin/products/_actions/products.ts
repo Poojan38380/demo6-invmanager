@@ -324,7 +324,6 @@ export async function editProduct(
 
     revalidateTag("get-single-product-for-edit");
     revalidateTag("get-products-for-table");
-    revalidateTag("get-products-for-display");
     revalidateTag("get-all-transactions");
     revalidatePath("/admin/products");
     revalidatePath("/products");
