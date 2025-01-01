@@ -222,7 +222,7 @@ export async function addProduct(data: addproductProps, productImages: File[]) {
     - Product Name: ${data.name} 
     - Initial Stock: ${data.stock}
      ${
-       data.productVariants
+       data.productVariants && data.productVariants?.length > 0
          ? `\nVariants:\n${data.productVariants
              .map((v) => `- ${v.variantName}: Initial Stock ${v.variantStock}`)
              .join("\n")}`

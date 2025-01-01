@@ -9,7 +9,6 @@ import {
 
 import { BottomNav } from "./bottom-nav";
 import { PrimaryNav } from "./primary-nav";
-import { SecondaryNav } from "./secondary-nav";
 import { NavUser } from "./nav-user";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
@@ -37,7 +36,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <PrimaryNav />
-        <SecondaryNav />
         <BottomNav className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
