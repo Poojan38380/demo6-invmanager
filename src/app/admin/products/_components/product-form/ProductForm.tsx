@@ -18,7 +18,6 @@ import { SelectCategory } from "@/app/admin/_components/select-category";
 import { ImageUploader } from "./image-uploader";
 import { ProductWithImages } from "@/types/dataTypes";
 import AdditionalFields from "./additional-fields";
-import VariantCard from "./variant-card";
 
 const VariantSchema = z.object({
   variantName: z.string().min(1, {
@@ -144,7 +143,7 @@ export default function ProductForm({
               lastMonthSales={product?.lastMonthSales}
               form={form}
             />
-            {product ? null : <VariantCard form={form} />}
+            {/* {product ? null : <VariantCard form={form} />} */}
             <Card>
               <CardHeader>
                 <CardTitle>Media</CardTitle>
