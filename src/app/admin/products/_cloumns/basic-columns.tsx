@@ -14,6 +14,7 @@ import Link from "next/link";
 import { Separator } from "@/components/ui/separator";
 import UpdateStockVariants from "../_components/update-stock-variants";
 
+
 export const BasicColumns: ColumnDef<ProductWithOneImage>[] = [
   {
     accessorKey: "name",
@@ -28,8 +29,10 @@ export const BasicColumns: ColumnDef<ProductWithOneImage>[] = [
     cell: ({ row }) => {
       const productName: string = row.getValue("name");
 
+
       return (
         <div className="flex items-center gap-2">
+
           <Avatar className="">
             <AvatarImage src={row.original.productImages[0]?.url} />
             <AvatarFallback>
@@ -38,6 +41,7 @@ export const BasicColumns: ColumnDef<ProductWithOneImage>[] = [
           </Avatar>
           <span className="font-semibold">{productName}</span>
         </div>
+
       );
     },
   },
