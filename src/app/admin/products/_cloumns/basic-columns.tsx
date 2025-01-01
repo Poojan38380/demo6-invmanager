@@ -165,7 +165,7 @@ const ProductNameCell = ({ row }: { row: Row<ProductWithOneImage> }) => {
       >
         {hasVariants && (
           <ChevronRight
-            className={`transform transition ${isExpanded ? "rotate-90" : ""}`}
+            className={`transform transition ${isExpanded ? "rotate-91" : ""}`}
           />
         )}
         <Avatar>
