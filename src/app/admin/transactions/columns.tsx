@@ -23,6 +23,7 @@ import {
   Truck,
 } from "lucide-react";
 import { formatDateYYMMDDHHMM } from "@/lib/format-date";
+import { Badge } from "@/components/ui/badge";
 
 export const TransactionTableColumns: ColumnDef<TransactionForTable>[] = [
   {
@@ -32,17 +33,30 @@ export const TransactionTableColumns: ColumnDef<TransactionForTable>[] = [
       <DataTableColumnHeader column={column} title="Product" />
     ),
     cell: ({ row }) => {
-      const productName = row.original.product.name;
-      const productId = row.original.productId;
+      const { name: productName } = row.original.product;
+      const { productId, productVariant, productVariantId } = row.original;
+      const variantName = productVariant?.variantName;
+
       return (
-        <Link
-          prefetch={false}
-          href={`/admin/transactions/product/${productId}`}
-          className="flex items-center gap-2 text-primary hover:underline hover:text-accent-foreground transition-colors"
-        >
-          <Package className="h-4 w-4" />
-          <span className="font-medium">{productName}</span>
-        </Link>
+        <span className="flex flex-wrap gap-1">
+          <Link
+            href={`/admin/transactions/product/${productId}`}
+            className="flex items-center gap-2 text-primary hover:underline hover:text-accent-foreground transition-colors"
+            prefetch={false}
+          >
+            <Package className="h-4 w-4" aria-hidden="true" />
+            <span className="font-medium">{productName}</span>
+          </Link>
+          {variantName && (
+            <Link
+              href={`/admin/transactions/product/variant/${productVariantId}`}
+              className=" text-foreground hover:underline hover:text-accent-foreground transition-colors"
+              prefetch={false}
+            >
+              <Badge variant={"secondary"}>{variantName}</Badge>
+            </Link>
+          )}
+        </span>
       );
     },
   },

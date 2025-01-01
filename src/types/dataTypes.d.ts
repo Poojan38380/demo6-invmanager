@@ -10,7 +10,7 @@ import {
 export type ProductWithImages = Product & {
   productImages: ProductImage[];
   lastMonthSales?: number;
-  productVariants?: ProductVariant[];
+  productVariants: ProductVariant[];
 };
 
 export type TransactionForTable = Transaction & {
@@ -20,6 +20,9 @@ export type TransactionForTable = Transaction & {
     costPrice: number | null;
     sellingPrice?: number | null;
   };
+  productVariant: {
+    variantName: string;
+  } | null;
   user: {
     username: string;
   };

@@ -24,7 +24,7 @@ export type ProductWithOneImage = Product & {
     name: string;
   } | null;
   lastMonthSales: number;
-  productVariants?: ProductVariant[];
+  productVariants: ProductVariant[];
 };
 
 async function getProductsforTable(): Promise<ProductWithOneImage[]> {
@@ -318,13 +318,12 @@ export async function editProduct(
       ),
     ]);
 
-    const notificationMessage = `Details of product ${existingProduct.name} has been updated by ${updater.username}`;
+    const notificationMessage = `Details of product: *${existingProduct.name}* has been updated by user: *${updater.username}*`;
 
     await sendTelegramMessage(notificationMessage);
 
     revalidateTag("get-single-product-for-edit");
     revalidateTag("get-products-for-table");
-    revalidateTag("get-products-for-display");
     revalidateTag("get-all-transactions");
     revalidatePath("/admin/products");
     revalidatePath("/products");

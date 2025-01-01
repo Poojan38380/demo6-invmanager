@@ -11,6 +11,9 @@ import { formatNumber } from "@/lib/formatter";
 import UpdateStock from "../_components/update-stock";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { Separator } from "@/components/ui/separator";
+import UpdateStockVariants from "../_components/update-stock-variants";
+
 
 export const BasicColumns: ColumnDef<ProductWithOneImage>[] = [
   {
@@ -25,22 +28,20 @@ export const BasicColumns: ColumnDef<ProductWithOneImage>[] = [
 
     cell: ({ row }) => {
       const productName: string = row.getValue("name");
-      const productId = row.original.id;
+
 
       return (
-        <Link
-          href={`/admin/transactions/product/${productId}`}
-          className="flex items-center gap-2"
-          prefetch={false}
-        >
+        <div className="flex items-center gap-2">
+
           <Avatar className="">
             <AvatarImage src={row.original.productImages[0]?.url} />
             <AvatarFallback>
               <Package className="h-5 w-5 text-muted-foreground" />
             </AvatarFallback>
           </Avatar>
-          <span>{productName}</span>
-        </Link>
+          <span className="font-semibold">{productName}</span>
+        </div>
+
       );
     },
   },
@@ -50,32 +51,71 @@ export const BasicColumns: ColumnDef<ProductWithOneImage>[] = [
       <DataTableColumnHeader column={column} title="Stock" />
     ),
     cell: ({ row }) => {
+      const product = row.original;
+
+      if (product.hasVariants) {
+        const totalVariantStock = product.productVariants?.reduce(
+          (sum, variant) => sum + variant.variantStock,
+          0
+        );
+
+        return (
+          <div className="space-y-3 ">
+            {product.productVariants?.map((variant) => (
+              <div
+                key={variant.id}
+                className=" flex items-center justify-between gap-2"
+              >
+                <span className="text-sm   truncate">
+                  {variant.variantName}
+                </span>
+                <Badge>{formatNumber(variant.variantStock)}</Badge>
+              </div>
+            ))}
+            <Separator />
+            <div className="flex justify-end text-muted-foreground text-sm">
+              <Badge variant={"outline"}>
+                {formatNumber(totalVariantStock || 0)} {product.unit}
+              </Badge>
+            </div>
+          </div>
+        );
+      }
+
       const stock: number = row.getValue("stock");
       const qtyInBox: number | null = row.original.qtyInBox;
       const bufferStock: number = row.original.bufferStock || 0;
       const threshold = 1.1;
-      const unit: string = row.original.unit || "pcs";
-      let badgeVariant: "default" | "warning" | "destructive" = "default";
-      if (stock < bufferStock) {
-        badgeVariant = "destructive";
-      } else if (stock <= bufferStock * threshold) {
-        badgeVariant = "warning";
-      }
+      const unit = row.original.unit || "pcs";
+
+      const getBadgeVariant = (
+        stock: number,
+        bufferStock: number,
+        threshold: number
+      ) => {
+        if (stock < bufferStock) return "destructive";
+        if (stock <= bufferStock * threshold) return "warning";
+        return "default";
+      };
+
       return (
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-1.5">
           <div className="flex items-center gap-1">
-            <Badge variant={badgeVariant}>{formatNumber(stock)}</Badge>
-            <span>{unit}</span>
+            <Badge variant={getBadgeVariant(stock, bufferStock, threshold)}>
+              {formatNumber(stock)}
+            </Badge>
+            <span className="text-sm text-muted-foreground">{unit}</span>
           </div>
           {qtyInBox && stock / qtyInBox ? (
-            <div className="text-xs text-muted-foreground ">
-              {stock / qtyInBox} boxes
-            </div>
+            <span className="text-xs text-muted-foreground">
+              {formatNumber(stock / qtyInBox)} boxes
+            </span>
           ) : null}
         </div>
       );
     },
   },
+
   {
     accessorKey: "actions",
     header: undefined,
@@ -83,7 +123,11 @@ export const BasicColumns: ColumnDef<ProductWithOneImage>[] = [
       const product = row.original;
       return (
         <div className="flex items-center justify-center gap-2">
-          <UpdateStock product={product} />
+          {product.hasVariants ? (
+            <UpdateStockVariants product={product} />
+          ) : (
+            <UpdateStock product={product} />
+          )}
           <Button
             asChild
             variant="outline"
@@ -119,7 +163,7 @@ export const BasicColumns: ColumnDef<ProductWithOneImage>[] = [
   {
     accessorKey: "lastMonthSales",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Last 30 days Demand" />
+      <DataTableColumnHeader column={column} title="Last 30 days" />
     ),
     cell: ({ row }) => {
       const lastMonthSales: number = row.original.lastMonthSales;
