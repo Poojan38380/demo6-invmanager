@@ -90,7 +90,7 @@ export default function InstallAppButton() {
       disabled={isInstalling}
       size="sm"
       variant="outline"
-      className="flex items-center gap-1 bg-transparent"
+      className="flex rounded-full items-center gap-1 bg-transparent opacity-60"
     >
       <Download className="h-4 w-4" />
       <span>{isInstalling ? "Installing..." : "Install App"}</span>

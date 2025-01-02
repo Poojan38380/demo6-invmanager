@@ -8,18 +8,12 @@ import {
 
 import Link from "next/link";
 import { BottomNavItems } from "../../_menus/bottomNavMenu";
-import InstallAppButton from "./install-app-button";
 
 export function BottomNav({ ...props }) {
   return (
     <SidebarGroup {...props}>
       <SidebarGroupContent>
         <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton asChild size="sm">
-              <InstallAppButton />
-            </SidebarMenuButton>
-          </SidebarMenuItem>
           {BottomNavItems.map((item) => (
             <SidebarMenuItem key={item.title}>
               <SidebarMenuButton asChild size="sm">

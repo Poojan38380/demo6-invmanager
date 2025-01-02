@@ -1,24 +1,13 @@
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
-
+import { Card, CardHeader, CardDescription } from "@/components/ui/card";
 import SupplierForm from "../../_components/create-update-supplier-form";
-import Link from "next/link";
-import { ChevronLeft } from "lucide-react";
+import BackButton from "@/app/admin/_components/sidebar/back-button";
 
 export default function CreateSuppliersPage() {
   return (
     <Card className="m-6 max-425:m-2">
       <CardHeader>
-        <CardTitle className=" flex items-center gap-2">
-          <Link prefetch={false} href="/admin/settings/suppliers">
-            <ChevronLeft />
-          </Link>
-          Add supplier
-        </CardTitle>
+        <BackButton title="Add Supplier" />
+
         <CardDescription>
           Enter the details of the new supplier below.
         </CardDescription>
