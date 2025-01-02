@@ -7,6 +7,7 @@ import {
 import { AppSidebar } from "./_components/sidebar/admin-sidebar";
 import { BreadCrumbs } from "./_components/sidebar/breadcrumbs";
 import { ThemeToggleButton } from "@/components/theme/ThemeSelectorButton";
+import InstallAppButton from "./_components/sidebar/install-app-button";
 
 export default function AdminLayout({
   children,
@@ -23,7 +24,10 @@ export default function AdminLayout({
             <Separator orientation="vertical" className="mr-2 h-4" />
             <div className="flex justify-between w-full items-center">
               <BreadCrumbs />
-              <ThemeToggleButton />
+              <div className="flex items-center gap-2">
+                <InstallAppButton />
+                <ThemeToggleButton />
+              </div>
             </div>
           </div>
         </header>
