@@ -1,4 +1,6 @@
 {
+  "scope": "/",
+  "lang": "en-us",
   "name": "InvManager",
   "short_name": "InvManager",
   "description": "Manage your inventory seamlessly!",
@@ -7,6 +9,9 @@
   "theme_color": "#f1f1f1",
   "background_color": "#f1f1f1",
   "orientation": "portrait",
+  "related_applications": [],
+  "prefer_related_applications": false,
+  "features": ["Cross Platform", "fast", "simple"],
   "icons": [
     {
       "src": "public/manifest-icon-192.maskable.png",
@@ -36,7 +41,7 @@
   "shortcuts": [
     {
       "name": "Products",
-      "url": "/products",
+      "url": "/admin/products",
       "description": "View and update products",
       "icons": [
         {
@@ -48,7 +53,7 @@
     },
     {
       "name": "Transactions",
-      "url": "/transactions",
+      "url": "/admin/transactions",
       "description": "View transactions",
       "icons": [
         {
