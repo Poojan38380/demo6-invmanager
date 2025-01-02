@@ -170,10 +170,17 @@ export async function updateProductVariantStock({
     const stockBefore = variant.variantStock;
     const stockAfter = stockBefore + data.change;
 
-    await prisma.productVariant.update({
-      where: { id: data.variantId },
-      data: { variantStock: stockAfter },
-    });
+    // Use a transaction to update both the variant and the parent product
+    await prisma.$transaction([
+      prisma.productVariant.update({
+        where: { id: data.variantId },
+        data: { variantStock: stockAfter },
+      }),
+      prisma.product.update({
+        where: { id: data.productId },
+        data: { updatedAt: new Date() },
+      }),
+    ]);
 
     const action = data.change > 0 ? "INCREASED" : "DECREASED";
 
