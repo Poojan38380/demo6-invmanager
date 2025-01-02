@@ -1,4 +1,10 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   FormControl,
   FormDescription,
@@ -28,7 +34,10 @@ export default function ProductDetailsCard({
       <Card>
         <CollapsibleTrigger asChild>
           <CardHeader className=" flex flex-row justify-between items-center cursor-pointer">
-            <CardTitle>Descriptions</CardTitle>
+            <div className="flex flex-col gap-1">
+              <CardTitle>Descriptions</CardTitle>
+              <CardDescription>Descriptions for SEO.</CardDescription>
+            </div>
             <ChevronRight
               className={cn(
                 "w-6 h-6 transition-transform duration-200 text-muted-foreground",

@@ -3,6 +3,7 @@ import { ProductFormValues } from "./ProductForm";
 import {
   Card,
   CardContent,
+  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -45,7 +46,10 @@ export default function VariantCard({
       <Card>
         <CollapsibleTrigger asChild>
           <CardHeader className=" flex flex-row justify-between items-center cursor-pointer">
-            <CardTitle>Add Variants</CardTitle>
+            <div className="flex flex-col gap-1">
+              <CardTitle>Add Variants</CardTitle>
+              <CardDescription>Add colour and size variants.</CardDescription>
+            </div>
             <ChevronRight
               className={cn(
                 "w-6 h-6 transition-transform duration-200 text-muted-foreground",

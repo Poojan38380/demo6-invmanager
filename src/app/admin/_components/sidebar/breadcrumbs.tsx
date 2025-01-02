@@ -11,7 +11,7 @@ import {
 
 export function BreadCrumbs() {
   const pathname = usePathname();
-  const pathSegments = pathname
+  const pathSegments = pathname!
     .split("/")
     .filter((segment) => segment !== "")
     .slice(1); // Exclude the "admin" base route
