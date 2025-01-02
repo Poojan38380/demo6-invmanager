@@ -14,7 +14,7 @@ export default function CreateSuppliersPage() {
     <Card className="m-6 max-425:m-2">
       <CardHeader>
         <CardTitle className=" flex items-center gap-2">
-          <Link href="/admin/settings/suppliers">
+          <Link prefetch={false} href="/admin/settings/suppliers">
             <ChevronLeft />
           </Link>
           Add supplier

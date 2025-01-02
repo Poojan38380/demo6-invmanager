@@ -39,7 +39,7 @@ export default function UserList({ initialUsers }: UserListProps) {
             className="max-w-60 rounded-full bg-card shadow-sm"
           />
           <Button asChild className="rounded-full shadow-sm">
-            <Link href="/admin/users/new">
+            <Link href="/admin/users/new" prefetch={false}>
               <PlusIcon size={16} />
               Add user
             </Link>

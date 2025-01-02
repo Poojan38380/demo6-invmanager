@@ -19,7 +19,7 @@ export default async function EditProductPage({
     <Card className="border-none  shadow-none bg-background ">
       <CardHeader className="max-w-5xl mx-auto">
         <CardTitle className=" text-left flex items-center gap-2">
-          <Link href="/admin/products">
+          <Link prefetch={false} href="/admin/products">
             <ChevronLeft />
           </Link>
           Edit Product

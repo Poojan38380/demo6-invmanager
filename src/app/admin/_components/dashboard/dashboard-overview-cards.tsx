@@ -44,7 +44,7 @@ const DashboardOverviewCards = ({
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
       {/* Approaching Buffer Stock Warning */}
 
-      <Link href={"/admin/products/warning"} target="_blank">
+      <Link prefetch={false} href={"/admin/products/warning"} target="_blank">
         <Card className="bg-warning/10 shadow-md rounded-2xl border-none hover:shadow-lg hover:scale-105 transition-all">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">
@@ -65,7 +65,11 @@ const DashboardOverviewCards = ({
 
       {/* Below Buffer Stock Alert */}
       {metrics.belowBufferCount > 0 ? (
-        <Link href={"/admin/products/critical"} target="_blank">
+        <Link
+          prefetch={false}
+          href={"/admin/products/critical"}
+          target="_blank"
+        >
           <Card className="bg-destructive/30 shadow-md rounded-2xl border-none  hover:shadow-lg hover:scale-105 transition-all">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium">

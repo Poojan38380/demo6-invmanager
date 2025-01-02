@@ -16,7 +16,7 @@ export default async function CustomersPage() {
           All Customers
         </CardTitle>
         <Button asChild className="rounded-full shadow-sm">
-          <Link href="/admin/settings/customers/new">
+          <Link prefetch={false} href="/admin/settings/customers/new">
             <PlusIcon size={16} />
             Add customer
           </Link>
