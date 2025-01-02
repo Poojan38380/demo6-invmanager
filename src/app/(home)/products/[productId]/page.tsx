@@ -6,7 +6,6 @@ import { Separator } from "@/components/ui/separator";
 import ProductImageCarousel from "./ProductImageCarousel";
 import { Button } from "@/components/ui/button";
 import { ShoppingCart } from "lucide-react";
-import { formatNumber } from "@/lib/formatter";
 
 export default async function SingleProductDisplayPage({
   params,
@@ -31,13 +30,7 @@ export default async function SingleProductDisplayPage({
               <h1 className="text-3xl font-bold mb-2">{product.name}</h1>
               <p className="text-gray-600 mb-4">{product.shortDescription}</p>
               <Separator className="my-6" />
-              {product.sellingPrice && (
-                <div className="flex justify-between items-center mb-6">
-                  <span className="text-3xl font-bold text-primary">
-                    ₹{formatNumber(product.sellingPrice)}
-                  </span>
-                </div>
-              )}
+
               <Button size="lg" className="w-full mb-6">
                 <ShoppingCart className="mr-2 h-5 w-5" /> Shop on amazon
               </Button>

@@ -39,8 +39,6 @@ export function CustSuppDataTable<TData, TValue>({
   );
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({
-      //   sellingPrice: false,
-      //   totalFinalValue: false,
       //   bufferStock: false,
     });
   const [rowSelection, setRowSelection] = React.useState({});

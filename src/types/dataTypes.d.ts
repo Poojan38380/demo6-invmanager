@@ -17,8 +17,6 @@ export type TransactionForTable = Transaction & {
   product: {
     name: string;
     unit?: string | null;
-    costPrice: number | null;
-    sellingPrice?: number | null;
   };
   productVariant: {
     variantName: string;

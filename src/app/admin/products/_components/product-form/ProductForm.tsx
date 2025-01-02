@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import ProductInfoCard from "./product-info-card";
 import ProductDetailsCard from "./product-details-card";
-import PricingCard from "./product-pricing-card";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
@@ -41,8 +40,7 @@ const ProductformSchema = z.object({
     })
     .optional(),
   longDescription: z.string().optional(),
-  costPrice: z.number().optional(),
-  sellingPrice: z.number().optional(),
+
   unit: z.string(),
   vendorId: z.string().optional(),
   categoryId: z.string().optional(),
@@ -75,8 +73,6 @@ export default function ProductForm({
       unit: product?.unit || "pcs",
       shortDescription: product?.shortDescription || undefined,
       longDescription: product?.longDescription || undefined,
-      costPrice: product?.costPrice || undefined,
-      sellingPrice: product?.sellingPrice || undefined,
       vendorId: product?.vendorId || undefined,
       categoryId: product?.categoryId || undefined,
       qtyInBox: product?.qtyInBox || undefined,
@@ -125,13 +121,6 @@ export default function ProductForm({
     }
   };
 
-  const calculateMargin = () => {
-    const costPrice = form.watch("costPrice") || 0;
-    const sellingPrice = form.watch("sellingPrice") || 0;
-    if (costPrice === 0 || sellingPrice === 0) return 0;
-    return ((sellingPrice - costPrice) / costPrice) * 100;
-  };
-
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -176,7 +165,6 @@ export default function ProductForm({
             <ProductDetailsCard form={form} />
           </div>
           <div className="col-span-1 flex flex-col space-y-6">
-            <PricingCard form={form} margin={calculateMargin()} />
             <Card>
               <CardHeader>
                 <CardTitle>Select Category</CardTitle>

@@ -24,8 +24,6 @@ async function getTransactions(
           select: {
             name: true,
             unit: true,
-            costPrice: true,
-            sellingPrice: true,
           },
         },
         productVariant: { select: { variantName: true } },

@@ -37,9 +37,7 @@ model Product {
   shortDescription String?
   longDescription  String?
 
-  bufferStock  Float? @default(0)
-  costPrice    Float?
-  sellingPrice Float?
+  bufferStock Float? @default(0)
 
   qtyInBox Int?
 
