@@ -1,0 +1,61 @@
+import React from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Plus, Package, TrendingUp } from "lucide-react";
+import Link from "next/link";
+
+const QuickActions = () => {
+  const actions = [
+    {
+      title: "View Products",
+      href: "/admin/products",
+      icon: Package,
+      color: "text-blue-600",
+      bgColor: "bg-blue-100",
+    },
+    {
+      title: "Transactions",
+      href: "/admin/transactions",
+      icon: TrendingUp,
+      color: "text-indigo-600",
+      bgColor: "bg-indigo-100",
+    },
+    {
+      title: "New Product",
+      href: "/admin/products/new",
+      icon: Plus,
+      color: "text-green-600",
+      bgColor: "bg-green-100",
+    },
+  ];
+
+  return (
+    <Card className="border-none shadow-none bg-background">
+      <CardHeader>
+        <CardTitle>Quick Actions</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+          {actions.map((action) => {
+            const Icon = action.icon;
+            return (
+              <Link href={action.href} key={action.title}>
+                <Button
+                  variant="outline"
+                  className="w-full h-24 flex flex-col items-center justify-center gap-2 hover:scale-105 transition-transform"
+                >
+                  <div className={`p-2 rounded-lg ${action.bgColor}`}>
+                    <Icon className={`w-6 h-6 ${action.color}`} />
+                  </div>
+                  <span className="text-sm font-medium">{action.title}</span>
+                </Button>
+              </Link>
+            );
+          })}
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
+
+export default QuickActions;
