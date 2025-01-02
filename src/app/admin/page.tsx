@@ -1,4 +1,5 @@
 import DashboardOverviewCards from "./_components/dashboard/dashboard-overview-cards";
+import QuickActions from "./_components/dashboard/quick-actions";
 
 import { getCachedProductsforTable } from "./products/_actions/products";
 
@@ -10,6 +11,7 @@ export default async function AdminPage() {
 
   return (
     <Card className="border-none  shadow-none bg-background ">
+      <QuickActions />
       <CardHeader>
         <CardTitle>Overview</CardTitle>
       </CardHeader>
