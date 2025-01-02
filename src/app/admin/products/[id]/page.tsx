@@ -1,9 +1,8 @@
 import { notFound } from "next/navigation";
 import { getCachedSingleProduct } from "../_actions/products";
 import ProductForm from "../_components/product-form/ProductForm";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import Link from "next/link";
-import { ChevronLeft } from "lucide-react";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import BackButton from "../../_components/sidebar/back-button";
 interface EditProductPageProps {
   params: Promise<{ id: string }>;
 }
@@ -18,12 +17,7 @@ export default async function EditProductPage({
   return (
     <Card className="border-none  shadow-none bg-background ">
       <CardHeader className="max-w-5xl mx-auto">
-        <CardTitle className=" text-left flex items-center gap-2">
-          <Link prefetch={false} href="/admin/products">
-            <ChevronLeft />
-          </Link>
-          Edit Product
-        </CardTitle>
+        <BackButton title="Edit Product" />
       </CardHeader>
       <CardContent className="max-768:px-0">
         <ProductForm product={product} />

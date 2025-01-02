@@ -10,6 +10,7 @@ import {
 
 import { ProductDataTable } from "../_components/data-table";
 import { BasicColumns } from "../_cloumns/basic-columns";
+import BackButton from "../../_components/sidebar/back-button";
 
 export default async function WarningProducts() {
   const products = await getCachedProductsforTable();
@@ -26,7 +27,10 @@ export default async function WarningProducts() {
   return (
     <Card className="border-none  shadow-none bg-background ">
       <CardHeader>
-        <CardTitle className="text-warning">Warning Products</CardTitle>
+        <div className="flex items-center">
+          <BackButton />
+          <CardTitle className="text-warning">Warning Products</CardTitle>
+        </div>
         <CardDescription>
           Products on the verge of becoming critical (stock is approching
           min.stock)

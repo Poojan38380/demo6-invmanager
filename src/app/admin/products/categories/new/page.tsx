@@ -18,13 +18,13 @@ import { Input } from "@/components/ui/input";
 import {
   Card,
   CardHeader,
-  CardTitle,
   CardDescription,
   CardContent,
 } from "@/components/ui/card";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { createCategory } from "../../_actions/categories";
+import BackButton from "@/app/admin/_components/sidebar/back-button";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -69,7 +69,7 @@ export default function CreateCategoryPage() {
     <div className="container mx-auto py-10">
       <Card className="max-w-md mx-auto">
         <CardHeader>
-          <CardTitle>Create Category</CardTitle>
+          <BackButton title="Create Category" />
           <CardDescription>
             Add a new category to your product system.
           </CardDescription>

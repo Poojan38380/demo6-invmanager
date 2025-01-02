@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useMemo } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { TransactionsDataTable } from "./_components/trans-data-table";
 import { TransactionForTable } from "@/types/dataTypes";
 import { TransactionTableColumns } from "./columns";
@@ -18,6 +18,7 @@ import { format, subDays } from "date-fns";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import TransactionChart from "./_components/transactionChart";
+import BackButton from "../_components/sidebar/back-button";
 
 export default function TransactionLayout({
   transactions,
@@ -97,7 +98,7 @@ export default function TransactionLayout({
   return (
     <Card className="border-none shadow-none bg-background">
       <CardHeader className="py-4 flex flex-row  items-center gap-4 justify-between">
-        <CardTitle className="text-2xl font-bold">{title}</CardTitle>
+        <BackButton title={title} />
         <div className="flex items-center gap-4">
           <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
             <PopoverTrigger asChild>

@@ -1,18 +1,12 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ChevronLeft } from "lucide-react";
-import Link from "next/link";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import ProductForm from "../_components/product-form/ProductForm";
+import BackButton from "../../_components/sidebar/back-button";
 
 export default function CreateProductPage() {
   return (
     <Card className="border-none  shadow-none bg-background ">
       <CardHeader className="max-w-5xl mx-auto">
-        <CardTitle className=" text-left flex items-center gap-2">
-          <Link prefetch={false} href="/admin/products">
-            <ChevronLeft />
-          </Link>
-          Add Product
-        </CardTitle>
+        <BackButton title="Add Product" />
       </CardHeader>
       <CardContent className="max-768:px-0">
         <ProductForm />

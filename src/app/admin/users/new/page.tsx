@@ -8,7 +8,6 @@ import {
   CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -16,6 +15,7 @@ import { addUser } from "../_actions/user-actions";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { Eye, EyeOff } from "lucide-react";
+import BackButton from "../../_components/sidebar/back-button";
 
 export default function CreateUser() {
   const [username, setUsername] = useState("");
@@ -58,7 +58,7 @@ export default function CreateUser() {
     <div className="container mx-auto py-10">
       <Card className="max-w-md mx-auto shadow-md">
         <CardHeader>
-          <CardTitle>Create New User</CardTitle>
+          <BackButton title="Create New User" />
           <CardDescription>
             Enter the details for the new user account.
           </CardDescription>

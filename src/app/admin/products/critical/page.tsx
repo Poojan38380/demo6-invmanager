@@ -10,6 +10,7 @@ import {
 
 import { ProductDataTable } from "../_components/data-table";
 import { BasicColumns } from "../_cloumns/basic-columns";
+import BackButton from "../../_components/sidebar/back-button";
 
 export default async function CriticalProducts() {
   const products = await getCachedProductsforTable();
@@ -20,7 +21,10 @@ export default async function CriticalProducts() {
   return (
     <Card className="border-none  shadow-none bg-background ">
       <CardHeader>
-        <CardTitle className="text-destructive">Critical Products</CardTitle>
+        <div className="flex items-center">
+          <BackButton />
+          <CardTitle className="text-destructive">Critical Products</CardTitle>
+        </div>
         <CardDescription>
           Products with stock lesser than min.stock
         </CardDescription>

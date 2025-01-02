@@ -1,12 +1,13 @@
 "use client";
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Loader, PlusIcon, Search } from "lucide-react";
 import Link from "next/link";
 import CategoryTableCard from "./category-tablecard";
 import { CategoryWithCounts } from "@/types/dataTypes";
+import BackButton from "@/app/admin/_components/sidebar/back-button";
 
 function CategoryList({ categories }: { categories: CategoryWithCounts[] }) {
   const [searchTerm, setSearchTerm] = useState("");
@@ -18,7 +19,7 @@ function CategoryList({ categories }: { categories: CategoryWithCounts[] }) {
   return (
     <>
       <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6">
-        <CardTitle className="text-2xl font-bold">All Categories</CardTitle>
+        <BackButton title="All Categories" />
         <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
           <div className="relative w-full sm:w-64">
             <Input

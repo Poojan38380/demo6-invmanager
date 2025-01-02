@@ -10,6 +10,7 @@ import { ArrowLeftRight, Calendar, Package, PlusIcon } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { formatDateYYMMDDHHMM } from "@/lib/format-date";
+import BackButton from "../../_components/sidebar/back-button";
 
 interface UserListProps {
   initialUsers: UserWithCounts[];
@@ -28,8 +29,8 @@ export default function UserList({ initialUsers }: UserListProps) {
 
   return (
     <>
-      <CardHeader className="py-2">
-        <CardTitle className="">All Users</CardTitle>
+      <CardHeader className="py-4">
+        <BackButton title="All Users" />
         <div className="flex gap-2 justify-between">
           <Input
             type="text"
