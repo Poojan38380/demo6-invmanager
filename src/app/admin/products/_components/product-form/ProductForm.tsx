@@ -8,7 +8,13 @@ import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import ProductInfoCard from "./product-info-card";
 import ProductDetailsCard from "./product-details-card";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { addProduct, editProduct } from "../../_actions/products";
@@ -156,7 +162,10 @@ export default function ProductForm({
               <Card>
                 <CollapsibleTrigger asChild>
                   <CardHeader className=" flex flex-row justify-between items-center cursor-pointer">
-                    <CardTitle>Media</CardTitle>
+                    <div className="flex flex-col gap-1">
+                      <CardTitle>Media</CardTitle>
+                      <CardDescription>Add images.</CardDescription>
+                    </div>
                     <ChevronRight
                       className={cn(
                         "w-6 h-6 transition-transform duration-200 text-muted-foreground",
