@@ -1,6 +1,15 @@
-import type { NextConfig } from "next";
+/** @type {import('next').NextConfig} */
+const withPWA = require("@ducanh2912/next-pwa").default({
+  dest: "public",
+  cacheOnFrontEndNav: true,
+  aggressiveFrontEndNavCaching: true,
+  reloadOnOnline: true,
+  swcMinify: true,
+  disable: process.env.NODE_ENV === "development",
+  workboxOptions: { disableDevLogs: true },
+});
 
-const nextConfig: NextConfig = {
+const NextConfig = {
   reactStrictMode: true, // Optional: Enable React's strict mode
 
   images: {
@@ -17,51 +26,6 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  async headers() {
-    return [
-      {
-        source: "/(.*)",
-        headers: [
-          {
-            key: "X-Content-Type-Options",
-            value: "nosniff",
-          },
-          {
-            key: "X-Frame-Options",
-            value: "DENY",
-          },
-          {
-            key: "Referrer-Policy",
-            value: "strict-origin-when-cross-origin",
-          },
-        ],
-      },
-      {
-        source: "/sw.js",
-        headers: [
-          {
-            key: "Content-Type",
-            value: "application/javascript; charset=utf-8",
-          },
-          {
-            key: "Cache-Control",
-            value: "no-cache, no-store, must-revalidate",
-          },
-          {
-            key: "Content-Security-Policy",
-            value: "default-src 'self'; script-src 'self'",
-          },
-        ],
-      },
-    ];
-  },
 };
 
-const withPWA = require("next-pwa")({
-  dest: "public",
-  register: true,
-  skipWaiting: true,
-  disable: process.env.NODE_ENV === "development", // Disable PWA in development
-});
-
-export default withPWA(nextConfig);
+module.exports = withPWA(NextConfig);
