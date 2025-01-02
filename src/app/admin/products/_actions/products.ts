@@ -127,8 +127,7 @@ interface addproductProps {
   bufferStock?: number | undefined;
   shortDescription?: string | undefined;
   longDescription?: string | undefined;
-  costPrice?: number | undefined;
-  sellingPrice?: number | undefined;
+
   vendorId?: string | undefined;
   categoryId?: string | undefined;
   qtyInBox?: number | undefined;
@@ -163,8 +162,6 @@ export async function addProduct(data: addproductProps, productImages: File[]) {
         bufferStock: data.bufferStock,
         shortDescription: data.shortDescription,
         longDescription: data.longDescription,
-        costPrice: data.costPrice,
-        sellingPrice: data.sellingPrice,
         unit: data.unit,
         hasVariants: data.productVariants && data.productVariants?.length > 0,
         vendorId: data.vendorId,
@@ -253,8 +250,7 @@ interface editProductProps {
   unit: string;
   shortDescription?: string | undefined;
   longDescription?: string | undefined;
-  costPrice?: number | undefined;
-  sellingPrice?: number | undefined;
+
   vendorId?: string | undefined;
   categoryId?: string | undefined;
   productPrevImageUrls: string[];
@@ -303,8 +299,7 @@ export async function editProduct(
           bufferStock: data.bufferStock,
           shortDescription: data.shortDescription,
           longDescription: data.longDescription,
-          costPrice: data.costPrice,
-          sellingPrice: data.sellingPrice,
+
           unit: data.unit,
           categoryId: data.categoryId,
           vendorId: data.vendorId,

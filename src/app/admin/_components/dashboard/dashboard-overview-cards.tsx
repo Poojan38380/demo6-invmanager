@@ -1,8 +1,7 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { AlertCircle, TrendingUp, Package, AlertTriangle } from "lucide-react";
+import { AlertCircle, AlertTriangle } from "lucide-react";
 import { ProductWithOneImage } from "../../products/_actions/products";
-import { formatCurrency } from "@/lib/formatter";
 import Link from "next/link";
 
 const DashboardOverviewCards = ({
@@ -13,8 +12,6 @@ const DashboardOverviewCards = ({
   const calculateMetrics = () => {
     let belowBufferCount = 0;
     let approachingBufferCount = 0;
-    let totalInventoryValue = 0;
-    let potentialRevenue = 0;
     const approachingThreshold = 1.1; // 10% above buffer stock
 
     products.forEach((product) => {
@@ -23,8 +20,6 @@ const DashboardOverviewCards = ({
 
       const bufferStock = product.bufferStock || 0;
       const currentStock = product.stock || 0;
-      const costPrice = product.costPrice || 0;
-      const sellingPrice = product.sellingPrice || 0;
 
       // Check buffer stock conditions
       if (currentStock < bufferStock) {
@@ -35,17 +30,11 @@ const DashboardOverviewCards = ({
       ) {
         approachingBufferCount++;
       }
-
-      // Calculate financial metrics
-      totalInventoryValue += currentStock * costPrice;
-      potentialRevenue += currentStock * sellingPrice;
     });
 
     return {
       belowBufferCount,
       approachingBufferCount,
-      totalInventoryValue,
-      potentialRevenue,
     };
   };
 
@@ -53,39 +42,6 @@ const DashboardOverviewCards = ({
 
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-      {/* Total Inventory Value */}
-      <Card className="shadow-md rounded-2xl border-none">
-        <CardHeader className="flex flex-row items-center justify-between pb-2">
-          <CardTitle className="text-sm font-medium">Inventory Value</CardTitle>
-          <Package className="h-4 w-4 text-gray-500" />
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold">
-            {formatCurrency(metrics.totalInventoryValue)}
-          </div>
-          <p className="text-xs text-gray-600 mt-1">
-            Total cost of current inventory
-          </p>
-        </CardContent>
-      </Card>
-
-      {/* Potential Revenue */}
-      <Card className="shadow-md rounded-2xl border-none">
-        <CardHeader className="flex flex-row items-center justify-between pb-2">
-          <CardTitle className="text-sm font-medium">
-            Potential Revenue
-          </CardTitle>
-          <TrendingUp className="h-4 w-4 text-green-500" />
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold text-green-600">
-            {formatCurrency(metrics.potentialRevenue)}
-          </div>
-          <p className="text-xs text-gray-600 mt-1">
-            Expected revenue at current stock levels
-          </p>
-        </CardContent>
-      </Card>
       {/* Approaching Buffer Stock Warning */}
 
       <Link href={"/admin/products/warning"} target="_blank">

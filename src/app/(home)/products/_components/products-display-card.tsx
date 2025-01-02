@@ -1,5 +1,4 @@
 import { ArrowRight } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { ProductWithImages } from "@/types/dataTypes";
 import Link from "next/link";
@@ -13,7 +12,7 @@ export default function ProductDisplayCard({
 }: {
   product: ProductWithImages;
 }) {
-  const { id, name, shortDescription, productImages, sellingPrice } = product;
+  const { id, name, shortDescription, productImages } = product;
   const imageUrl = productImages[0]?.url || placeholderImage;
 
   return (
@@ -42,14 +41,6 @@ export default function ProductDisplayCard({
             </p>
           </div>
           <div className="flex items-center justify-between">
-            {sellingPrice && (
-              <Badge
-                variant="secondary"
-                className="px-2.5 py-0.5 text-sm font-semibold"
-              >
-                ₹{sellingPrice.toLocaleString("en-IN")}
-              </Badge>
-            )}
             <span className="flex items-center gap-2 text-sm font-medium text-primary opacity-0 transition-opacity duration-300 group-hover:opacity-100">
               View Details
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
