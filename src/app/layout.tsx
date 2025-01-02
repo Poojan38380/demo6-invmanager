@@ -3,7 +3,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import { SessionProvider } from "next-auth/react";
 
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 
 const APP_NAME = "InvManager";
 const APP_DEFAULT_TITLE = "InvManager";
@@ -44,6 +44,10 @@ export const metadata: Metadata = {
     },
     description: APP_DESCRIPTION,
   },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#f2f2f2",
 };
 
 export default function RootLayout({
