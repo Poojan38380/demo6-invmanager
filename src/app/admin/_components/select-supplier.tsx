@@ -12,12 +12,14 @@ import { getCachedSuppliers } from "../_actions/selector-data";
 import { Vendor } from "@prisma/client";
 import {
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
 import { UseFormReturn } from "react-hook-form";
 import { ProductFormValues } from "../products/_components/product-form/ProductForm";
+import Link from "next/link";
 
 interface SupplierSelectorProps {
   form: UseFormReturn<ProductFormValues>;
@@ -94,6 +96,16 @@ export function SupplierSelector({ form }: SupplierSelectorProps) {
             </SelectContent>
           </Select>
           <FormMessage />
+          <FormDescription>
+            <Link
+              href={`/admin/settings/suppliers/new`}
+              prefetch={false}
+              target="_blank"
+              className="flex justify-end underline"
+            >
+              Add new supplier ?
+            </Link>
+          </FormDescription>
         </FormItem>
       )}
     />

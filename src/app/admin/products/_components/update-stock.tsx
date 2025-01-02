@@ -240,7 +240,7 @@ export default function UpdateStock({ product }: { product: Product }) {
                       >
                         <PlusCircle className="text-xs" />
                       </Link>
-                    </Button>{" "}
+                    </Button>
                   </div>
                 </div>
               </div>

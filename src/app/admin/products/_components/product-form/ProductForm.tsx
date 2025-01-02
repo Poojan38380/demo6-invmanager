@@ -20,7 +20,6 @@ import AdditionalFields from "./additional-fields";
 import VariantCard from "./variant-card";
 import VariantEditCard from "./variant-edit-card";
 
-
 const VariantSchema = z.object({
   variantName: z.string().min(1, {
     message: "Variant name must be at least 1 character.",
