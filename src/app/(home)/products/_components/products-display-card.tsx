@@ -17,6 +17,7 @@ export default function ProductDisplayCard({
 
   return (
     <Link
+      prefetch={false}
       href={`/products/${id}`}
       className="group relative block overflow-hidden rounded-xl transition-all hover:shadow-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
     >

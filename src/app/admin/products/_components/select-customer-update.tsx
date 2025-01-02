@@ -55,10 +55,7 @@ export function CustomerSelectorforUpdater({
 
   return (
     <Select value={selectedCustomer} onValueChange={handleCustomerChange}>
-      <SelectTrigger
-        id="customer-select"
-        className=" h-12  border-none  shadow-sm"
-      >
+      <SelectTrigger id="customer-select" className=" h-12 ">
         <SelectValue placeholder="Select a customer" />
       </SelectTrigger>
       <SelectContent>

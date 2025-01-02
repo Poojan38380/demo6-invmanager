@@ -55,10 +55,7 @@ export function SupplierSelectorforUpdater({
 
   return (
     <Select value={selectedSupplier} onValueChange={handleSupplierChange}>
-      <SelectTrigger
-        className=" h-12  border-none  shadow-sm"
-        id="supplier-select"
-      >
+      <SelectTrigger className=" h-12 " id="supplier-select">
         <SelectValue placeholder="Select a supplier" />
       </SelectTrigger>
       <SelectContent>

@@ -10,12 +10,15 @@ import { Category } from "@prisma/client";
 import { getCachedCategories } from "../_actions/selector-data";
 import {
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
+  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { UseFormReturn } from "react-hook-form";
 import { ProductFormValues } from "../products/_components/product-form/ProductForm";
+import Link from "next/link";
 
 export function SelectCategory({
   form,
@@ -57,6 +60,7 @@ export function SelectCategory({
       name="categoryId"
       render={({ field }) => (
         <FormItem>
+          <FormLabel>Select category</FormLabel>
           <Select
             onValueChange={(value) => {
               if (value === "none") {
@@ -96,6 +100,16 @@ export function SelectCategory({
             </SelectContent>
           </Select>
           <FormMessage />
+          <FormDescription>
+            <Link
+              href={`/admin/products/categories/new`}
+              prefetch={false}
+              target="_blank"
+              className="flex justify-end underline"
+            >
+              Add new category ?
+            </Link>
+          </FormDescription>
         </FormItem>
       )}
     />

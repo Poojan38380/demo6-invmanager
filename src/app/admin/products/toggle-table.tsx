@@ -21,7 +21,7 @@ function ToggleTable({ products }: { products: ProductWithOneImage[] }) {
       <CardHeader className="py-2 flex flex-row items-center justify-between ">
         <CardTitle>Products</CardTitle>
         <Button asChild className="rounded-full shadow-sm">
-          <Link href="/admin/products/new">
+          <Link prefetch={false} href="/admin/products/new">
             <PlusIcon size={16} />
             Add product
           </Link>

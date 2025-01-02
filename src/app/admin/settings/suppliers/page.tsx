@@ -16,7 +16,7 @@ export default async function SuppliersPage() {
           All Suppliers
         </CardTitle>
         <Button asChild className="rounded-full shadow-sm">
-          <Link href="/admin/settings/suppliers/new">
+          <Link prefetch={false} href="/admin/settings/suppliers/new">
             <PlusIcon size={16} />
             Add supplier
           </Link>

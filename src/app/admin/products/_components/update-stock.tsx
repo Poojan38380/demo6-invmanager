@@ -171,7 +171,7 @@ export default function UpdateStock({ product }: { product: Product }) {
                       onChange={(e) =>
                         handleAddStockChange(Number(e.target.value))
                       }
-                      className="text-xl font-black h-12 bg-success/40 border-none shadow-sm"
+                      className="text-xl font-black h-12 bg-success/40  shadow-sm"
                     />
                   </div>
                   {addStockValue > 0 && product.qtyInBox ? (
@@ -216,7 +216,7 @@ export default function UpdateStock({ product }: { product: Product }) {
                       onChange={(e) =>
                         handleRemoveStockChange(Number(e.target.value))
                       }
-                      className="text-xl font-black h-12 bg-destructive/40 border-none shadow-sm"
+                      className="text-xl font-black h-12 bg-destructive/40  shadow-sm"
                     />
                   </div>
                   {removeStockValue > 0 && product.qtyInBox ? (
@@ -225,8 +225,8 @@ export default function UpdateStock({ product }: { product: Product }) {
                     </p>
                   ) : null}
                 </div>
-                <div className="flex flex-col">
-                  <Label>Customer</Label>{" "}
+                <div className="flex flex-col gap-1">
+                  <Label>Customer</Label>
                   <div className="flex items-center gap-2">
                     <CustomerSelectorforUpdater
                       onCustomerSelectAction={setCustomerId}
@@ -240,7 +240,7 @@ export default function UpdateStock({ product }: { product: Product }) {
                       >
                         <PlusCircle className="text-xs" />
                       </Link>
-                    </Button>{" "}
+                    </Button>
                   </div>
                 </div>
               </div>
@@ -270,7 +270,7 @@ export default function UpdateStock({ product }: { product: Product }) {
                   placeholder="Optional note..."
                   value={note}
                   onChange={(e) => setNote(e.target.value)}
-                  className="border-none shadow-sm"
+                  className=" shadow-sm"
                   rows={3}
                 />
               </div>
@@ -294,7 +294,10 @@ export default function UpdateStock({ product }: { product: Product }) {
                   : `${addStockValue > 0 ? "Add" : "Remove"} Stock`}
               </Button>
               <DrawerClose asChild>
-                <Button variant="outline" className="rounded-full h-12">
+                <Button
+                  variant="outline"
+                  className=" bg-card rounded-full h-12"
+                >
                   Cancel
                 </Button>
               </DrawerClose>

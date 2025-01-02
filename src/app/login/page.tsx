@@ -15,6 +15,7 @@ export default function LoginPage() {
         <div className="p-8 space-y-8">
           <div className="flex justify-between items-center">
             <Link
+              prefetch={false}
               href="/"
               className="inline-flex items-center text-primary hover:opacity-80 transition-opacity"
             >

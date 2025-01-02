@@ -1,5 +1,4 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import React from "react";
 import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
 import ProductForm from "../_components/product-form/ProductForm";
@@ -9,13 +8,13 @@ export default function CreateProductPage() {
     <Card className="border-none  shadow-none bg-background ">
       <CardHeader className="max-w-5xl mx-auto">
         <CardTitle className=" text-left flex items-center gap-2">
-          <Link href="/admin/products">
+          <Link prefetch={false} href="/admin/products">
             <ChevronLeft />
           </Link>
           Add Product
         </CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="max-768:px-0">
         <ProductForm />
       </CardContent>
     </Card>

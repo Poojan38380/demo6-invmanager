@@ -30,6 +30,7 @@ function CategoryList({ categories }: { categories: CategoryWithCounts[] }) {
             <Search className="absolute right-4 top-2.5 h-4 w-4 text-muted-foreground" />
           </div>
           <Link
+            prefetch={false}
             href="/admin/products/categories/new"
             className="w-full sm:w-auto"
           >

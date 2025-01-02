@@ -19,7 +19,7 @@ export default function ProductInfoCard({
   canStockChange: boolean;
 }) {
   return (
-    <Card>
+    <Card className="shadow-md">
       <CardContent className="space-y-6 pt-6">
         <FormField
           control={form.control}

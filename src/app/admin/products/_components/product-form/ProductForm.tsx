@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -12,14 +12,19 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { addProduct, editProduct } from "../../_actions/products";
-import { SupplierSelector } from "@/app/admin/_components/select-supplier";
-import { SelectCategory } from "@/app/admin/_components/select-category";
 import { ImageUploader } from "./image-uploader";
 import { ProductWithImages } from "@/types/dataTypes";
 import AdditionalFields from "./additional-fields";
 import VariantCard from "./variant-card";
 import VariantEditCard from "./variant-edit-card";
-
+import CategorySupplierCard from "./cat-supp-card";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+import { ChevronRight } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const VariantSchema = z.object({
   variantName: z.string().min(1, {
@@ -125,7 +130,7 @@ export default function ProductForm({
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <div className="px-3 max-768:px-0 grid max-1024:grid-cols-1 gap-6 grid-cols-3 max-w-5xl mx-auto mb-10">
+        <div className=" grid max-1024:grid-cols-1 space-x-6 max-1024:space-x-0 max-1024:space-y-6 grid-cols-3 max-w-5xl mx-auto mb-10">
           <div className="col-span-2 space-y-6">
             <ProductInfoCard
               form={form}
@@ -147,43 +152,42 @@ export default function ProductForm({
               <VariantCard form={form} />
             )}
 
-            <Card>
-              <CardHeader>
-                <CardTitle>Media</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <section id="media" className="space-y-4">
-                  {product ? (
-                    <ImageUploader
-                      onImagesChangeAction={setProductImages}
-                      existingImages={productPrevImageUrls}
-                      onRemoveExistingImage={setProductPrevImageUrls}
+            <Collapsible className="w-full group/collapsible" asChild>
+              <Card>
+                <CollapsibleTrigger asChild>
+                  <CardHeader className=" flex flex-row justify-between items-center cursor-pointer">
+                    <CardTitle>Media</CardTitle>
+                    <ChevronRight
+                      className={cn(
+                        "w-6 h-6 transition-transform duration-200 text-muted-foreground",
+                        "group-data-[state=open]/collapsible:rotate-90"
+                      )}
                     />
-                  ) : (
-                    <ImageUploader onImagesChangeAction={setProductImages} />
-                  )}
-                </section>
-              </CardContent>
-            </Card>
+                  </CardHeader>
+                </CollapsibleTrigger>
+                <CollapsibleContent>
+                  <CardContent>
+                    <section id="media" className="space-y-4">
+                      {product ? (
+                        <ImageUploader
+                          onImagesChangeAction={setProductImages}
+                          existingImages={productPrevImageUrls}
+                          onRemoveExistingImage={setProductPrevImageUrls}
+                        />
+                      ) : (
+                        <ImageUploader
+                          onImagesChangeAction={setProductImages}
+                        />
+                      )}
+                    </section>
+                  </CardContent>
+                </CollapsibleContent>
+              </Card>
+            </Collapsible>
             <ProductDetailsCard form={form} />
           </div>
           <div className="col-span-1 flex flex-col space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Select Category</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <SelectCategory form={form} />
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle>Select Supplier</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <SupplierSelector form={form} />
-              </CardContent>
-            </Card>
+            <CategorySupplierCard form={form} />
             <div className="flex justify-end px-6">
               <Button type="submit" disabled={form.formState.isSubmitting}>
                 {product
