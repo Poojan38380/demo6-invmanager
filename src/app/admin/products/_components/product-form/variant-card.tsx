@@ -15,7 +15,13 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { PlusIcon, TrashIcon } from "lucide-react";
+import { ChevronRight, PlusIcon, TrashIcon } from "lucide-react";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+import { cn } from "@/lib/utils";
 
 export default function VariantCard({
   form,
@@ -35,70 +41,85 @@ export default function VariantCard({
   };
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Variants</CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-2">
-        {fields.map((field, index) => (
-          <div key={field.id} className="grid grid-cols-2 gap-2 items-center">
-            <FormField
-              control={control}
-              name={`productVariants.${index}.variantName`}
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input placeholder="Enter variant name" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
+    <Collapsible className="w-full group/collapsible" asChild>
+      <Card>
+        <CollapsibleTrigger asChild>
+          <CardHeader className=" flex flex-row justify-between items-center cursor-pointer">
+            <CardTitle>Add Variants</CardTitle>
+            <ChevronRight
+              className={cn(
+                "w-6 h-6 transition-transform duration-200 text-muted-foreground",
+                "group-data-[state=open]/collapsible:rotate-90"
               )}
             />
-            <div className="flex gap-2 items-center">
-              <FormField
-                control={control}
-                name={`productVariants.${index}.variantStock`}
-                render={({ field }) => (
-                  <FormItem className="w-full">
-                    <FormControl>
-                      <Input
-                        placeholder="Enter stock"
-                        type="number"
-                        {...field}
-                        onChange={(e) =>
-                          field.onChange(parseInt(e.target.value, 10))
-                        }
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <Button
-                type="button"
-                size={"icon"}
-                variant={"ghost"}
-                className="flex gap-2 items-center text-destructive"
-                onClick={() => remove(index)}
+          </CardHeader>
+        </CollapsibleTrigger>
+        <CollapsibleContent>
+          <CardContent className="space-y-2">
+            {fields.map((field, index) => (
+              <div
+                key={field.id}
+                className="grid grid-cols-2 gap-2 items-center"
               >
-                <TrashIcon />
-              </Button>
-            </div>
-          </div>
-        ))}
-      </CardContent>
-      <CardFooter className="justify-end">
-        <Button
-          type="button"
-          size={"sm"}
-          variant={"outline"}
-          className="flex gap-2 items-center"
-          onClick={addVariant}
-        >
-          <PlusIcon />
-          Add Variant
-        </Button>
-      </CardFooter>
-    </Card>
+                <FormField
+                  control={control}
+                  name={`productVariants.${index}.variantName`}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input placeholder="Enter variant name" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <div className="flex gap-2 items-center">
+                  <FormField
+                    control={control}
+                    name={`productVariants.${index}.variantStock`}
+                    render={({ field }) => (
+                      <FormItem className="w-full">
+                        <FormControl>
+                          <Input
+                            placeholder="Enter stock"
+                            type="number"
+                            {...field}
+                            onChange={(e) =>
+                              field.onChange(parseInt(e.target.value, 10))
+                            }
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <Button
+                    type="button"
+                    size={"icon"}
+                    variant={"ghost"}
+                    className="flex gap-2 items-center text-destructive"
+                    onClick={() => remove(index)}
+                  >
+                    <TrashIcon />
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </CardContent>
+          <CardFooter className="justify-end">
+            <Button
+              type="button"
+              size={"sm"}
+              variant={"outline"}
+              className="flex gap-2 items-center"
+              onClick={addVariant}
+            >
+              <PlusIcon />
+              Add Variant
+            </Button>
+          </CardFooter>
+        </CollapsibleContent>
+      </Card>
+    </Collapsible>
   );
 }
