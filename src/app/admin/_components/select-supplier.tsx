@@ -15,6 +15,7 @@ import {
   FormDescription,
   FormField,
   FormItem,
+  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { UseFormReturn } from "react-hook-form";
@@ -58,6 +59,8 @@ export function SupplierSelector({ form }: SupplierSelectorProps) {
       name="vendorId"
       render={({ field }) => (
         <FormItem>
+          <FormLabel>Select supplier</FormLabel>
+
           <Select
             onValueChange={(value) => {
               if (value === "none") {

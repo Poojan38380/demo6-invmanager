@@ -13,6 +13,7 @@ import {
   FormDescription,
   FormField,
   FormItem,
+  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { UseFormReturn } from "react-hook-form";
@@ -59,6 +60,7 @@ export function SelectCategory({
       name="categoryId"
       render={({ field }) => (
         <FormItem>
+          <FormLabel>Select category</FormLabel>
           <Select
             onValueChange={(value) => {
               if (value === "none") {

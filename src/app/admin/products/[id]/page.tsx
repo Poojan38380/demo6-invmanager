@@ -25,7 +25,7 @@ export default async function EditProductPage({
           Edit Product
         </CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="max-768:px-0">
         <ProductForm product={product} />
       </CardContent>
     </Card>
