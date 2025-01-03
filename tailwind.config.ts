@@ -48,6 +48,10 @@ export default {
           DEFAULT: "hsl(var(--warning))",
           foreground: "hsl(var(--warning-foreground))",
         },
+        scrollbar: {
+          DEFAULT: "hsl(var(--scrollbar-thumb))",
+          hover: "hsl(var(--scrollbar-thumb-hover))",
+        },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",

@@ -19,14 +19,14 @@ body {
 @layer base {
   :root {
     /* Light theme - increased contrast and softer colors */
-    --background: 0 0% 98%;
-    --foreground: 222.2 84% 2.9%;
+    --background: 0 0% 97%;
+    --foreground: 222.2 84% 0%;
     --card: 0 0% 100%;
     --card-foreground: 222.2 84% 4.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
     /* Softened primary blue for reduced eye strain */
-    --primary: 215 82% 45%;
+    --primary: 215 100% 50%;
     --primary-foreground: 210 40% 98%;
     /* More muted secondary colors */
     --secondary: 210 40% 93%;
@@ -35,11 +35,9 @@ body {
     --muted: 210 40% 93%;
     --muted-foreground: 215.4 16.3% 36.9%;
     /* Softer accent colors */
-    --accent: 210 40% 85%;
+    --accent: 210 40% 90%;
     --accent-foreground: 222.2 47.4% 11.2%;
-    /* Higher contrast destructive colors */
-    --destructive: 0 84.2% 55.2%;
-    --destructive-foreground: 210 40% 98%;
+
     /* Enhanced border contrast */
     --border: 214.3 31.8% 82%;
     --input: 214.3 0% 50%;
@@ -53,7 +51,7 @@ body {
     --chart-4: 43 74% 45%;
     --chart-5: 27 87% 45%;
     /* Enhanced sidebar contrast */
-    --sidebar-background: 0 0% 95%;
+    --sidebar-background: 0 0% 90%;
     --sidebar-foreground: 240 5.3% 20%;
     --sidebar-primary: 240 5.9% 15%;
     --sidebar-primary-foreground: 0 0% 100%;
@@ -62,10 +60,16 @@ body {
     --sidebar-border: 220 13% 85%;
     --sidebar-ring: 215 82% 45%;
     /* Status colors with better contrast */
-    --success: 142 76% 32%;
+    --success: 142 100% 35%;
     --success-foreground: 210 40% 98%;
     --warning: 38 92% 45%;
     --warning-foreground: 48 96% 95%;
+    /* Higher contrast destructive colors */
+    --destructive: 0 100% 50%;
+    --destructive-foreground: 210 40% 98%;
+
+    --scrollbar-thumb: 0 0% 70%;
+    --scrollbar-thumb-hover: 0 0% 50%;
   }
 
   .dark {
@@ -88,9 +92,7 @@ body {
     /* Softer accent colors */
     --accent: 217.2 32.6% 25%;
     --accent-foreground: 210 40% 98%;
-    /* Adjusted destructive colors */
-    --destructive: 0 62.8% 35%;
-    --destructive-foreground: 210 40% 98%;
+
     /* Enhanced borders for better visibility */
     --border: 217.2 32.6% 28%;
     --input: 217.2 0% 45%;
@@ -111,10 +113,16 @@ body {
     --sidebar-border: 240 3.7% 20%;
     --sidebar-ring: 217.2 91.2% 65%;
     /* Status colors with better visibility */
-    --success: 142 69% 54%;
+    --success: 142 75% 50%;
     --success-foreground: 210 40% 98%;
     --warning: 48 96% 85%;
     --warning-foreground: 38 92% 45%;
+    /* Adjusted destructive colors */
+    --destructive: 0 62.8% 50%;
+    --destructive-foreground: 210 40% 98%;
+
+    --scrollbar-thumb: 240 5.9% 20%;
+    --scrollbar-thumb-hover: 240 5.9% 40%;
   }
 }
 
@@ -129,8 +137,8 @@ body {
 
 /* Enhanced scrollbar styling */
 ::-webkit-scrollbar {
-  width: 12px;
-  height: 12px;
+  width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
@@ -139,11 +147,11 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: hsl(var(--accent));
+  background: hsl(var(--scrollbar-thumb));
   border-radius: 6px;
   border: 2px solid hsl(var(--sidebar-background));
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: hsl(var(--muted-foreground));
+  background: hsl(var(--scrollbar-thumb-hover));
 }
