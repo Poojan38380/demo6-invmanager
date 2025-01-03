@@ -62,7 +62,7 @@ const QuickActions = () => {
           {actions.map((action) => {
             const Icon = action.icon;
             return (
-              <Link href={action.href} key={action.title}>
+              <Link href={action.href} key={action.title} prefetch={false}>
                 <Button
                   variant="outline"
                   className="w-full h-24 flex flex-col items-center justify-center gap-2 hover:scale-105 transition-transform"
