@@ -14,14 +14,14 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Trash } from "lucide-react";
-import { deleteProduct } from "../_actions/deleteProduct";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { deleteTransaction } from "../_actions/deleteTransaction";
 
-export default function ProductDeletionDialog({
-  productId,
+export default function TransactionDeletionDialog({
+  transactionId,
 }: {
-  productId: string;
+  transactionId: string;
 }) {
   const [isDeleting, setIsDeleting] = useState(false);
   const [open, setOpen] = useState(false);
@@ -29,10 +29,10 @@ export default function ProductDeletionDialog({
 
   const handleDelete = async () => {
     setIsDeleting(true);
-    const loadingToast = toast.loading("Deleting product...");
+    const loadingToast = toast.loading("Deleting transaction...");
 
     try {
-      const result = await deleteProduct({ productId });
+      const result = await deleteTransaction({ transactionId });
 
       if (result?.error) {
         toast.error("Error", {
@@ -42,14 +42,14 @@ export default function ProductDeletionDialog({
       } else {
         router.refresh();
         toast.success("Success", {
-          description: "Product deleted successfully",
+          description: "transaction deleted successfully",
           id: loadingToast,
         });
       }
     } catch (error) {
       console.error(error);
       toast.error("Error", {
-        description: "Failed to delete product",
+        description: "Failed to delete transaction",
         id: loadingToast,
       });
     } finally {
@@ -60,10 +60,10 @@ export default function ProductDeletionDialog({
 
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
-      <TooltipWrapper content="Delete product">
+      <TooltipWrapper side="left" content="Delete transaction">
         <AlertDialogTrigger asChild>
           <Button
-            variant="outline"
+            variant="ghost"
             size="icon"
             className="opacity-50 w-6 h-6 p-1 text-destructive"
           >
@@ -75,8 +75,8 @@ export default function ProductDeletionDialog({
         <AlertDialogHeader>
           <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
           <AlertDialogDescription>
-            This will permanently delete the product and all its related data.
-            This action cannot be undone.
+            This will permanently delete this transaction. The stock change wont
+            be reverted. This action cannot be undone.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

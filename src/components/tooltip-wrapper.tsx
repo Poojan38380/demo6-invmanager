@@ -16,12 +16,12 @@ interface TooltipWrapperProps {
 export function TooltipWrapper({
   content,
   children,
-  side = "bottom",
+  side = "top",
   align = "center",
 }: TooltipWrapperProps) {
   return (
     <TooltipProvider>
-      <Tooltip delayDuration={300}>
+      <Tooltip delayDuration={500}>
         <TooltipTrigger asChild>{children}</TooltipTrigger>
         <TooltipContent
           side={side}

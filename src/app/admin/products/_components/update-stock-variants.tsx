@@ -154,8 +154,8 @@ export default function UpdateStockVariants({
         if (!isOpen) resetForm();
       }}
     >
-      <DrawerTrigger asChild>
-        <TooltipWrapper content="Update stock">
+      <TooltipWrapper content="Update stock">
+        <DrawerTrigger asChild>
           <Button
             variant="outline"
             size="icon"
@@ -163,8 +163,8 @@ export default function UpdateStockVariants({
           >
             <ArrowUpDown />
           </Button>
-        </TooltipWrapper>
-      </DrawerTrigger>
+        </DrawerTrigger>
+      </TooltipWrapper>
       <DrawerContent className="bg-background">
         <div className="mx-auto w-full max-w-lg">
           <DrawerHeader>

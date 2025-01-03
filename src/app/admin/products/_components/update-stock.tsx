@@ -135,8 +135,8 @@ export default function UpdateStock({ product }: { product: Product }) {
         if (!isOpen) resetForm();
       }}
     >
-      <DrawerTrigger asChild>
-        <TooltipWrapper content="Update stock">
+      <TooltipWrapper content="Update stock">
+        <DrawerTrigger asChild>
           <Button
             variant="outline"
             size="icon"
@@ -144,8 +144,8 @@ export default function UpdateStock({ product }: { product: Product }) {
           >
             <ArrowUpDown />
           </Button>
-        </TooltipWrapper>
-      </DrawerTrigger>
+        </DrawerTrigger>
+      </TooltipWrapper>
       <DrawerContent className="bg-background">
         <div className="mx-auto w-full max-w-lg">
           <DrawerHeader>
