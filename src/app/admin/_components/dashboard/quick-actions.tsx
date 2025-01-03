@@ -1,7 +1,14 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Plus, Package, TrendingUp } from "lucide-react";
+import {
+  Plus,
+  Package,
+  TrendingUp,
+  Users,
+  ShoppingCart,
+  Truck,
+} from "lucide-react";
 import Link from "next/link";
 
 const QuickActions = () => {
@@ -26,6 +33,27 @@ const QuickActions = () => {
       icon: Plus,
       color: "text-green-600",
       bgColor: "bg-green-100",
+    },
+    {
+      title: "Add Category",
+      href: "/admin/products/categories/new",
+      icon: Package,
+      color: "text-blue-600",
+      bgColor: "bg-blue-100",
+    },
+    {
+      title: "New Customer",
+      href: "/admin/settings/customers/new",
+      icon: Users,
+      color: "text-purple-600",
+      bgColor: "bg-purple-100",
+    },
+    {
+      title: "New Supplier",
+      href: "/admin/settings/suppliers/new",
+      icon: Truck,
+      color: "text-orange-600",
+      bgColor: "bg-orange-100",
     },
   ];
 

@@ -149,7 +149,7 @@ export default function UpdateStock({ product }: { product: Product }) {
             <DrawerTitle className="flex items-center gap-2 text-xl font-semibold justify-between">
               {product.name}
               <span className="text-muted-foreground">
-                Current: {product.stock} {product.unit}
+                {product.stock} {product.unit}
               </span>
             </DrawerTitle>
           </DrawerHeader>
