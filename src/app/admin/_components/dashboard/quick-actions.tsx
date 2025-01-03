@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Plus, Package, TrendingUp, Users, Truck } from "lucide-react";
 import Link from "next/link";
+import ShareButton from "@/components/share-button";
 
 const QuickActions = () => {
   const actions = [
@@ -52,8 +53,9 @@ const QuickActions = () => {
 
   return (
     <Card className="border-none shadow-none bg-background">
-      <CardHeader>
+      <CardHeader className="flex flex-row items-center gap-2 justify-between">
         <CardTitle>Quick Actions</CardTitle>
+        <ShareButton />
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
