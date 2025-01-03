@@ -1,14 +1,7 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import {
-  Plus,
-  Package,
-  TrendingUp,
-  Users,
-  ShoppingCart,
-  Truck,
-} from "lucide-react";
+import { Plus, Package, TrendingUp, Users, Truck } from "lucide-react";
 import Link from "next/link";
 
 const QuickActions = () => {
