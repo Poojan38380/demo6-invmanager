@@ -1,13 +1,13 @@
+import { Suspense } from "react";
 import DashboardOverviewCards from "./_components/dashboard/dashboard-overview-cards";
 import QuickActions from "./_components/dashboard/quick-actions";
 
 import { getCachedProductsforTable } from "./products/_actions/products";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-
-export default async function AdminPage() {
+import { Loader } from "lucide-react";
+async function AdminPageComp() {
   const products = await getCachedProductsforTable();
-  // const transactions = await getAllCachedTransactions();
 
   return (
     <Card className="border-none  shadow-none bg-background ">
@@ -18,7 +18,13 @@ export default async function AdminPage() {
       <CardContent>
         <DashboardOverviewCards products={products} />
       </CardContent>
-      {/* <DashboardAnalytics transactions={transactions} /> */}
     </Card>
+  );
+}
+export default async function AdminPage() {
+  return (
+    <Suspense fallback={<Loader className="animate-spin" />}>
+      <AdminPageComp />
+    </Suspense>
   );
 }
