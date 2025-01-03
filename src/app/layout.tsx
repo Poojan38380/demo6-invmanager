@@ -49,6 +49,12 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   themeColor: "#f2f2f2",
 };
+import { Inter } from "next/font/google";
+
+const inter = Inter({
+  subsets: ["latin"],
+  display: "swap",
+});
 
 export default function RootLayout({
   children,
@@ -56,7 +62,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning className={inter.className}>
       <head>
         <link rel="manifest" href="/manifest.json" />
       </head>
