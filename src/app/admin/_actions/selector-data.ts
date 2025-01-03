@@ -92,8 +92,10 @@ export async function createUnit(unitName: string) {
     revalidatePath("/admin/settings/units");
     revalidatePath("/admin/products/new");
     return { success: true, unitId: newUnit.id };
-  } catch (Error) {
-    console.log("Error creating unit");
-    return { success: false, error: `Failed to create new unit: ${Error}` };
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error("Error in createUnit server action: ", error.stack);
+    }
+    return { success: false, error: `Failed to create new unit: ${error}` };
   }
 }

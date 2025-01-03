@@ -1,4 +1,5 @@
 "use client";
+import { TooltipWrapper } from "@/components/tooltip-wrapper";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DataTableColumnHeader } from "@/components/ui/data-table/data-table-column-header";
@@ -35,14 +36,16 @@ export const CustomerColumns: ColumnDef<Customer>[] = [
     cell: ({ row }) => {
       const customerId = row.original.id;
       return (
-        <Button asChild size={"icon"} variant={"ghost"}>
-          <Link
-            prefetch={false}
-            href={`/admin/settings/customers/${customerId}`}
-          >
-            <Edit />
-          </Link>
-        </Button>
+        <TooltipWrapper content="Edit details">
+          <Button asChild size={"icon"} variant={"ghost"}>
+            <Link
+              prefetch={false}
+              href={`/admin/settings/customers/${customerId}`}
+            >
+              <Edit />
+            </Link>
+          </Button>
+        </TooltipWrapper>
       );
     },
   },

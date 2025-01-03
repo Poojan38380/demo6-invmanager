@@ -34,9 +34,11 @@ export async function createCategory(name: string) {
     revalidatePath("/admin/products/new");
 
     return { success: true, categoryId: newCategory.id };
-  } catch (Error) {
-    console.log("Error creating category");
-    return { success: false, error: `Failed to create new category: ${Error}` };
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error("Error in createCategory server action: ", error.stack);
+    }
+    return { success: false, error: `Failed to create new category: ${error}` };
   }
 }
 interface EditCategoryPayload {
@@ -64,8 +66,10 @@ export async function editCategory(data: EditCategoryPayload) {
     revalidatePath("/admin/products/categories");
     revalidatePath("/admin/products/new");
     return { success: true, categoryId: updatedCategory.id };
-  } catch (Error) {
-    console.log("Error editing category");
-    return { success: false, error: `Failed to update category: ${Error}` };
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error("Error in editCategory server action: ", error.stack);
+    }
+    return { success: false, error: `Failed to update category: ${error}` };
   }
 }

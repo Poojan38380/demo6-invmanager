@@ -116,7 +116,9 @@ ${vendor ? `-Supplier: ${vendor.companyName}` : ""}
 
     return { success: true, productId: data.productId };
   } catch (error) {
-    console.error("Error updating stock:", error);
+    if (error instanceof Error) {
+      console.error("Error in updateProductStock server action: ", error.stack);
+    }
     return { success: false, error: "Failed to update product stock" };
   }
 }
@@ -243,7 +245,12 @@ ${vendor ? `-Supplier: ${vendor.companyName}` : ""}
 
     return { success: true, variantId: data.variantId };
   } catch (error) {
-    console.error("Error updating stock:", error);
+    if (error instanceof Error) {
+      console.error(
+        "Error in updateProductVariantStock server action: ",
+        error.stack
+      );
+    }
     return { success: false, error: "Failed to update product variant stock" };
   }
 }

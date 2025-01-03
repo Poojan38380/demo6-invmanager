@@ -6,6 +6,7 @@ import { Separator } from "@/components/ui/separator";
 import ProductImageCarousel from "./ProductImageCarousel";
 import { Button } from "@/components/ui/button";
 import { ShoppingCart } from "lucide-react";
+import { checkIdValidity } from "@/utils/checkIdValidity";
 
 export default async function SingleProductDisplayPage({
   params,
@@ -13,6 +14,9 @@ export default async function SingleProductDisplayPage({
   params: Promise<{ productId: string }>;
 }) {
   const { productId } = await params;
+
+  const idValidityCheck = checkIdValidity(productId, "productId");
+  if (idValidityCheck) return idValidityCheck;
 
   const product = await getCachedSingleProduct(productId);
   if (!product) return notFound();

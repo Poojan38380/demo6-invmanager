@@ -1,6 +1,6 @@
-import { notFound } from "next/navigation";
 import TransactionLayout from "../../../transactionLayout";
 import { getCachedTransactionsByVariantId } from "../../../_actions/getTransactions";
+import { checkIdValidity } from "@/utils/checkIdValidity";
 
 export default async function ProductTransactionsPage({
   params,
@@ -9,8 +9,17 @@ export default async function ProductTransactionsPage({
 }) {
   const { variantId } = await params;
 
+  const idValidityCheck = checkIdValidity(variantId, "variantId");
+  if (idValidityCheck) return idValidityCheck;
+
   const transactions = await getCachedTransactionsByVariantId(variantId);
-  if (!transactions || transactions.length === 0) return notFound();
+
+  if (!transactions || transactions.length === 0)
+    return (
+      <div className="text-center p-8 text-gray-600">
+        No transactions done on this product variant.
+      </div>
+    );
 
   const productName = transactions[0].product.name;
   return (

@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/card";
 
 import { ProductDataTable } from "../_components/data-table";
-import { BasicColumns } from "../_cloumns/basic-columns";
+import { BasicColumns } from "../basic-columns";
 import BackButton from "../../_components/sidebar/back-button";
 
 export default async function CriticalProducts() {

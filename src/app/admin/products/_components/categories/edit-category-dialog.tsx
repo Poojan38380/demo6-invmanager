@@ -17,6 +17,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { CategoryWithCounts } from "@/types/dataTypes";
 import { editCategory } from "../../_actions/categories";
+import { TooltipWrapper } from "@/components/tooltip-wrapper";
 
 interface EditCategoryDialogProps {
   category: CategoryWithCounts;
@@ -64,9 +65,11 @@ const EditCategoryDialog: React.FC<EditCategoryDialogProps> = ({
   return (
     <Dialog open={isDialogOpen} onOpenChange={setDialogOpen}>
       <DialogTrigger asChild>
-        <Button variant="ghost" size="icon" aria-label="Edit category">
-          <Edit className="h-4 w-4" />
-        </Button>
+        <TooltipWrapper content="Edit details">
+          <Button variant="ghost" size="icon" aria-label="Edit category">
+            <Edit className="h-4 w-4" />
+          </Button>
+        </TooltipWrapper>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>

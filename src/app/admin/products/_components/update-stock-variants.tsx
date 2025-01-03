@@ -29,6 +29,7 @@ import { Label } from "@/components/ui/label";
 import VariantSelectorForUpdater from "./variant-selector-for-update";
 import { ProductWithOneImage } from "../_actions/products";
 import Link from "next/link";
+import { TooltipWrapper } from "@/components/tooltip-wrapper";
 
 export default function UpdateStockVariants({
   product,
@@ -153,15 +154,17 @@ export default function UpdateStockVariants({
         if (!isOpen) resetForm();
       }}
     >
-      <DrawerTrigger asChild>
-        <Button
-          variant="outline"
-          size="icon"
-          className="h-9 w-9 p-1 bg-card shadow-lg"
-        >
-          <ArrowUpDown />
-        </Button>
-      </DrawerTrigger>
+      <TooltipWrapper content="Update stock">
+        <DrawerTrigger asChild>
+          <Button
+            variant="outline"
+            size="icon"
+            className="h-9 w-9 p-1 bg-card shadow-lg"
+          >
+            <ArrowUpDown />
+          </Button>
+        </DrawerTrigger>
+      </TooltipWrapper>
       <DrawerContent className="bg-background">
         <div className="mx-auto w-full max-w-lg">
           <DrawerHeader>

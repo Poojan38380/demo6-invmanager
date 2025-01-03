@@ -16,7 +16,7 @@ const ShareButton = () => {
       onClick={handleShare}
       variant="outline"
       size="sm"
-      className="flex items-center gap-2"
+      className="flex items-center gap-2 rounded-2xl"
     >
       <Share2 className="h-4 w-4" />
       Share

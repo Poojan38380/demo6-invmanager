@@ -65,7 +65,7 @@ const QuickActions = () => {
               <Link href={action.href} key={action.title} prefetch={false}>
                 <Button
                   variant="outline"
-                  className="w-full h-24 flex flex-col items-center justify-center gap-2 hover:scale-105 transition-transform"
+                  className="w-full h-24 rounded-2xl flex flex-col items-center justify-center gap-2 hover:scale-105 transition-transform"
                 >
                   <div className={`p-2 rounded-lg ${action.bgColor}`}>
                     <Icon className={`w-6 h-6 ${action.color}`} />

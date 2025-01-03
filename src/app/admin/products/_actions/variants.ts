@@ -87,11 +87,9 @@ Number of variants: ${data.variants.length}
 
     return { success: true, productId: data.productId };
   } catch (error) {
-    console.error("Error updating stock:", error);
-    return {
-      success: false,
-      error:
-        error instanceof Error ? error.message : "Failed to update variants",
-    };
+    if (error instanceof Error) {
+      console.error("Error in EditVariants server action: ", error.stack);
+    }
+    return { success: false, error: `Failed to update variants: ${error}` };
   }
 }

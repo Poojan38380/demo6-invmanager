@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 import { formatDateYYMMDDHHMM } from "@/lib/format-date";
 import { Badge } from "@/components/ui/badge";
+import TransactionDeletionDialog from "./_components/trans-deletion-dialog";
 
 export const TransactionTableColumns: ColumnDef<TransactionForTable>[] = [
   {
@@ -228,6 +229,15 @@ export const TransactionTableColumns: ColumnDef<TransactionForTable>[] = [
           </Tooltip>
         </TooltipProvider>
       );
+    },
+  },
+  {
+    accessorKey: "actions",
+    header: undefined,
+    cell: ({ row }) => {
+      const transaction = row.original;
+      if (transaction.action !== "CREATED")
+        return <TransactionDeletionDialog transactionId={transaction.id} />;
     },
   },
 ];

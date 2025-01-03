@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/card";
 
 import { ProductDataTable } from "./_components/data-table";
-import { BasicColumns } from "./_cloumns/basic-columns";
+import { BasicColumns } from "./basic-columns";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { PlusIcon } from "lucide-react";

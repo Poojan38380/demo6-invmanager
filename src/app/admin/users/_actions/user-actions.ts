@@ -78,8 +78,10 @@ export async function addUser({
     revalidatePath("/admin/users");
 
     return { success: true, userId: CreatedUser.id };
-  } catch (Error) {
-    console.error("Error creating new user:", Error);
-    return { success: false, error: `Failed to create user : ${Error}` };
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error("Error in addUser server action: ", error.stack);
+    }
+    return { success: false, error: `Failed to create user : ${error}` };
   }
 }
