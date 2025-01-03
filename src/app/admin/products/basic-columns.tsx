@@ -6,14 +6,14 @@ import { DataTableColumnHeader } from "@/components/ui/data-table/data-table-col
 import { formatDateYYMMDDHHMM } from "@/lib/format-date";
 import { ColumnDef } from "@tanstack/react-table";
 import { ChartNoAxesCombined, Package, Pen } from "lucide-react";
-import { ProductWithOneImage } from "../_actions/products";
+import { ProductWithOneImage } from "./_actions/products";
 import { formatNumber } from "@/lib/formatter";
-import UpdateStock from "../_components/update-stock";
+import UpdateStock from "./_components/update-stock";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Separator } from "@/components/ui/separator";
-import UpdateStockVariants from "../_components/update-stock-variants";
-
+import UpdateStockVariants from "./_components/update-stock-variants";
+import { TooltipWrapper } from "@/components/tooltip-wrapper";
 
 export const BasicColumns: ColumnDef<ProductWithOneImage>[] = [
   {
@@ -29,10 +29,8 @@ export const BasicColumns: ColumnDef<ProductWithOneImage>[] = [
     cell: ({ row }) => {
       const productName: string = row.getValue("name");
 
-
       return (
         <div className="flex items-center gap-2">
-
           <Avatar className="">
             <AvatarImage src={row.original.productImages[0]?.url} />
             <AvatarFallback>
@@ -41,7 +39,6 @@ export const BasicColumns: ColumnDef<ProductWithOneImage>[] = [
           </Avatar>
           <span className="font-semibold">{productName}</span>
         </div>
-
       );
     },
   },
@@ -128,34 +125,38 @@ export const BasicColumns: ColumnDef<ProductWithOneImage>[] = [
           ) : (
             <UpdateStock product={product} />
           )}
-          <Button
-            asChild
-            variant="outline"
-            size="icon"
-            className=" bg-card shadow-md opacity-50"
-          >
-            <Link
-              href={`/admin/products/${product.id}`}
-              prefetch={false}
-              className="w-6  h-6"
+          <TooltipWrapper content="Edit product">
+            <Button
+              asChild
+              variant="outline"
+              size="icon"
+              className=" bg-card shadow-md opacity-50"
             >
-              <Pen className="text-xs" />
-            </Link>
-          </Button>
-          <Button
-            asChild
-            variant="outline"
-            size="icon"
-            className=" bg-card shadow-md opacity-50"
-          >
-            <Link
-              href={`/admin/transactions/product/${product.id}`}
-              className="w-6  h-6"
-              prefetch={false}
+              <Link
+                href={`/admin/products/${product.id}`}
+                prefetch={false}
+                className="w-6  h-6"
+              >
+                <Pen className="text-xs" />
+              </Link>
+            </Button>
+          </TooltipWrapper>
+          <TooltipWrapper content="View transactions">
+            <Button
+              asChild
+              variant="outline"
+              size="icon"
+              className=" bg-card shadow-md opacity-50"
             >
-              <ChartNoAxesCombined className="text-xs" />
-            </Link>
-          </Button>
+              <Link
+                href={`/admin/transactions/product/${product.id}`}
+                className="w-6  h-6"
+                prefetch={false}
+              >
+                <ChartNoAxesCombined className="text-xs" />
+              </Link>
+            </Button>
+          </TooltipWrapper>
         </div>
       );
     },

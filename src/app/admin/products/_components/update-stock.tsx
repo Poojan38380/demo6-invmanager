@@ -28,6 +28,7 @@ import { Product } from "@prisma/client";
 import { formatNumber } from "@/lib/formatter";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
+import { TooltipWrapper } from "@/components/tooltip-wrapper";
 
 export default function UpdateStock({ product }: { product: Product }) {
   const router = useRouter();
@@ -135,13 +136,15 @@ export default function UpdateStock({ product }: { product: Product }) {
       }}
     >
       <DrawerTrigger asChild>
-        <Button
-          variant="outline"
-          size="icon"
-          className="h-9 w-9 p-1 bg-card shadow-lg"
-        >
-          <ArrowUpDown />
-        </Button>
+        <TooltipWrapper content="Update stock">
+          <Button
+            variant="outline"
+            size="icon"
+            className="h-9 w-9 p-1 bg-card shadow-lg"
+          >
+            <ArrowUpDown />
+          </Button>
+        </TooltipWrapper>
       </DrawerTrigger>
       <DrawerContent className="bg-background">
         <div className="mx-auto w-full max-w-lg">

@@ -1,4 +1,4 @@
-import { ArrowLeftRight, LucideIcon, PackagePlus } from "lucide-react";
+import { ChevronsLeftRightEllipsis, LucideIcon } from "lucide-react";
 
 interface NavItem {
   name: string;
@@ -9,11 +9,6 @@ export const SecondaryNavItems: NavItem[] = [
   {
     name: "All Transactions",
     url: "/admin/transactions",
-    icon: ArrowLeftRight,
-  },
-  {
-    name: "Create product",
-    url: "/admin/products/new",
-    icon: PackagePlus,
+    icon: ChevronsLeftRightEllipsis,
   },
 ];
