@@ -75,10 +75,7 @@ export default function ProductDeletionDialog({
         <AlertDialogHeader>
           <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
           <AlertDialogDescription>
-            This will permanently delete the product and all its related data.
-            <br />
-            <br />
-            FIRST DELETE ALL TRANSACTIONS !!!
+            This will permanently delete the product.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
