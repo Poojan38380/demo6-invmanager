@@ -1,14 +1,10 @@
 import { notFound } from "next/navigation";
 import { getCachedTransactionsByProductId } from "../../_actions/getTransactions";
 import TransactionLayout from "../../transactionLayout";
+import TableSkeleton from "@/app/admin/_components/table-skeleton";
+import { Suspense } from "react";
 
-export default async function ProductTransactionsPage({
-  params,
-}: {
-  params: Promise<{ productId: string }>;
-}) {
-  const { productId } = await params;
-
+async function ProductTransactionsComp({ productId }: { productId: string }) {
   const transactions = await getCachedTransactionsByProductId(productId);
   if (!transactions || transactions.length === 0) return notFound();
   return (
@@ -17,5 +13,19 @@ export default async function ProductTransactionsPage({
       transactions={transactions}
       displayChart
     />
+  );
+}
+
+export default async function TransactionsPage({
+  params,
+}: {
+  params: Promise<{ productId: string }>;
+}) {
+  const { productId } = await params;
+
+  return (
+    <Suspense fallback={<TableSkeleton />}>
+      <ProductTransactionsComp productId={productId} />
+    </Suspense>
   );
 }

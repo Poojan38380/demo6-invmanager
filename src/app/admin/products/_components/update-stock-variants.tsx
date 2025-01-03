@@ -169,8 +169,7 @@ export default function UpdateStockVariants({
               {product.name}
               {selectedVariant && (
                 <span className="text-muted-foreground">
-                  Current: {formatNumber(selectedVariant.variantStock)}{" "}
-                  {product.unit}
+                  {formatNumber(selectedVariant.variantStock)} {product.unit}
                 </span>
               )}
             </DrawerTitle>
