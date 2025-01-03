@@ -67,6 +67,9 @@ body {
     /* Higher contrast destructive colors */
     --destructive: 0 100% 50%;
     --destructive-foreground: 210 40% 98%;
+
+    --scrollbar-thumb: 0 0% 70%;
+    --scrollbar-thumb-hover: 0 0% 50%;
   }
 
   .dark {
@@ -117,6 +120,9 @@ body {
     /* Adjusted destructive colors */
     --destructive: 0 62.8% 50%;
     --destructive-foreground: 210 40% 98%;
+
+    --scrollbar-thumb: 240 5.9% 20%;
+    --scrollbar-thumb-hover: 240 5.9% 40%;
   }
 }
 
@@ -131,8 +137,8 @@ body {
 
 /* Enhanced scrollbar styling */
 ::-webkit-scrollbar {
-  width: 12px;
-  height: 12px;
+  width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
@@ -141,11 +147,11 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: hsl(var(--accent));
+  background: hsl(var(--scrollbar-thumb));
   border-radius: 6px;
   border: 2px solid hsl(var(--sidebar-background));
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: hsl(var(--muted-foreground));
+  background: hsl(var(--scrollbar-thumb-hover));
 }

@@ -27,7 +27,7 @@ export function PrimaryNav() {
 
   return (
     <SidebarGroup className="space-y-4 p-3">
-      <SidebarGroupLabel className="text-sm font-bold text-primary/80 uppercase tracking-wider px-3 pb-2 border-b border-border">
+      <SidebarGroupLabel className="text-sm font-bold text-primary/80 uppercase tracking-wider px-3 pb-2  ">
         INV MANAGER
       </SidebarGroupLabel>
 
@@ -60,7 +60,7 @@ export function PrimaryNav() {
                       "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary",
                       isActiveGroup
                         ? "bg-primary/10 text-primary font-medium"
-                        : "text-muted-foreground"
+                        : "text-sidebar-foreground"
                     )}
                   >
                     {item.icon && (
@@ -88,7 +88,7 @@ export function PrimaryNav() {
                   id={`${item.title}-submenu`}
                   className={cn(
                     "pl-8 mt-1 mb-3 border-l border-border",
-                    "animate-in slide-in-from-left-2 duration-200"
+                    "animate-in slide-in-from-left-2 duration-300"
                   )}
                 >
                   <ul className="space-y-1">
@@ -117,7 +117,7 @@ export function PrimaryNav() {
                                 "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary",
                                 isActive
                                   ? "bg-primary/10 text-primary font-medium"
-                                  : "text-muted-foreground hover:text-foreground"
+                                  : "text-muted-foreground font-medium hover:text-foreground"
                               )}
                             >
                               <span className="flex-grow">{subItem.title}</span>
