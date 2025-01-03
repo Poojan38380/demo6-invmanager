@@ -24,6 +24,7 @@ export type ProductWithOneImage = Product & {
     name: string;
   } | null;
   lastMonthSales: number;
+  transactionCount: number;
   productVariants: ProductVariant[];
 };
 
@@ -37,7 +38,6 @@ async function getProductsforTable(): Promise<ProductWithOneImage[]> {
       vendor: {
         select: { companyName: true },
       },
-
       category: { select: { name: true } },
       productImages: {
         take: 1,
@@ -55,8 +55,14 @@ async function getProductsforTable(): Promise<ProductWithOneImage[]> {
         },
       },
       productVariants: true,
+      _count: {
+        select: {
+          transactions: true,
+        },
+      },
     },
   });
+
   const productsWithSales = products.map((product) => {
     const lastMonthSales = product.transactions.reduce(
       (total, transaction) => total + Math.abs(transaction.stockChange),
@@ -65,6 +71,7 @@ async function getProductsforTable(): Promise<ProductWithOneImage[]> {
     return {
       ...product,
       lastMonthSales,
+      transactionCount: product._count.transactions,
     };
   });
 
@@ -238,7 +245,9 @@ export async function addProduct(data: addproductProps, productImages: File[]) {
 
     return { success: true, productId: product.id };
   } catch (error) {
-    console.error("Error adding product:", error);
+    if (error instanceof Error) {
+      console.error("Error in addProduct server action: ", error.stack);
+    }
     return { success: false, error: `Failed to add product: ${error}` };
   }
 }
@@ -326,9 +335,11 @@ export async function editProduct(
     revalidatePath(`/admin/products/${existingProduct.id}`);
 
     return { success: true, message: "Product edited successfully." };
-  } catch (Error) {
-    console.error("Error adding product:", Error);
-    return { success: false, error: `Failed to edit product: ${Error}` };
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error("Error in editProduct server action: ", error.stack);
+    }
+    return { success: false, error: `Failed to edit product: ${error}` };
   }
 }
 

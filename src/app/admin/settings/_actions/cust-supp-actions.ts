@@ -64,7 +64,9 @@ export async function addSupplier(data: addSupplierProps) {
     revalidatePath("/admin/settings/suppliers");
     return { success: true, supplierId: newSupplier.id };
   } catch (error) {
-    console.error("Error creating supplier:", error);
+    if (error instanceof Error) {
+      console.error("Error in addSupplier server action: ", error.stack);
+    }
     return { success: false, error: `Failed to create supplier: ${error}` };
   }
 }
@@ -100,7 +102,9 @@ export async function addCustomer(data: addCustomerProps) {
     revalidatePath("/admin/settings/customers");
     return { success: true, customerId: newCustomer.id };
   } catch (error) {
-    console.error("Error creating customer:", error);
+    if (error instanceof Error) {
+      console.error("Error in addCustomer server action: ", error.stack);
+    }
     return { success: false, error: `Failed to create customer: ${error}` };
   }
 }
@@ -151,7 +155,9 @@ export async function editSupplier(data: editSupplierProps) {
     revalidatePath(`/admin/settings/suppliers/${updatedSupplier.id}`);
     return { success: true, supplierId: updatedSupplier.id };
   } catch (error) {
-    console.error("Error updating supplier:", error);
+    if (error instanceof Error) {
+      console.error("Error in editSupplier server action: ", error.stack);
+    }
     return { success: false, error: `Failed to update supplier: ${error}` };
   }
 }
@@ -200,7 +206,9 @@ export async function editCustomer(data: editCustomerProps) {
     revalidatePath(`/admin/settings/customers/${updatedCustomer.id}`);
     return { success: true, customerId: updatedCustomer.id };
   } catch (error) {
-    console.error("Error updating customer:", error);
+    if (error instanceof Error) {
+      console.error("Error in editCustomer server action: ", error.stack);
+    }
     return { success: false, error: `Failed to update customer: ${error}` };
   }
 }

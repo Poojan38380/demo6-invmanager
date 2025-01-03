@@ -14,6 +14,7 @@ import Link from "next/link";
 import { Separator } from "@/components/ui/separator";
 import UpdateStockVariants from "./_components/update-stock-variants";
 import { TooltipWrapper } from "@/components/tooltip-wrapper";
+import ProductDeletionDialog from "./_components/product-deletion-dialog";
 
 export const BasicColumns: ColumnDef<ProductWithOneImage>[] = [
   {
@@ -119,44 +120,49 @@ export const BasicColumns: ColumnDef<ProductWithOneImage>[] = [
     cell: ({ row }) => {
       const product = row.original;
       return (
-        <div className="flex items-center justify-center gap-2">
+        <div className="w-max flex items-center justify-between gap-2">
           {product.hasVariants ? (
             <UpdateStockVariants product={product} />
           ) : (
             <UpdateStock product={product} />
           )}
-          <TooltipWrapper content="Edit product">
-            <Button
-              asChild
-              variant="outline"
-              size="icon"
-              className=" bg-card shadow-md opacity-50"
-            >
-              <Link
-                href={`/admin/products/${product.id}`}
-                prefetch={false}
-                className="w-6  h-6"
+          <div className="grid grid-cols-2 gap-1">
+            <TooltipWrapper content="Edit product">
+              <Button
+                asChild
+                variant="outline"
+                size="icon"
+                className=" bg-card shadow-md opacity-50"
               >
-                <Pen className="text-xs" />
-              </Link>
-            </Button>
-          </TooltipWrapper>
-          <TooltipWrapper content="View transactions">
-            <Button
-              asChild
-              variant="outline"
-              size="icon"
-              className=" bg-card shadow-md opacity-50"
-            >
-              <Link
-                href={`/admin/transactions/product/${product.id}`}
-                className="w-6  h-6"
-                prefetch={false}
+                <Link
+                  href={`/admin/products/${product.id}`}
+                  prefetch={false}
+                  className="w-6  h-6"
+                >
+                  <Pen className="text-xs" />
+                </Link>
+              </Button>
+            </TooltipWrapper>
+            <TooltipWrapper content="View transactions">
+              <Button
+                asChild
+                variant="outline"
+                size="icon"
+                className=" bg-card shadow-md opacity-50"
               >
-                <ChartNoAxesCombined className="text-xs" />
-              </Link>
-            </Button>
-          </TooltipWrapper>
+                <Link
+                  href={`/admin/transactions/product/${product.id}`}
+                  className="w-6  h-6"
+                  prefetch={false}
+                >
+                  <ChartNoAxesCombined className="text-xs" />
+                </Link>
+              </Button>
+            </TooltipWrapper>
+            {product.transactionCount === 1 && (
+              <ProductDeletionDialog productId={product.id} />
+            )}
+          </div>
         </div>
       );
     },
