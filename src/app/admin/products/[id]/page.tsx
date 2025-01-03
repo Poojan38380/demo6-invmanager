@@ -3,6 +3,7 @@ import { getCachedSingleProduct } from "../_actions/products";
 import ProductForm from "../_components/product-form/ProductForm";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import BackButton from "../../_components/sidebar/back-button";
+import { checkIdValidity } from "@/utils/checkIdValidity";
 interface EditProductPageProps {
   params: Promise<{ id: string }>;
 }
@@ -11,6 +12,9 @@ export default async function EditProductPage({
   params,
 }: EditProductPageProps) {
   const { id } = await params;
+
+  const idValidityCheck = checkIdValidity(id, "productId");
+  if (idValidityCheck) return idValidityCheck;
 
   const product = await getCachedSingleProduct(id);
   if (!product) return notFound();

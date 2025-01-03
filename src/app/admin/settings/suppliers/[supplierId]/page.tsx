@@ -3,6 +3,7 @@ import { Card, CardDescription, CardHeader } from "@/components/ui/card";
 import SupplierForm from "../../_components/create-update-supplier-form";
 import { getCachedSinglesupplier } from "../../_actions/cust-supp-actions";
 import BackButton from "@/app/admin/_components/sidebar/back-button";
+import { checkIdValidity } from "@/utils/checkIdValidity";
 
 export default async function EditSupplierPage({
   params,
@@ -10,6 +11,9 @@ export default async function EditSupplierPage({
   params: Promise<{ supplierId: string }>;
 }) {
   const { supplierId } = await params;
+
+  const idValidityCheck = checkIdValidity(supplierId, "supplierId");
+  if (idValidityCheck) return idValidityCheck;
 
   const supplier = await getCachedSinglesupplier(supplierId);
   if (!supplier) return notFound();
