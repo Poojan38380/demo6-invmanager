@@ -300,27 +300,41 @@ export async function editProduct(
 
     const productImageUrls = await uploadImagesToCloudinary(productImages);
 
-    await Promise.all([
-      prisma.product.update({
+    const updatedProductImages = [
+      ...data.productPrevImageUrls,
+      ...productImageUrls,
+    ];
+
+    await prisma.$transaction(async (tx) => {
+      const updatedProduct = await tx.product.update({
         where: { id: data.productId },
         data: {
           name: data.name,
           bufferStock: data.bufferStock,
           shortDescription: data.shortDescription,
           longDescription: data.longDescription,
-
           unit: data.unit,
           categoryId: data.categoryId,
           vendorId: data.vendorId,
           qtyInBox: data.qtyInBox,
         },
-      }),
-      handleProductImages(
-        data.productId,
-        data.productPrevImageUrls,
-        productImageUrls
-      ),
-    ]);
+      });
+
+      await tx.productImage.deleteMany({
+        where: { productId: data.productId },
+      });
+
+      if (updatedProductImages.length > 0) {
+        const imageRecords = updatedProductImages.map((url) => ({
+          productId: data.productId,
+          url,
+        }));
+
+        await tx.productImage.createMany({ data: imageRecords });
+      }
+
+      return updatedProduct;
+    });
 
     const notificationMessage = `Details of product: *${existingProduct.name}* has been updated by user: *${updater.username}*`;
 
@@ -340,23 +354,5 @@ export async function editProduct(
       console.error("Error in editProduct server action: ", error.stack);
     }
     return { success: false, error: `Failed to edit product: ${error}` };
-  }
-}
-
-async function handleProductImages(
-  productId: string,
-  prevImageUrls: string[],
-  newImageUrls: string[]
-) {
-  const updatedProductImages = [...prevImageUrls, ...newImageUrls];
-
-  if (updatedProductImages.length > 0) {
-    await prisma.productImage.deleteMany({ where: { productId } });
-
-    const imageRecords = updatedProductImages.map((url) => ({
-      productId,
-      url,
-    }));
-    await prisma.productImage.createMany({ data: imageRecords });
   }
 }
