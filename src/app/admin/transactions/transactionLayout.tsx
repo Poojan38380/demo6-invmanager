@@ -99,12 +99,12 @@ export default function TransactionLayout({
     <Card className="border-none shadow-none bg-background">
       <CardHeader className="py-4 flex flex-row  items-center gap-4 justify-between">
         <BackButton title={title} />
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 flex-wrap justify-end">
           <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
             <PopoverTrigger asChild>
               <Button
                 className={cn(
-                  "items-center rounded-full",
+                  "items-center rounded-full h-full  ",
                   !dateRange && "text-muted-foreground"
                 )}
               >
@@ -113,12 +113,12 @@ export default function TransactionLayout({
                 )}
                 {dateRange?.from ? (
                   dateRange.to ? (
-                    <div>
-                      {format(dateRange.from, "LLL dd, y")} -{" "}
-                      {format(dateRange.to, "LLL dd, y")}
+                    <div className="flex gap-1 flex-wrap py-1">
+                      <span>{format(dateRange.from, "dd/LL/yy")} -</span>
+                      <span>{format(dateRange.to, "dd/LL/y")}</span>
                     </div>
                   ) : (
-                    format(dateRange.from, "LLL dd, y")
+                    format(dateRange.from, "dd/LL/y")
                   )
                 ) : null}
               </Button>
