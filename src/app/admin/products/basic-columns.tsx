@@ -5,7 +5,12 @@ import { Badge } from "@/components/ui/badge";
 import { DataTableColumnHeader } from "@/components/ui/data-table/data-table-column-header";
 import { formatDateYYMMDDHHMM } from "@/lib/format-date";
 import { ColumnDef } from "@tanstack/react-table";
-import { ChartNoAxesCombined, Package, Pen } from "lucide-react";
+import {
+  ChartNoAxesCombined,
+  EllipsisVertical,
+  Package,
+  Pen,
+} from "lucide-react";
 import { ProductWithOneImage } from "./_actions/products";
 import { formatNumber } from "@/lib/formatter";
 import UpdateStock from "./_components/update-stock";
@@ -13,8 +18,15 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Separator } from "@/components/ui/separator";
 import UpdateStockVariants from "./_components/update-stock-variants";
-import { TooltipWrapper } from "@/components/tooltip-wrapper";
 import ProductDeletionDialog from "./_components/product-deletion-dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export const BasicColumns: ColumnDef<ProductWithOneImage>[] = [
   {
@@ -126,43 +138,41 @@ export const BasicColumns: ColumnDef<ProductWithOneImage>[] = [
           ) : (
             <UpdateStock product={product} />
           )}
-          <div className="grid grid-cols-2 gap-1">
-            <TooltipWrapper content="Edit product">
-              <Button
-                asChild
-                variant="outline"
-                size="icon"
-                className=" bg-card shadow-md opacity-50"
-              >
-                <Link
-                  href={`/admin/products/${product.id}`}
-                  prefetch={false}
-                  className="w-6  h-6"
-                >
-                  <Pen className="text-xs" />
-                </Link>
+
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost">
+                <EllipsisVertical />
               </Button>
-            </TooltipWrapper>
-            <TooltipWrapper content="View transactions">
-              <Button
-                asChild
-                variant="outline"
-                size="icon"
-                className=" bg-card shadow-md opacity-50"
-              >
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="font-semibold">
+              <DropdownMenuGroup>
+                <Link href={`/admin/products/${product.id}`} prefetch={false}>
+                  <DropdownMenuItem>
+                    <Pen />
+                    <span>Edit</span>
+                  </DropdownMenuItem>
+                </Link>
                 <Link
                   href={`/admin/transactions/product/${product.id}`}
-                  className="w-6  h-6"
                   prefetch={false}
                 >
-                  <ChartNoAxesCombined className="text-xs" />
+                  <DropdownMenuItem>
+                    <ChartNoAxesCombined />
+                    <span>Transactions</span>
+                  </DropdownMenuItem>{" "}
                 </Link>
-              </Button>
-            </TooltipWrapper>
-            {product.transactionCount === 1 && (
-              <ProductDeletionDialog productId={product.id} />
-            )}
-          </div>
+              </DropdownMenuGroup>
+              {product.transactionCount === 1 && (
+                <>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuGroup>
+                    <ProductDeletionDialog productId={product.id} />{" "}
+                  </DropdownMenuGroup>
+                </>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       );
     },

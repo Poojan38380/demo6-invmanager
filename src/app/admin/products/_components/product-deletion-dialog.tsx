@@ -1,6 +1,5 @@
 "use client";
 import { useState } from "react";
-import { TooltipWrapper } from "@/components/tooltip-wrapper";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -12,7 +11,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
+import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { Trash } from "lucide-react";
 import { deleteProduct } from "../_actions/deleteProduct";
 import { toast } from "sonner";
@@ -60,17 +59,17 @@ export default function ProductDeletionDialog({
 
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
-      <TooltipWrapper content="Delete product">
-        <AlertDialogTrigger asChild>
-          <Button
-            variant="outline"
-            size="icon"
-            className="opacity-50 w-6 h-6 p-1 text-destructive"
-          >
-            <Trash className="text-xs" />
-          </Button>
-        </AlertDialogTrigger>
-      </TooltipWrapper>
+      <AlertDialogTrigger asChild>
+        <DropdownMenuItem
+          onSelect={(e) => {
+            e.preventDefault();
+          }}
+          className="bg-destructive/70 text-destructive-foreground"
+        >
+          <Trash />
+          <span>Delete</span>
+        </DropdownMenuItem>
+      </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
