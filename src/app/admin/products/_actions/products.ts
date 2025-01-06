@@ -148,100 +148,123 @@ export async function addProduct(data: addproductProps, productImages: File[]) {
   }
 
   const creatorId = session.user.id;
+  const creatorUsername = session.user.username;
 
   if (!creatorId) return redirect("/login");
 
   try {
-    const creator = await prisma.user.findUnique({
-      where: { id: creatorId },
-    });
-
-    if (!creator) {
-      throw new Error("User not found in database.Login Again");
-    }
-
-    const productImageUrls = await uploadImagesToCloudinary(productImages);
-
-    const product = await prisma.product.create({
-      data: {
-        name: data.name,
-        stock: data.stock,
-        bufferStock: data.bufferStock,
-        shortDescription: data.shortDescription,
-        longDescription: data.longDescription,
-        unit: data.unit,
-        hasVariants: data.productVariants && data.productVariants?.length > 0,
-        vendorId: data.vendorId,
-        categoryId: data.categoryId,
-        creatorId,
-        qtyInBox: data.qtyInBox,
-        productImages: {
-          create: productImageUrls?.map((url: string) => ({ url })) || [],
+    // Start image upload and initial product creation in parallel
+    const [productImageUrls, product] = await Promise.all([
+      uploadImagesToCloudinary(productImages),
+      prisma.product.create({
+        data: {
+          name: data.name,
+          stock: data.stock,
+          bufferStock: data.bufferStock,
+          shortDescription: data.shortDescription,
+          longDescription: data.longDescription,
+          unit: data.unit,
+          hasVariants: data.productVariants && data.productVariants?.length > 0,
+          vendorId: data.vendorId,
+          categoryId: data.categoryId,
+          creatorId,
+          qtyInBox: data.qtyInBox,
+          productImages: {
+            create: [],
+          },
         },
-      },
-    });
+      }),
+    ]);
 
-    await prisma.transaction.create({
-      data: {
-        action: "CREATED",
-        stockBefore: 0,
-        stockChange: data.stock,
-        stockAfter: data.stock,
-        productId: product.id,
-        userId: creatorId,
-        vendorId: data.vendorId,
-      },
-    });
+    // Prepare all database operations
+    const dbOperations = [];
 
-    if (data.productVariants && data.productVariants.length > 0) {
-      for (const variant of data.productVariants) {
-        // Create variant
-        const createdVariant = await prisma.productVariant.create({
+    // Add product images if they exist
+    if (productImageUrls?.length) {
+      dbOperations.push(
+        prisma.product.update({
+          where: { id: product.id },
           data: {
-            variantName: variant.variantName,
-            variantStock: variant.variantStock,
-            productId: product.id,
+            productImages: {
+              create: productImageUrls.map((url: string) => ({ url })),
+            },
           },
-        });
-
-        // Create transaction for each variant
-        await prisma.transaction.create({
-          data: {
-            action: "CREATED",
-            stockBefore: 0,
-            stockChange: variant.variantStock,
-            stockAfter: variant.variantStock,
-            productId: product.id,
-            productVariantId: createdVariant.id,
-            userId: creatorId,
-            vendorId: data.vendorId,
-          },
-        });
-      }
+        })
+      );
     }
 
-    const notificationMessage = `A new product has been created by ${
-      creator?.username
-    }:
+    // Add initial product transaction
+    dbOperations.push(
+      prisma.transaction.create({
+        data: {
+          action: "CREATED",
+          stockBefore: 0,
+          stockChange: data.stock,
+          stockAfter: data.stock,
+          productId: product.id,
+          userId: creatorId,
+          vendorId: data.vendorId,
+        },
+      })
+    );
+
+    // Prepare variant operations if they exist
+    if (data.productVariants?.length) {
+      const variantOperations = data.productVariants.map((variant) =>
+        prisma.productVariant
+          .create({
+            data: {
+              variantName: variant.variantName,
+              variantStock: variant.variantStock,
+              productId: product.id,
+            },
+          })
+          .then((createdVariant) =>
+            prisma.transaction.create({
+              data: {
+                action: "CREATED",
+                stockBefore: 0,
+                stockChange: variant.variantStock,
+                stockAfter: variant.variantStock,
+                productId: product.id,
+                productVariantId: createdVariant.id,
+                userId: creatorId,
+                vendorId: data.vendorId,
+              },
+            })
+          )
+      );
+      dbOperations.push(...variantOperations);
+    }
+
+    // Execute all database operations concurrently
+    await Promise.all(dbOperations);
+
+    // Prepare notification message
+    const notificationMessage = `A new product has been created by ${creatorUsername}:
     - Product Name: ${data.name} 
     - Initial Stock: ${data.stock}
      ${
-       data.productVariants && data.productVariants?.length > 0
+       data.productVariants?.length
          ? `\nVariants:\n${data.productVariants
              .map((v) => `- ${v.variantName}: Initial Stock ${v.variantStock}`)
              .join("\n")}`
          : ""
      }`;
 
-    await sendTelegramMessage(notificationMessage);
-
-    revalidateTag("get-products-for-table");
-    revalidateTag("get-products-for-display");
-    revalidateTag("get-all-transactions");
-    revalidatePath("/admin/products");
-    revalidatePath("/products");
-    revalidatePath("/admin/transactions");
-    revalidatePath("/admin");
+    // Send notification and revalidate paths in parallel
+    await Promise.all([
+      sendTelegramMessage(notificationMessage),
+      Promise.all([
+        revalidateTag("get-products-for-table"),
+        revalidateTag("get-products-for-display"),
+        revalidateTag("get-all-transactions"),
+        revalidatePath("/admin/products"),
+        revalidatePath("/products"),
+        revalidatePath("/admin/transactions"),
+        revalidatePath("/admin"),
+      ]),
+    ]);
 
     return { success: true, productId: product.id };
   } catch (error) {
