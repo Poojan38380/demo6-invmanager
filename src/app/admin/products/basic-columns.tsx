@@ -172,7 +172,7 @@ export const BasicColumns: ColumnDef<ProductWithOneImage>[] = [
                   <DropdownMenuGroup>
                     <ProductDeletionDialog
                       productId={product.id}
-                      setOpenFn={setOpen}
+                      setOpenFnAction={setOpen}
                     />
                   </DropdownMenuGroup>
                 </>

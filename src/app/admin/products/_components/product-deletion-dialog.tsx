@@ -19,10 +19,10 @@ import { useRouter } from "next/navigation";
 
 export default function ProductDeletionDialog({
   productId,
-  setOpenFn,
+  setOpenFnAction,
 }: {
   productId: string;
-  setOpenFn: Dispatch<SetStateAction<boolean>>;
+  setOpenFnAction: Dispatch<SetStateAction<boolean>>;
 }) {
   const [isDeleting, setIsDeleting] = useState(false);
   const [open, setOpen] = useState(false);
@@ -56,7 +56,7 @@ export default function ProductDeletionDialog({
     } finally {
       setIsDeleting(false);
       setOpen(false);
-      setOpenFn(false);
+      setOpenFnAction(false);
     }
   };
 
