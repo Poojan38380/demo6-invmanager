@@ -24,7 +24,7 @@ export type ProductWithOneImage = Product & {
     name: string;
   } | null;
   lastMonthSales: number;
-  transactionCount: number;
+  specialTransactionCount: number;
   productVariants: ProductVariant[];
 };
 
@@ -57,7 +57,7 @@ async function getProductsforTable(): Promise<ProductWithOneImage[]> {
       productVariants: true,
       _count: {
         select: {
-          transactions: true,
+          transactions: { where: { action: { not: "CREATED" } } },
         },
       },
     },
@@ -71,7 +71,7 @@ async function getProductsforTable(): Promise<ProductWithOneImage[]> {
     return {
       ...product,
       lastMonthSales,
-      transactionCount: product._count.transactions,
+      specialTransactionCount: product._count.transactions,
     };
   });
 

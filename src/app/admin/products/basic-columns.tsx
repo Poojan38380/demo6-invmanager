@@ -163,7 +163,7 @@ export const BasicColumns: ColumnDef<ProductWithOneImage>[] = [
                   </DropdownMenuItem>{" "}
                 </Link>
               </DropdownMenuGroup>
-              {product.transactionCount === 1 && (
+              {product.specialTransactionCount === 0 && (
                 <>
                   <DropdownMenuSeparator />
                   <DropdownMenuGroup>
