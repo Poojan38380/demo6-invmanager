@@ -27,6 +27,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useState } from "react";
 
 export const BasicColumns: ColumnDef<ProductWithOneImage>[] = [
   {
@@ -131,6 +132,8 @@ export const BasicColumns: ColumnDef<ProductWithOneImage>[] = [
     header: undefined,
     cell: ({ row }) => {
       const product = row.original;
+      const [open, setOpen] = useState(false);
+
       return (
         <div className="w-max flex items-center justify-between gap-2">
           {product.hasVariants ? (
@@ -139,7 +142,7 @@ export const BasicColumns: ColumnDef<ProductWithOneImage>[] = [
             <UpdateStock product={product} />
           )}
 
-          <DropdownMenu>
+          <DropdownMenu open={open} onOpenChange={setOpen}>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost">
                 <EllipsisVertical />
@@ -167,7 +170,10 @@ export const BasicColumns: ColumnDef<ProductWithOneImage>[] = [
                 <>
                   <DropdownMenuSeparator />
                   <DropdownMenuGroup>
-                    <ProductDeletionDialog productId={product.id} />{" "}
+                    <ProductDeletionDialog
+                      productId={product.id}
+                      setOpenFn={setOpen}
+                    />
                   </DropdownMenuGroup>
                 </>
               )}

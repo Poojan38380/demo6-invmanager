@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -19,8 +19,10 @@ import { useRouter } from "next/navigation";
 
 export default function ProductDeletionDialog({
   productId,
+  setOpenFn,
 }: {
   productId: string;
+  setOpenFn: Dispatch<SetStateAction<boolean>>;
 }) {
   const [isDeleting, setIsDeleting] = useState(false);
   const [open, setOpen] = useState(false);
@@ -54,6 +56,7 @@ export default function ProductDeletionDialog({
     } finally {
       setIsDeleting(false);
       setOpen(false);
+      setOpenFn(false);
     }
   };
 
