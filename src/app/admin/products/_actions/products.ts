@@ -253,6 +253,7 @@ export async function addProduct(data: addproductProps, productImages: File[]) {
      }`;
 
     // Send notification and revalidate paths in parallel
+
     await Promise.all([
       sendTelegramMessage(notificationMessage),
       Promise.all([

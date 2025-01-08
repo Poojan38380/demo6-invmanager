@@ -3,12 +3,9 @@ import { auth } from "@/lib/auth";
 import { sendTelegramMessage } from "@/lib/send-telegram-message";
 import prisma from "@/prisma";
 import { CategoryWithCounts } from "@/types/dataTypes";
+import cacheRevalidate from "@/utils/cache-revalidation-helper";
 import { Customer, MeasurementUnit, Vendor, Warehouse } from "@prisma/client";
-import {
-  unstable_cache as cache,
-  revalidatePath,
-  revalidateTag,
-} from "next/cache";
+import { unstable_cache as cache } from "next/cache";
 
 async function getCategories(): Promise<CategoryWithCounts[]> {
   const categories = await prisma.category.findMany({
@@ -88,9 +85,11 @@ export async function createUnit(unitName: string) {
 
     await sendTelegramMessage(notificationMessage);
 
-    revalidateTag("get-units");
-    revalidatePath("/admin/settings/units");
-    revalidatePath("/admin/products/new");
+    cacheRevalidate({
+      routesToRevalidate: ["/admin/settings/units", "/admin/products/new"],
+      tagsToRevalidate: ["get-units"],
+    });
+
     return { success: true, unitId: newUnit.id };
   } catch (error) {
     if (error instanceof Error) {
