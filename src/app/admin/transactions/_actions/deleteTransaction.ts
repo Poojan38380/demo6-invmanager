@@ -2,9 +2,9 @@
 import { auth } from "@/lib/auth";
 import prisma from "@/prisma";
 import { redirect } from "next/navigation";
-import { revalidatePath, revalidateTag } from "next/cache";
 import { sendTelegramMessage } from "@/lib/send-telegram-message";
 import { formatDateYYMMDDHHMM } from "@/lib/format-date";
+import cacheRevalidate from "@/utils/cache-revalidation-helper";
 
 export async function deleteTransaction({
   transactionId,
@@ -59,23 +59,22 @@ ${
 StockChange: *${transaction.stockChange}*
 `;
 
-    await sendTelegramMessage(notificationMessage);
-
-    const routesToRevalidate = [
-      "/admin/products",
-      "/products",
-      "/admin/transactions",
-      "/admin",
-    ];
-
-    const tagsToRevalidate = [
-      "get-products-for-table",
-      "get-products-for-display",
-      "get-all-transactions",
-    ];
-
-    routesToRevalidate.forEach((route) => revalidatePath(route));
-    tagsToRevalidate.forEach((tag) => revalidateTag(tag));
+    await Promise.all([
+      sendTelegramMessage(notificationMessage),
+      cacheRevalidate({
+        routesToRevalidate: [
+          "/admin/products",
+          "/products",
+          "/admin/transactions",
+          "/admin",
+        ],
+        tagsToRevalidate: [
+          "get-products-for-table",
+          "get-products-for-display",
+          "get-all-transactions",
+        ],
+      }),
+    ]);
 
     return { success: true };
   } catch (error) {

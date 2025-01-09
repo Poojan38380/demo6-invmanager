@@ -3,7 +3,7 @@
 import { auth } from "@/lib/auth";
 import { sendTelegramMessage } from "@/lib/send-telegram-message";
 import prisma from "@/prisma";
-import { revalidatePath, revalidateTag } from "next/cache";
+import cacheRevalidate from "@/utils/cache-revalidation-helper";
 import { redirect } from "next/navigation";
 
 interface VariantDataProps {
@@ -78,12 +78,19 @@ Number of variants: ${data.variants.length}
     `;
 
     await sendTelegramMessage(notificationMessage);
-    revalidateTag("get-products-for-table");
-    revalidateTag("get-all-transactions");
-    revalidatePath("/admin/products");
-    revalidatePath("/admin/transactions");
-    revalidatePath(`/admin/transactions/product/${data.productId}`);
-    revalidatePath(`/admin/products/${data.productId}`);
+
+    await Promise.all([
+      sendTelegramMessage(notificationMessage),
+      cacheRevalidate({
+        routesToRevalidate: [
+          "/admin/products",
+          "/admin/transactions",
+          `/admin/transactions/product/${data.productId}`,
+          `/admin/products/${data.productId}`,
+        ],
+        tagsToRevalidate: ["get-products-for-table", "get-all-transactions"],
+      }),
+    ]);
 
     return { success: true, productId: data.productId };
   } catch (error) {

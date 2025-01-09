@@ -27,12 +27,16 @@ export async function createCategory(name: string) {
 
     const notificationMessage = `A new category *${name}* has been created.`;
 
-    await sendTelegramMessage(notificationMessage);
-
-    cacheRevalidate({
-      routesToRevalidate: ["/admin/products/categories", "/admin/products/new"],
-      tagsToRevalidate: ["get-categories"],
-    });
+    await Promise.all([
+      sendTelegramMessage(notificationMessage),
+      cacheRevalidate({
+        routesToRevalidate: [
+          "/admin/products/categories",
+          "/admin/products/new",
+        ],
+        tagsToRevalidate: ["get-categories"],
+      }),
+    ]);
 
     return { success: true, categoryId: newCategory.id };
   } catch (error) {

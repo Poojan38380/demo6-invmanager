@@ -83,12 +83,13 @@ export async function createUnit(unitName: string) {
 
     const notificationMessage = `A new unit *${unitName}* has been created by *${session.user.username}*.`;
 
-    await sendTelegramMessage(notificationMessage);
-
-    cacheRevalidate({
-      routesToRevalidate: ["/admin/settings/units", "/admin/products/new"],
-      tagsToRevalidate: ["get-units"],
-    });
+    await Promise.all([
+      sendTelegramMessage(notificationMessage),
+      cacheRevalidate({
+        routesToRevalidate: ["/admin/settings/units", "/admin/products/new"],
+        tagsToRevalidate: ["get-units"],
+      }),
+    ]);
 
     return { success: true, unitId: newUnit.id };
   } catch (error) {

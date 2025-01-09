@@ -2,9 +2,9 @@
 import { auth } from "@/lib/auth";
 import prisma from "@/prisma";
 import { redirect } from "next/navigation";
-import { revalidatePath, revalidateTag } from "next/cache";
 import { formatNumber } from "@/lib/formatter";
 import { sendTelegramMessage } from "@/lib/send-telegram-message";
+import cacheRevalidate from "@/utils/cache-revalidation-helper";
 
 export async function deleteProduct({ productId }: { productId: string }) {
   const session = await auth();
@@ -70,23 +70,22 @@ User: *${updater.username}*
 - Stock at deletion: ${formatNumber(stockBefore)} ${product.unit}
 `;
 
-    await sendTelegramMessage(notificationMessage);
-
-    const routesToRevalidate = [
-      "/admin/products",
-      "/products",
-      "/admin/transactions",
-      "/admin",
-    ];
-
-    const tagsToRevalidate = [
-      "get-products-for-table",
-      "get-products-for-display",
-      "get-all-transactions",
-    ];
-
-    routesToRevalidate.forEach((route) => revalidatePath(route));
-    tagsToRevalidate.forEach((tag) => revalidateTag(tag));
+    await Promise.all([
+      sendTelegramMessage(notificationMessage),
+      cacheRevalidate({
+        routesToRevalidate: [
+          "/admin/products",
+          "/products",
+          "/admin/transactions",
+          "/admin",
+        ],
+        tagsToRevalidate: [
+          "get-products-for-table",
+          "get-products-for-display",
+          "get-all-transactions",
+        ],
+      }),
+    ]);
 
     return { success: true, productId: productId };
   } catch (error) {

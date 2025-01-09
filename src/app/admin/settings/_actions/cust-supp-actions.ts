@@ -2,12 +2,9 @@
 import { auth } from "@/lib/auth";
 import { sendTelegramMessage } from "@/lib/send-telegram-message";
 import prisma from "@/prisma";
+import cacheRevalidate from "@/utils/cache-revalidation-helper";
 import { Customer, Vendor } from "@prisma/client";
-import {
-  revalidatePath,
-  revalidateTag,
-  unstable_cache as cache,
-} from "next/cache";
+import { unstable_cache as cache } from "next/cache";
 
 async function getSingleCustomer(id: string): Promise<Customer | null> {
   const customer = await prisma.customer.findUnique({
@@ -57,11 +54,14 @@ export async function addSupplier(data: addSupplierProps) {
 
     const notificationMessage = `A new supplier ${newSupplier.companyName} has been created.`;
 
-    await sendTelegramMessage(notificationMessage);
+    await Promise.all([
+      sendTelegramMessage(notificationMessage),
+      cacheRevalidate({
+        routesToRevalidate: ["/admin/settings/suppliers"],
+        tagsToRevalidate: ["get-suppliers", "get-single-supplier-for-edit"],
+      }),
+    ]);
 
-    revalidateTag("get-suppliers");
-    revalidateTag("get-single-supplier-for-edit");
-    revalidatePath("/admin/settings/suppliers");
     return { success: true, supplierId: newSupplier.id };
   } catch (error) {
     if (error instanceof Error) {
@@ -95,11 +95,14 @@ export async function addCustomer(data: addCustomerProps) {
 
     const notificationMessage = `A new customer ${newCustomer.companyName} has been created.`;
 
-    await sendTelegramMessage(notificationMessage);
+    await Promise.all([
+      sendTelegramMessage(notificationMessage),
+      cacheRevalidate({
+        routesToRevalidate: ["/admin/settings/customers"],
+        tagsToRevalidate: ["get-customers", "get-single-customer-for-edit"],
+      }),
+    ]);
 
-    revalidateTag("get-customers");
-    revalidateTag("get-single-customer-for-edit");
-    revalidatePath("/admin/settings/customers");
     return { success: true, customerId: newCustomer.id };
   } catch (error) {
     if (error instanceof Error) {
@@ -149,10 +152,17 @@ export async function editSupplier(data: editSupplierProps) {
         address: data?.address,
       },
     });
-    revalidateTag("get-suppliers");
-    revalidateTag("get-single-supplier-for-edit");
-    revalidatePath("/admin/settings/suppliers");
-    revalidatePath(`/admin/settings/suppliers/${updatedSupplier.id}`);
+
+    await Promise.all([
+      cacheRevalidate({
+        routesToRevalidate: [
+          "/admin/settings/suppliers",
+          `/admin/settings/suppliers/${updatedSupplier.id}`,
+        ],
+        tagsToRevalidate: ["get-suppliers", "get-single-supplier-for-edit"],
+      }),
+    ]);
+
     return { success: true, supplierId: updatedSupplier.id };
   } catch (error) {
     if (error instanceof Error) {
@@ -200,10 +210,17 @@ export async function editCustomer(data: editCustomerProps) {
         address: data?.address,
       },
     });
-    revalidateTag("get-customers");
-    revalidateTag("get-single-customer-for-edit");
-    revalidatePath("/admin/settings/customers");
-    revalidatePath(`/admin/settings/customers/${updatedCustomer.id}`);
+
+    await Promise.all([
+      cacheRevalidate({
+        routesToRevalidate: [
+          "/admin/settings/customers",
+          `/admin/settings/customers/${updatedCustomer.id}`,
+        ],
+        tagsToRevalidate: ["get-customers", "get-single-customer-for-edit"],
+      }),
+    ]);
+
     return { success: true, customerId: updatedCustomer.id };
   } catch (error) {
     if (error instanceof Error) {

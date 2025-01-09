@@ -2,11 +2,11 @@
 import { auth } from "@/lib/auth";
 import prisma from "@/prisma";
 import { UserWithCounts } from "@/types/dataTypes";
-import { unstable_cache as cache, revalidatePath } from "next/cache";
+import { unstable_cache as cache } from "next/cache";
 import { redirect } from "next/navigation";
 import bcrypt from "bcryptjs";
 import { sendTelegramMessage } from "@/lib/send-telegram-message";
-import { revalidateTag } from "next/cache";
+import cacheRevalidate from "@/utils/cache-revalidation-helper";
 
 async function getAllUsers(): Promise<UserWithCounts[]> {
   return await prisma.user.findMany({
@@ -74,8 +74,12 @@ export async function addUser({
     const newNotification = `.\n\nUser : ${CreatedUser.username} was created\n\n.`;
     await sendTelegramMessage(newNotification);
 
-    revalidateTag("get-all-users");
-    revalidatePath("/admin/users");
+    await Promise.all([
+      cacheRevalidate({
+        routesToRevalidate: ["/admin/users"],
+        tagsToRevalidate: ["get-all-users"],
+      }),
+    ]);
 
     return { success: true, userId: CreatedUser.id };
   } catch (error) {
