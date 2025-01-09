@@ -2,7 +2,7 @@
 import { auth } from "@/lib/auth";
 import { sendTelegramMessage } from "@/lib/send-telegram-message";
 import prisma from "@/prisma";
-import { revalidatePath, revalidateTag } from "next/cache";
+import cacheRevalidate from "@/utils/cache-revalidation-helper";
 
 export async function createCategory(name: string) {
   if (!name) {
@@ -27,11 +27,16 @@ export async function createCategory(name: string) {
 
     const notificationMessage = `A new category *${name}* has been created.`;
 
-    await sendTelegramMessage(notificationMessage);
-
-    revalidateTag("get-categories");
-    revalidatePath("/admin/products/categories");
-    revalidatePath("/admin/products/new");
+    await Promise.all([
+      sendTelegramMessage(notificationMessage),
+      cacheRevalidate({
+        routesToRevalidate: [
+          "/admin/products/categories",
+          "/admin/products/new",
+        ],
+        tagsToRevalidate: ["get-categories"],
+      }),
+    ]);
 
     return { success: true, categoryId: newCategory.id };
   } catch (error) {
@@ -62,9 +67,11 @@ export async function editCategory(data: EditCategoryPayload) {
       data: { name: data.name.trim() },
     });
 
-    revalidateTag("get-categories");
-    revalidatePath("/admin/products/categories");
-    revalidatePath("/admin/products/new");
+    cacheRevalidate({
+      routesToRevalidate: ["/admin/products/categories", "/admin/products/new"],
+      tagsToRevalidate: ["get-categories"],
+    });
+
     return { success: true, categoryId: updatedCategory.id };
   } catch (error) {
     if (error instanceof Error) {

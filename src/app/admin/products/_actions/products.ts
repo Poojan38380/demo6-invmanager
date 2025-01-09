@@ -3,15 +3,12 @@
 import { auth } from "@/lib/auth";
 import prisma from "@/prisma";
 import { Product, ProductVariant } from "@prisma/client";
-import {
-  unstable_cache as cache,
-  revalidatePath,
-  revalidateTag,
-} from "next/cache";
+import { unstable_cache as cache } from "next/cache";
 import { redirect } from "next/navigation";
 import { uploadImagesToCloudinary } from "./cloudinary";
 import { sendTelegramMessage } from "@/lib/send-telegram-message";
 import { ProductWithImages } from "@/types/dataTypes";
+import cacheRevalidate from "@/utils/cache-revalidation-helper";
 
 export type ProductWithOneImage = Product & {
   productImages: {
@@ -24,7 +21,7 @@ export type ProductWithOneImage = Product & {
     name: string;
   } | null;
   lastMonthSales: number;
-  transactionCount: number;
+  specialTransactionCount: number;
   productVariants: ProductVariant[];
 };
 
@@ -57,7 +54,7 @@ async function getProductsforTable(): Promise<ProductWithOneImage[]> {
       productVariants: true,
       _count: {
         select: {
-          transactions: true,
+          transactions: { where: { action: { not: "CREATED" } } },
         },
       },
     },
@@ -71,7 +68,7 @@ async function getProductsforTable(): Promise<ProductWithOneImage[]> {
     return {
       ...product,
       lastMonthSales,
-      transactionCount: product._count.transactions,
+      specialTransactionCount: product._count.transactions,
     };
   });
 
@@ -253,17 +250,22 @@ export async function addProduct(data: addproductProps, productImages: File[]) {
      }`;
 
     // Send notification and revalidate paths in parallel
+
     await Promise.all([
       sendTelegramMessage(notificationMessage),
-      Promise.all([
-        revalidateTag("get-products-for-table"),
-        revalidateTag("get-products-for-display"),
-        revalidateTag("get-all-transactions"),
-        revalidatePath("/admin/products"),
-        revalidatePath("/products"),
-        revalidatePath("/admin/transactions"),
-        revalidatePath("/admin"),
-      ]),
+      cacheRevalidate({
+        routesToRevalidate: [
+          "/admin/products",
+          "/products",
+          "/admin/transactions",
+          "/admin",
+        ],
+        tagsToRevalidate: [
+          "get-products-for-table",
+          "get-products-for-display",
+          "get-all-transactions",
+        ],
+      }),
     ]);
 
     return { success: true, productId: product.id };
@@ -361,15 +363,22 @@ export async function editProduct(
 
     const notificationMessage = `Details of product: *${existingProduct.name}* has been updated by user: *${updater.username}*`;
 
-    await sendTelegramMessage(notificationMessage);
-
-    revalidateTag("get-single-product-for-edit");
-    revalidateTag("get-products-for-table");
-    revalidateTag("get-all-transactions");
-    revalidatePath("/admin/products");
-    revalidatePath("/products");
-    revalidatePath("/admin");
-    revalidatePath(`/admin/products/${existingProduct.id}`);
+    await Promise.all([
+      sendTelegramMessage(notificationMessage),
+      cacheRevalidate({
+        routesToRevalidate: [
+          "/admin/products",
+          "/products",
+          "/admin",
+          `/admin/products/${existingProduct.id}`,
+        ],
+        tagsToRevalidate: [
+          "get-single-product-for-edit",
+          "get-products-for-table",
+          "get-all-transactions",
+        ],
+      }),
+    ]);
 
     return { success: true, message: "Product edited successfully." };
   } catch (error) {

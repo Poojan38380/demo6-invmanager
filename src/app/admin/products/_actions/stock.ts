@@ -4,7 +4,7 @@ import { auth } from "@/lib/auth";
 import { formatNumber } from "@/lib/formatter";
 import { sendTelegramMessage } from "@/lib/send-telegram-message";
 import prisma from "@/prisma";
-import { revalidatePath, revalidateTag } from "next/cache";
+import cacheRevalidate from "@/utils/cache-revalidation-helper";
 import { redirect } from "next/navigation";
 
 interface updateProductStockProps {
@@ -101,18 +101,27 @@ ${vendor ? `-Supplier: ${vendor.companyName}` : ""}
   
   `;
 
-    await sendTelegramMessage(notificationMessage);
-    revalidateTag("get-products-for-table");
-    revalidateTag("get-all-transactions");
-    revalidatePath("/admin/products");
-    revalidatePath("/admin/transactions");
-    revalidatePath(`/admin/transactions/product/${data.productId}`);
-    revalidatePath(`/admin/transactions/user/${updater.id}`);
-    if (data.customerId)
-      revalidatePath(`/admin/transactions/customer/${data.customerId}`);
-    if (data.vendorId)
-      revalidatePath(`/admin/transactions/supplier/${data.vendorId}`);
-    revalidatePath("/admin");
+    const routesToRevalidate = [
+      "/admin",
+      "/admin/products",
+      "/admin/transactions",
+      `/admin/transactions/product/${data.productId}`,
+      `/admin/transactions/user/${updater.id}`,
+      ...(data.customerId
+        ? [`/admin/transactions/customer/${data.customerId}`]
+        : []),
+      ...(data.vendorId
+        ? [`/admin/transactions/supplier/${data.vendorId}`]
+        : []),
+    ].filter(Boolean);
+
+    await Promise.all([
+      sendTelegramMessage(notificationMessage),
+      cacheRevalidate({
+        routesToRevalidate,
+        tagsToRevalidate: ["get-products-for-table", "get-all-transactions"],
+      }),
+    ]);
 
     return { success: true, productId: data.productId };
   } catch (error) {
@@ -231,17 +240,28 @@ ${vendor ? `-Supplier: ${vendor.companyName}` : ""}
   `;
 
     await sendTelegramMessage(notificationMessage);
-    revalidateTag("get-products-for-table");
-    revalidateTag("get-all-transactions");
-    revalidatePath("/admin/products");
-    revalidatePath("/admin/transactions");
-    revalidatePath(`/admin/transactions/product/${data.productId}`);
-    revalidatePath(`/admin/transactions/user/${updater.id}`);
-    if (data.customerId)
-      revalidatePath(`/admin/transactions/customer/${data.customerId}`);
-    if (data.vendorId)
-      revalidatePath(`/admin/transactions/supplier/${data.vendorId}`);
-    revalidatePath("/admin");
+
+    const routesToRevalidate = [
+      "/admin/products",
+      "/admin/transactions",
+      `/admin/transactions/product/${data.productId}`,
+      `/admin/transactions/user/${updater.id}`,
+      ...(data.customerId
+        ? [`/admin/transactions/customer/${data.customerId}`]
+        : []),
+      ...(data.vendorId
+        ? [`/admin/transactions/supplier/${data.vendorId}`]
+        : []),
+      "/admin",
+    ].filter(Boolean);
+
+    await Promise.all([
+      sendTelegramMessage(notificationMessage),
+      cacheRevalidate({
+        routesToRevalidate,
+        tagsToRevalidate: ["get-products-for-table", "get-all-transactions"],
+      }),
+    ]);
 
     return { success: true, variantId: data.variantId };
   } catch (error) {

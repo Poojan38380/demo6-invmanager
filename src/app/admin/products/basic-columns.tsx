@@ -27,6 +27,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useState } from "react";
 
 export const BasicColumns: ColumnDef<ProductWithOneImage>[] = [
   {
@@ -129,54 +130,9 @@ export const BasicColumns: ColumnDef<ProductWithOneImage>[] = [
   {
     accessorKey: "actions",
     header: undefined,
-    cell: ({ row }) => {
-      const product = row.original;
-      return (
-        <div className="w-max flex items-center justify-between gap-2">
-          {product.hasVariants ? (
-            <UpdateStockVariants product={product} />
-          ) : (
-            <UpdateStock product={product} />
-          )}
-
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost">
-                <EllipsisVertical />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="font-semibold">
-              <DropdownMenuGroup>
-                <Link href={`/admin/products/${product.id}`} prefetch={false}>
-                  <DropdownMenuItem>
-                    <Pen />
-                    <span>Edit</span>
-                  </DropdownMenuItem>
-                </Link>
-                <Link
-                  href={`/admin/transactions/product/${product.id}`}
-                  prefetch={false}
-                >
-                  <DropdownMenuItem>
-                    <ChartNoAxesCombined />
-                    <span>Transactions</span>
-                  </DropdownMenuItem>{" "}
-                </Link>
-              </DropdownMenuGroup>
-              {product.transactionCount === 1 && (
-                <>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuGroup>
-                    <ProductDeletionDialog productId={product.id} />{" "}
-                  </DropdownMenuGroup>
-                </>
-              )}
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-      );
-    },
+    cell: ({ row }) => <ProductActionsCell product={row.original} />,
   },
+
   {
     accessorKey: "lastMonthSales",
     header: ({ column }) => (
@@ -232,3 +188,55 @@ export const BasicColumns: ColumnDef<ProductWithOneImage>[] = [
     ),
   },
 ];
+
+const ProductActionsCell = ({ product }: { product: ProductWithOneImage }) => {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div className="w-max flex items-center justify-between gap-2">
+      {product.hasVariants ? (
+        <UpdateStockVariants product={product} />
+      ) : (
+        <UpdateStock product={product} />
+      )}
+
+      <DropdownMenu open={open} onOpenChange={setOpen}>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost">
+            <EllipsisVertical />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="font-semibold">
+          <DropdownMenuGroup>
+            <Link href={`/admin/products/${product.id}`} prefetch={false}>
+              <DropdownMenuItem>
+                <Pen />
+                <span>Edit</span>
+              </DropdownMenuItem>
+            </Link>
+            <Link
+              href={`/admin/transactions/product/${product.id}`}
+              prefetch={false}
+            >
+              <DropdownMenuItem>
+                <ChartNoAxesCombined />
+                <span>Transactions</span>
+              </DropdownMenuItem>
+            </Link>
+          </DropdownMenuGroup>
+          {product.specialTransactionCount === 0 && (
+            <>
+              <DropdownMenuSeparator />
+              <DropdownMenuGroup>
+                <ProductDeletionDialog
+                  productId={product.id}
+                  setOpenFnAction={setOpen}
+                />
+              </DropdownMenuGroup>
+            </>
+          )}
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
+  );
+};
