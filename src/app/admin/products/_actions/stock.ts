@@ -133,7 +133,7 @@ ${vendor ? `-Supplier: ${vendor.companyName}` : ""}
 }
 interface updateProductVariantStockProps {
   productId: string;
-  variantId: string;
+  variantId: string[];
   change: number;
   customerId?: string;
   vendorId?: string;
@@ -151,9 +151,9 @@ export async function updateProductVariantStock({
   }
   try {
     if (
-      !data.variantId ||
-      data.variantId.length !== 24 ||
-      !/^[a-fA-F0-9]{24}$/.test(data.variantId)
+      !data.productId ||
+      data.productId.length !== 24 ||
+      !/^[a-fA-F0-9]{24}$/.test(data.productId)
     ) {
       throw new Error("Invalid Product ID.");
     }
@@ -161,9 +161,13 @@ export async function updateProductVariantStock({
     const updaterId = session.user.id;
 
     if (!updaterId) return redirect("/login");
-    const [updater, variant, product] = await Promise.all([
+    const [updater, variants, product] = await Promise.all([
       prisma.user.findUnique({ where: { id: updaterId } }),
-      prisma.productVariant.findUnique({ where: { id: data.variantId } }),
+      prisma.productVariant.findMany({
+        where: {
+          id: { in: data.variantId },
+        },
+      }),
       prisma.product.findUnique({ where: { id: data.productId } }),
     ]);
 
@@ -174,19 +178,29 @@ export async function updateProductVariantStock({
     if (!product) {
       throw new Error("Product not found.");
     }
-    if (!variant) {
-      throw new Error("Product Variant not found.");
+    if (!variants || variants.length === 0) {
+      throw new Error("Product Variants not found.");
     }
 
-    const stockBefore = variant.variantStock;
-    const stockAfter = stockBefore + data.change;
+    const variantUpdates = variants.map((variant) => {
+      const stockBefore = variant.variantStock;
+      const stockAfter = stockBefore + data.change;
+
+      return {
+        variant,
+        stockBefore,
+        stockAfter,
+      };
+    });
 
     // Use a transaction to update both the variant and the parent product
     await prisma.$transaction([
-      prisma.productVariant.update({
-        where: { id: data.variantId },
-        data: { variantStock: stockAfter },
-      }),
+      ...variantUpdates.map((update) =>
+        prisma.productVariant.update({
+          where: { id: update.variant.id },
+          data: { variantStock: update.stockAfter },
+        })
+      ),
       prisma.product.update({
         where: { id: data.productId },
         data: { updatedAt: new Date() },
@@ -195,19 +209,19 @@ export async function updateProductVariantStock({
 
     const action = data.change > 0 ? "INCREASED" : "DECREASED";
 
-    await prisma.transaction.create({
-      data: {
+    await prisma.transaction.createMany({
+      data: variantUpdates.map((update) => ({
         action,
-        stockBefore,
+        stockBefore: update.stockBefore,
         stockChange: data.change,
-        stockAfter,
+        stockAfter: update.stockAfter,
         note: data.transactionNote,
-        productVariantId: data.variantId,
+        productVariantId: update.variant.id,
         productId: data.productId,
         userId: updaterId,
         customerId: data.customerId,
         vendorId: data.vendorId,
-      },
+      })),
     });
 
     let customer, vendor;
@@ -223,23 +237,27 @@ export async function updateProductVariantStock({
     }
 
     // Craft a notification
+    const variantUpdatesText = variantUpdates
+      .map(
+        (update) => `
+Variant: *${update.variant.variantName}*
+- Stock Before: ${formatNumber(update.stockBefore)} ${product.unit}
+- Final Stock: *${formatNumber(update.stockAfter)} ${product.unit}*`
+      )
+      .join("\n");
+
     const notificationMessage = `
 Product: *${product.name}*
-Variant: *${variant.variantName}*
 User: *${updater.username}*   
 *${action}*
+- Change: *${data.change > 0 ? "+" : ""}${formatNumber(data.change)}*
 
-- Stock Before: ${formatNumber(stockBefore)} ${product.unit}
-    - Change: *${data.change > 0 ? "+" : ""}${formatNumber(data.change)}*
-    - Final Stock: *${formatNumber(stockAfter)} ${product.unit}*
+${variantUpdatesText}
 
 ${data.transactionNote ? `- Note: ${data.transactionNote || ""}` : ""}
 ${customer ? `-Customer: ${customer.companyName}` : ""}
 ${vendor ? `-Supplier: ${vendor.companyName}` : ""}
-  
-  `;
-
-    await sendTelegramMessage(notificationMessage);
+`;
 
     const routesToRevalidate = [
       "/admin/products",
