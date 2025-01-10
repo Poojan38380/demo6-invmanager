@@ -26,7 +26,6 @@ export default function DashboardAnalytics({
   const filteredTransactions = transactions.filter(
     (transaction) => new Date(transaction.createdAt) >= startDate
   );
-  console.log(filteredTransactions);
   return (
     <>
       <CardHeader className="flex flex-row items-center justify-between gap-4 ">
@@ -47,7 +46,6 @@ export default function DashboardAnalytics({
           </SelectContent>
         </Select>
       </CardHeader>
-      <CardContent className="max-768:px-0"></CardContent>
       <CardContent className="max-768:px-0"></CardContent>
     </>
   );

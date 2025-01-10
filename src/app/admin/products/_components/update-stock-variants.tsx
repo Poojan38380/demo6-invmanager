@@ -175,29 +175,25 @@ export default function UpdateStockVariants({
 
           <form onSubmit={handleSubmit} className="space-y-6 p-4">
             <div className="space-y-4">
-              <div className="space-y-2">
-                <Label>Select Variants</Label>
-                <div className="grid grid-cols-2 gap-2 max-h-40 overflow-y-auto border rounded-lg p-2">
-                  {product.productVariants.map((variant) => (
-                    <div
-                      key={variant.id}
-                      className="flex items-center space-x-2"
+              <div className="grid grid-cols-2 gap-2  ">
+                {product.productVariants.map((variant) => (
+                  <div key={variant.id} className="flex items-center gap-2 ">
+                    <Checkbox
+                      id={variant.id}
+                      checked={selectedVariantIds.includes(variant.id)}
+                      onCheckedChange={() => handleVariantToggle(variant.id)}
+                    />
+                    <Label
+                      htmlFor={variant.id}
+                      className="flex-1 cursor-pointer  font-mono"
                     >
-                      <Checkbox
-                        id={variant.id}
-                        checked={selectedVariantIds.includes(variant.id)}
-                        onCheckedChange={() => handleVariantToggle(variant.id)}
-                      />
-                      <Label
-                        htmlFor={variant.id}
-                        className="flex-1 cursor-pointer"
-                      >
-                        {variant.variantName} -{" "}
-                        {formatNumber(variant.variantStock)} {product.unit}
-                      </Label>
-                    </div>
-                  ))}
-                </div>
+                      {variant.variantName}{" "}
+                      <span className="font-bold ">
+                        ({formatNumber(variant.variantStock)})
+                      </span>
+                    </Label>
+                  </div>
+                ))}
               </div>
 
               {selectedVariantIds.length > 0 && (
@@ -281,7 +277,7 @@ export default function UpdateStockVariants({
                     </div>
                   </div>
 
-                  <div className="space-y-1 border rounded-lg p-3 text-sm">
+                  <div className="space-y-1 border rounded-lg p-3 py-1.5 text-sm font-mono">
                     {newStocks.map((stock) => (
                       <div
                         key={stock.variantId}
