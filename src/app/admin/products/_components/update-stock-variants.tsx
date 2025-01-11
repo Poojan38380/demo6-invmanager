@@ -47,6 +47,10 @@ export default function UpdateStockVariants({
     );
   }, [selectedVariantIds, product.productVariants]);
 
+  const allVariantsSelected = useMemo(() => {
+    return selectedVariantIds.length === product.productVariants.length;
+  }, [selectedVariantIds, product.productVariants]);
+
   const stockChange = useMemo(() => {
     return addStockValue - removeStockValue;
   }, [addStockValue, removeStockValue]);
@@ -83,6 +87,14 @@ export default function UpdateStockVariants({
       prev.includes(variantId)
         ? prev.filter((id) => id !== variantId)
         : [...prev, variantId]
+    );
+  };
+
+  const handleSelectAllToggle = () => {
+    setSelectedVariantIds(
+      allVariantsSelected
+        ? []
+        : product.productVariants.map((variant) => variant.id)
     );
   };
 
@@ -175,25 +187,37 @@ export default function UpdateStockVariants({
 
           <form onSubmit={handleSubmit} className="space-y-6 p-4">
             <div className="space-y-4">
-              <div className="grid grid-cols-2 gap-2  ">
-                {product.productVariants.map((variant) => (
-                  <div key={variant.id} className="flex items-center gap-2 ">
-                    <Checkbox
-                      id={variant.id}
-                      checked={selectedVariantIds.includes(variant.id)}
-                      onCheckedChange={() => handleVariantToggle(variant.id)}
-                    />
-                    <Label
-                      htmlFor={variant.id}
-                      className="flex-1 cursor-pointer  font-mono"
-                    >
-                      {variant.variantName}{" "}
-                      <span className="font-bold ">
-                        ({formatNumber(variant.variantStock)})
-                      </span>
-                    </Label>
-                  </div>
-                ))}
+              <div className="space-y-2">
+                <div className="flex items-center gap-2 border-b pb-2">
+                  <Checkbox
+                    id="select-all"
+                    checked={allVariantsSelected}
+                    onCheckedChange={handleSelectAllToggle}
+                  />
+                  <Label htmlFor="select-all" className="cursor-pointer">
+                    Select All
+                  </Label>
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  {product.productVariants.map((variant) => (
+                    <div key={variant.id} className="flex items-center gap-2">
+                      <Checkbox
+                        id={variant.id}
+                        checked={selectedVariantIds.includes(variant.id)}
+                        onCheckedChange={() => handleVariantToggle(variant.id)}
+                      />
+                      <Label
+                        htmlFor={variant.id}
+                        className="flex-1 cursor-pointer font-mono"
+                      >
+                        {variant.variantName}{" "}
+                        <span className="font-bold">
+                          ({formatNumber(variant.variantStock)})
+                        </span>
+                      </Label>
+                    </div>
+                  ))}
+                </div>
               </div>
 
               {selectedVariantIds.length > 0 && (

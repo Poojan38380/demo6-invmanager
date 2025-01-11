@@ -67,6 +67,11 @@ StockChange: *${transaction.stockChange}*
           "/products",
           "/admin/transactions",
           "/admin",
+          `/admin/transactions/product/${transaction.productId}`,
+          `/admin/transactions/product/variant/${transaction.productVariantId}`,
+          `/admin/transactions/user/${transaction.userId}`,
+          `/admin/transactions/vendor/${transaction.vendorId}`,
+          `/admin/transactions/customer/${transaction.customerId}`,
         ],
         tagsToRevalidate: [
           "get-products-for-table",

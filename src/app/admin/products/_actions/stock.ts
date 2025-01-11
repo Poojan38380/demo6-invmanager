@@ -103,7 +103,6 @@ ${vendor ? `-Supplier: ${vendor.companyName}` : ""}
 
     const routesToRevalidate = [
       "/admin",
-      "/admin/products",
       "/admin/transactions",
       `/admin/transactions/product/${data.productId}`,
       `/admin/transactions/user/${updater.id}`,
@@ -149,6 +148,7 @@ export async function updateProductVariantStock({
   if (!session?.user) {
     throw new Error("Unauthorized. Login first.");
   }
+
   try {
     if (
       !data.productId ||
@@ -159,84 +159,90 @@ export async function updateProductVariantStock({
     }
 
     const updaterId = session.user.id;
-
     if (!updaterId) return redirect("/login");
+
+    // Optimize database queries by including only necessary fields
     const [updater, variants, product] = await Promise.all([
-      prisma.user.findUnique({ where: { id: updaterId } }),
-      prisma.productVariant.findMany({
-        where: {
-          id: { in: data.variantId },
-        },
+      prisma.user.findUnique({
+        where: { id: updaterId },
+        select: { id: true, username: true },
       }),
-      prisma.product.findUnique({ where: { id: data.productId } }),
+      prisma.productVariant.findMany({
+        where: { id: { in: data.variantId } },
+        select: { id: true, variantStock: true, variantName: true },
+      }),
+      prisma.product.findUnique({
+        where: { id: data.productId },
+        select: { id: true, name: true, unit: true },
+      }),
     ]);
 
-    if (!updater) {
-      throw new Error("User not found.");
+    // Validate entities
+    if (!updater || !product || !variants.length) {
+      throw new Error(
+        !updater
+          ? "User not found."
+          : !product
+          ? "Product not found."
+          : "Product Variants not found."
+      );
     }
 
-    if (!product) {
-      throw new Error("Product not found.");
-    }
-    if (!variants || variants.length === 0) {
-      throw new Error("Product Variants not found.");
-    }
+    const variantUpdates = variants.map((variant) => ({
+      variant,
+      stockBefore: variant.variantStock,
+      stockAfter: variant.variantStock + data.change,
+    }));
 
-    const variantUpdates = variants.map((variant) => {
-      const stockBefore = variant.variantStock;
-      const stockAfter = stockBefore + data.change;
-
-      return {
-        variant,
-        stockBefore,
-        stockAfter,
-      };
-    });
-
-    // Use a transaction to update both the variant and the parent product
-    await prisma.$transaction([
-      ...variantUpdates.map((update) =>
-        prisma.productVariant.update({
-          where: { id: update.variant.id },
-          data: { variantStock: update.stockAfter },
-        })
-      ),
+    // Prepare all database operations
+    const dbOperations = [
+      // Batch variant updates
+      prisma.productVariant.updateMany({
+        where: { id: { in: data.variantId } },
+        data: { variantStock: { increment: data.change } },
+      }),
+      // Update product timestamp
       prisma.product.update({
         where: { id: data.productId },
         data: { updatedAt: new Date() },
       }),
+      // Batch create transactions
+      prisma.transaction.createMany({
+        data: variantUpdates.map((update) => ({
+          action: data.change > 0 ? "INCREASED" : "DECREASED",
+          stockBefore: update.stockBefore,
+          stockChange: data.change,
+          stockAfter: update.stockAfter,
+          note: data.transactionNote,
+          productVariantId: update.variant.id,
+          productId: data.productId,
+          userId: updaterId,
+          customerId: data.customerId,
+          vendorId: data.vendorId,
+        })),
+      }),
+    ];
+
+    // Conditionally fetch customer and vendor in parallel if needed
+    const [customer, vendor] = await Promise.all([
+      data.customerId
+        ? prisma.customer.findUnique({
+            where: { id: data.customerId },
+            select: { companyName: true },
+          })
+        : null,
+      data.vendorId
+        ? prisma.vendor.findUnique({
+            where: { id: data.vendorId },
+            select: { companyName: true },
+          })
+        : null,
     ]);
 
-    const action = data.change > 0 ? "INCREASED" : "DECREASED";
+    // Execute all database operations in a single transaction
+    await prisma.$transaction(dbOperations);
 
-    await prisma.transaction.createMany({
-      data: variantUpdates.map((update) => ({
-        action,
-        stockBefore: update.stockBefore,
-        stockChange: data.change,
-        stockAfter: update.stockAfter,
-        note: data.transactionNote,
-        productVariantId: update.variant.id,
-        productId: data.productId,
-        userId: updaterId,
-        customerId: data.customerId,
-        vendorId: data.vendorId,
-      })),
-    });
-
-    let customer, vendor;
-    if (data.customerId) {
-      customer = await prisma.customer.findUnique({
-        where: { id: data.customerId },
-      });
-    }
-    if (data.vendorId) {
-      vendor = await prisma.vendor.findUnique({
-        where: { id: data.vendorId },
-      });
-    }
-
-    // Craft a notification
+    // Prepare notification message
     const variantUpdatesText = variantUpdates
       .map(
         (update) => `
@@ -249,12 +255,12 @@ Variant: *${update.variant.variantName}*
     const notificationMessage = `
 Product: *${product.name}*
 User: *${updater.username}*   
-*${action}*
+*${data.change > 0 ? "INCREASED" : "DECREASED"}*
 - Change: *${data.change > 0 ? "+" : ""}${formatNumber(data.change)}*
 
 ${variantUpdatesText}
 
-${data.transactionNote ? `- Note: ${data.transactionNote || ""}` : ""}
+${data.transactionNote ? `- Note: ${data.transactionNote}` : ""}
 ${customer ? `-Customer: ${customer.companyName}` : ""}
 ${vendor ? `-Supplier: ${vendor.companyName}` : ""}
 `;
@@ -271,15 +277,16 @@ ${vendor ? `-Supplier: ${vendor.companyName}` : ""}
         ? [`/admin/transactions/supplier/${data.vendorId}`]
         : []),
       "/admin",
-    ].filter(Boolean);
+    ];
 
-    await Promise.all([
+    // Fire and forget notifications and cache revalidation
+    Promise.all([
       sendTelegramMessage(notificationMessage),
       cacheRevalidate({
         routesToRevalidate,
         tagsToRevalidate: ["get-products-for-table", "get-all-transactions"],
       }),
-    ]);
+    ]).catch(console.error); // Handle errors but don't wait for completion
 
     return { success: true, variantId: data.variantId };
   } catch (error) {

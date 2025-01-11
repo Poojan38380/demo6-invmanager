@@ -40,9 +40,8 @@ export default function TransactionDeletionDialog({
           id: loadingToast,
         });
       } else {
-        router.refresh();
         toast.success("Success", {
-          description: "transaction deleted successfully",
+          description: "Transaction deleted successfully",
           id: loadingToast,
         });
       }
@@ -53,6 +52,7 @@ export default function TransactionDeletionDialog({
         id: loadingToast,
       });
     } finally {
+      router.refresh();
       setIsDeleting(false);
       setOpen(false);
     }
