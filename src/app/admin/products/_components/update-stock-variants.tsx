@@ -1,14 +1,7 @@
 import React, { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import {
-  ArrowUpDown,
-  TriangleAlert,
-  Info,
-  Truck,
-  Store,
-  PlusCircle,
-} from "lucide-react";
+import { ArrowUpDown, Info, Truck, Store, PlusCircle } from "lucide-react";
 import {
   Drawer,
   DrawerClose,
@@ -26,7 +19,7 @@ import { CustomerSelectorforUpdater } from "./select-customer-update";
 import { updateProductVariantStock } from "../_actions/stock";
 import { formatNumber } from "@/lib/formatter";
 import { Label } from "@/components/ui/label";
-import VariantSelectorForUpdater from "./variant-selector-for-update";
+import { Checkbox } from "@/components/ui/checkbox";
 import { ProductWithOneImage } from "../_actions/products";
 import Link from "next/link";
 
@@ -42,36 +35,42 @@ export default function UpdateStockVariants({
     product.vendorId || undefined
   );
   const [customerId, setCustomerId] = useState<string | undefined>();
-  const [selectedVariantId, setSelectedVariantId] = useState<string>();
+  const [selectedVariantIds, setSelectedVariantIds] = useState<string[]>([]);
   const [addStockValue, setAddStockValue] = useState<number>(0);
   const [removeStockValue, setRemoveStockValue] = useState<number>(0);
   const [note, setNote] = useState("");
   const [error, setError] = useState("");
 
-  const selectedVariant = useMemo(() => {
-    return product.productVariants.find((v) => v.id === selectedVariantId);
-  }, [selectedVariantId, product.productVariants]);
+  const selectedVariants = useMemo(() => {
+    return product.productVariants.filter((v) =>
+      selectedVariantIds.includes(v.id)
+    );
+  }, [selectedVariantIds, product.productVariants]);
+
+  const allVariantsSelected = useMemo(() => {
+    return selectedVariantIds.length === product.productVariants.length;
+  }, [selectedVariantIds, product.productVariants]);
 
   const stockChange = useMemo(() => {
     return addStockValue - removeStockValue;
   }, [addStockValue, removeStockValue]);
 
-  const newStock = useMemo(() => {
-    if (!selectedVariant) return 0;
-    return selectedVariant.variantStock + stockChange;
-  }, [selectedVariant, stockChange]);
-
-  const isBelowBuffer = useMemo(() => {
-    return newStock < (product.bufferStock || 0);
-  }, [newStock, product.bufferStock]);
+  const newStocks = useMemo(() => {
+    return selectedVariants.map((variant) => ({
+      variantId: variant.id,
+      variantName: variant.variantName,
+      currentStock: variant.variantStock,
+      newStock: variant.variantStock + stockChange,
+    }));
+  }, [selectedVariants, stockChange]);
 
   const isValidChange = useMemo(() => {
     return (
-      selectedVariantId &&
+      selectedVariantIds.length > 0 &&
       ((addStockValue > 0 && removeStockValue === 0) ||
         (removeStockValue > 0 && addStockValue === 0))
     );
-  }, [addStockValue, removeStockValue, selectedVariantId]);
+  }, [addStockValue, removeStockValue, selectedVariantIds]);
 
   const handleAddStockChange = (value: number) => {
     setAddStockValue(value);
@@ -83,6 +82,22 @@ export default function UpdateStockVariants({
     setAddStockValue(0);
   };
 
+  const handleVariantToggle = (variantId: string) => {
+    setSelectedVariantIds((prev) =>
+      prev.includes(variantId)
+        ? prev.filter((id) => id !== variantId)
+        : [...prev, variantId]
+    );
+  };
+
+  const handleSelectAllToggle = () => {
+    setSelectedVariantIds(
+      allVariantsSelected
+        ? []
+        : product.productVariants.map((variant) => variant.id)
+    );
+  };
+
   const resetForm = () => {
     setAddStockValue(0);
     setRemoveStockValue(0);
@@ -90,15 +105,15 @@ export default function UpdateStockVariants({
     setError("");
     setCustomerId(undefined);
     setVendorId(product.vendorId || undefined);
-    setSelectedVariantId(undefined);
+    setSelectedVariantIds([]);
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError("");
 
-    if (!selectedVariantId) {
-      setError("Please select a variant");
+    if (selectedVariantIds.length === 0) {
+      setError("Please select at least one variant");
       return;
     }
 
@@ -119,7 +134,7 @@ export default function UpdateStockVariants({
       const result = await updateProductVariantStock({
         data: {
           productId: product.id,
-          variantId: selectedVariantId,
+          variantId: selectedVariantIds,
           change: stockChange,
           customerId: removeStockValue > 0 ? customerId : undefined,
           vendorId: addStockValue > 0 ? vendorId : undefined,
@@ -165,27 +180,47 @@ export default function UpdateStockVariants({
       <DrawerContent className="bg-background">
         <div className="mx-auto w-full max-w-lg">
           <DrawerHeader>
-            <DrawerTitle className="flex items-center gap-2 text-xl font-semibold justify-between">
+            <DrawerTitle className="text-xl font-semibold">
               {product.name}
-              {selectedVariant && (
-                <span className="text-muted-foreground">
-                  {formatNumber(selectedVariant.variantStock)} {product.unit}
-                </span>
-              )}
             </DrawerTitle>
           </DrawerHeader>
 
           <form onSubmit={handleSubmit} className="space-y-6 p-4">
             <div className="space-y-4">
-              <div>
-                <VariantSelectorForUpdater
-                  productVariants={product.productVariants}
-                  onVariantSelect={setSelectedVariantId}
-                  selectedVariantId={selectedVariantId}
-                />
+              <div className="space-y-2">
+                <div className="flex items-center gap-2 border-b pb-2">
+                  <Checkbox
+                    id="select-all"
+                    checked={allVariantsSelected}
+                    onCheckedChange={handleSelectAllToggle}
+                  />
+                  <Label htmlFor="select-all" className="cursor-pointer">
+                    Select All
+                  </Label>
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  {product.productVariants.map((variant) => (
+                    <div key={variant.id} className="flex items-center gap-2">
+                      <Checkbox
+                        id={variant.id}
+                        checked={selectedVariantIds.includes(variant.id)}
+                        onCheckedChange={() => handleVariantToggle(variant.id)}
+                      />
+                      <Label
+                        htmlFor={variant.id}
+                        className="flex-1 cursor-pointer font-mono"
+                      >
+                        {variant.variantName}{" "}
+                        <span className="font-bold">
+                          ({formatNumber(variant.variantStock)})
+                        </span>
+                      </Label>
+                    </div>
+                  ))}
+                </div>
               </div>
 
-              {selectedVariantId && (
+              {selectedVariantIds.length > 0 && (
                 <>
                   <div className="grid grid-cols-2 gap-2 items-end">
                     <div className="flex gap-2 items-center">
@@ -207,21 +242,16 @@ export default function UpdateStockVariants({
                       </div>
                     </div>
                     <div className="flex flex-col gap-1">
-                      <Label>Supplier</Label>{" "}
+                      <Label>Supplier</Label>
                       <div className="flex items-center gap-2">
                         <SupplierSelectorforUpdater
                           onSupplierSelectAction={setVendorId}
                           defaultValue={product.vendorId || "none"}
                         />
-                        <Button
-                          asChild
-                          variant="ghost"
-                          size="icon"
-                          className="  "
-                        >
+                        <Button asChild variant="ghost" size="icon">
                           <Link
-                            href={`/admin/settings/suppliers/new`}
-                            className="w-6  h-6"
+                            href="/admin/settings/suppliers/new"
+                            className="w-6 h-6"
                             prefetch={false}
                             target="_blank"
                           >
@@ -257,15 +287,10 @@ export default function UpdateStockVariants({
                         <CustomerSelectorforUpdater
                           onCustomerSelectAction={setCustomerId}
                         />
-                        <Button
-                          asChild
-                          variant="ghost"
-                          size="icon"
-                          className="  "
-                        >
+                        <Button asChild variant="ghost" size="icon">
                           <Link
-                            href={`/admin/settings/customers/new`}
-                            className="w-6  h-6"
+                            href="/admin/settings/customers/new"
+                            className="w-6 h-6"
                             prefetch={false}
                             target="_blank"
                           >
@@ -276,24 +301,27 @@ export default function UpdateStockVariants({
                     </div>
                   </div>
 
-                  <div>
-                    <div className="flex items-center justify-end">
-                      <span
-                        className={`text-lg font-bold ${
-                          isBelowBuffer ? "text-red-600" : ""
-                        }`}
+                  <div className="grid grid-cols-2 gap-2 border rounded-lg p-3 py-1.5 text-sm font-mono ">
+                    {newStocks.map((stock) => (
+                      <div
+                        key={stock.variantId}
+                        className="flex  justify-between items-center"
                       >
-                        New: {formatNumber(newStock)} {product.unit}
-                      </span>
-                    </div>
-
-                    {isBelowBuffer && (
-                      <div className="flex items-center gap-2 text-red-600 text-sm">
-                        <TriangleAlert className="h-4 w-4" />
-                        Below minimum stock ({product.bufferStock}{" "}
-                        {product.unit})
+                        <span>{stock.variantName}</span>
+                        <div>
+                          <span
+                            className={`font-bold
+                            ${
+                              stock.newStock < (product.bufferStock || 0)
+                                ? "text-red-600 "
+                                : ""
+                            }`}
+                          >
+                            {formatNumber(stock.newStock)}
+                          </span>
+                        </div>
                       </div>
-                    )}
+                    ))}
                   </div>
 
                   <div>
@@ -328,10 +356,7 @@ export default function UpdateStockVariants({
                   : `${addStockValue > 0 ? "Add" : "Remove"} Stock`}
               </Button>
               <DrawerClose asChild>
-                <Button
-                  variant="outline"
-                  className=" bg-card rounded-full h-12"
-                >
+                <Button variant="outline" className="bg-card rounded-full h-12">
                   Cancel
                 </Button>
               </DrawerClose>

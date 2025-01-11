@@ -7,6 +7,6 @@ export default function cacheRevalidate({
   routesToRevalidate: string[];
   tagsToRevalidate: string[];
 }) {
-  routesToRevalidate.forEach((route) => revalidatePath(route));
   tagsToRevalidate.forEach((tag) => revalidateTag(tag));
+  routesToRevalidate.forEach((route) => revalidatePath(route));
 }

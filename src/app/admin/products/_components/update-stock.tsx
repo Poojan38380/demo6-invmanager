@@ -1,14 +1,7 @@
 import React, { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import {
-  ArrowUpDown,
-  TriangleAlert,
-  Info,
-  Truck,
-  Store,
-  PlusCircle,
-} from "lucide-react";
+import { ArrowUpDown, Info, Truck, Store, PlusCircle } from "lucide-react";
 import {
   Drawer,
   DrawerClose,
@@ -255,13 +248,6 @@ export default function UpdateStock({ product }: { product: Product }) {
                     New: {newStock} {product.unit}
                   </span>
                 </div>
-
-                {isBelowBuffer && (
-                  <div className="flex items-center gap-2 text-red-600 text-sm">
-                    <TriangleAlert className="h-4 w-4" />
-                    Below minimum stock ({product.bufferStock} {product.unit})
-                  </div>
-                )}
               </div>
 
               <div>
