@@ -301,23 +301,25 @@ export default function UpdateStockVariants({
                     </div>
                   </div>
 
-                  <div className="space-y-1 border rounded-lg p-3 py-1.5 text-sm font-mono">
+                  <div className="grid grid-cols-2 gap-2 border rounded-lg p-3 py-1.5 text-sm font-mono ">
                     {newStocks.map((stock) => (
                       <div
                         key={stock.variantId}
-                        className="flex justify-between items-center"
+                        className="flex  justify-between items-center"
                       >
                         <span>{stock.variantName}</span>
-                        <span
-                          className={`
-                              ${
-                                stock.newStock < (product.bufferStock || 0)
-                                  ? "text-red-600 "
-                                  : ""
-                              } font-semibold`}
-                        >
-                          {formatNumber(stock.newStock)} {product.unit}
-                        </span>
+                        <div>
+                          <span
+                            className={`font-bold
+                            ${
+                              stock.newStock < (product.bufferStock || 0)
+                                ? "text-red-600 "
+                                : ""
+                            }`}
+                          >
+                            {formatNumber(stock.newStock)}
+                          </span>
+                        </div>
                       </div>
                     ))}
                   </div>
