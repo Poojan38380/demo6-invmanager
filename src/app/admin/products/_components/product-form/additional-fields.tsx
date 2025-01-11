@@ -31,11 +31,24 @@ export default function AdditionalFields({
   form: UseFormReturn<ProductFormValues>;
   lastMonthSales?: number;
 }) {
+  const handleNumberChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    onChange: (value: number | undefined) => void
+  ) => {
+    const value = e.target.value;
+    if (value === "") {
+      onChange(undefined);
+    } else {
+      const parsed = parseInt(value, 10);
+      onChange(isNaN(parsed) ? undefined : parsed);
+    }
+  };
+
   return (
     <Collapsible className="w-full group/collapsible" asChild>
       <Card>
         <CollapsibleTrigger asChild>
-          <CardHeader className=" flex flex-row justify-between items-center cursor-pointer">
+          <CardHeader className="flex flex-row justify-between items-center cursor-pointer">
             <div className="flex flex-col gap-1">
               <CardTitle>Additional Fields</CardTitle>
               <CardDescription>
@@ -62,9 +75,7 @@ export default function AdditionalFields({
                     <Input
                       type="number"
                       {...field}
-                      onChange={(e) =>
-                        field.onChange(parseInt(e.target.value, 10))
-                      }
+                      onChange={(e) => handleNumberChange(e, field.onChange)}
                       placeholder="Min. stock"
                     />
                   </FormControl>
@@ -87,9 +98,7 @@ export default function AdditionalFields({
                     <Input
                       type="number"
                       {...field}
-                      onChange={(e) =>
-                        field.onChange(parseInt(e.target.value, 10))
-                      }
+                      onChange={(e) => handleNumberChange(e, field.onChange)}
                       placeholder="Items in a box"
                     />
                   </FormControl>

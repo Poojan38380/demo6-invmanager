@@ -103,6 +103,7 @@ ${vendor ? `-Supplier: ${vendor.companyName}` : ""}
 
     const routesToRevalidate = [
       "/admin",
+      "/admin/products",
       "/admin/transactions",
       `/admin/transactions/product/${data.productId}`,
       `/admin/transactions/user/${updater.id}`,
@@ -266,6 +267,7 @@ ${vendor ? `-Supplier: ${vendor.companyName}` : ""}
 `;
 
     const routesToRevalidate = [
+      "/admin",
       "/admin/products",
       "/admin/transactions",
       `/admin/transactions/product/${data.productId}`,
@@ -276,7 +278,6 @@ ${vendor ? `-Supplier: ${vendor.companyName}` : ""}
       ...(data.vendorId
         ? [`/admin/transactions/supplier/${data.vendorId}`]
         : []),
-      "/admin",
     ];
 
     // Fire and forget notifications and cache revalidation
