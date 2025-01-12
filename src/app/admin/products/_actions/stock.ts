@@ -103,6 +103,7 @@ ${vendor ? `-Supplier: ${vendor.companyName}` : ""}
 
     const routesToRevalidate = [
       "/admin",
+      "/admin/products",
       "/admin/transactions",
       `/admin/transactions/product/${data.productId}`,
       `/admin/transactions/user/${updater.id}`,
@@ -118,7 +119,11 @@ ${vendor ? `-Supplier: ${vendor.companyName}` : ""}
       sendTelegramMessage(notificationMessage),
       cacheRevalidate({
         routesToRevalidate,
-        tagsToRevalidate: ["get-products-for-table", "get-all-transactions"],
+        tagsToRevalidate: [
+          "get-products-for-table",
+          "get-all-transactions",
+          "get-product-last-transactions",
+        ],
       }),
     ]);
 
@@ -266,6 +271,7 @@ ${vendor ? `-Supplier: ${vendor.companyName}` : ""}
 `;
 
     const routesToRevalidate = [
+      "/admin",
       "/admin/products",
       "/admin/transactions",
       `/admin/transactions/product/${data.productId}`,
@@ -276,7 +282,6 @@ ${vendor ? `-Supplier: ${vendor.companyName}` : ""}
       ...(data.vendorId
         ? [`/admin/transactions/supplier/${data.vendorId}`]
         : []),
-      "/admin",
     ];
 
     // Fire and forget notifications and cache revalidation
@@ -284,7 +289,11 @@ ${vendor ? `-Supplier: ${vendor.companyName}` : ""}
       sendTelegramMessage(notificationMessage),
       cacheRevalidate({
         routesToRevalidate,
-        tagsToRevalidate: ["get-products-for-table", "get-all-transactions"],
+        tagsToRevalidate: [
+          "get-products-for-table",
+          "get-all-transactions",
+          "get-product-last-transactions",
+        ],
       }),
     ]).catch(console.error); // Handle errors but don't wait for completion
 

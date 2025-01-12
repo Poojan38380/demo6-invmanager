@@ -88,7 +88,11 @@ Number of variants: ${data.variants.length}
           `/admin/transactions/product/${data.productId}`,
           `/admin/products/${data.productId}`,
         ],
-        tagsToRevalidate: ["get-products-for-table", "get-all-transactions"],
+        tagsToRevalidate: [
+          "get-products-for-table",
+          "get-all-transactions",
+          "get-product-last-transactions",
+        ],
       }),
     ]);
 

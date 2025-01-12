@@ -2,7 +2,7 @@
 
 import { auth } from "@/lib/auth";
 import prisma from "@/prisma";
-import { Product, ProductVariant } from "@prisma/client";
+import { Product, ProductVariant, TransactionAction } from "@prisma/client";
 import { unstable_cache as cache } from "next/cache";
 import { redirect } from "next/navigation";
 import { uploadImagesToCloudinary } from "./cloudinary";
@@ -78,6 +78,86 @@ async function getProductsforTable(): Promise<ProductWithOneImage[]> {
 export const getCachedProductsforTable = cache(
   async () => getProductsforTable(),
   ["get-products-for-table"]
+);
+
+export type ProductTransaction = {
+  id: string;
+  createdAt: Date;
+  action: TransactionAction;
+  stockBefore: number;
+  stockChange: number;
+  stockAfter: number;
+  note: string | null;
+  user: {
+    username: string;
+  };
+  customer: {
+    id: string;
+    companyName: string;
+  } | null;
+  vendor: {
+    id: string;
+    companyName: string;
+  } | null;
+  productVariant: {
+    id: string;
+    variantName: string;
+  } | null;
+};
+
+async function getProductLastTransactions(
+  productId: string
+): Promise<ProductTransaction[]> {
+  const transactions = await prisma.transaction.findMany({
+    where: {
+      productId: productId,
+      action: { in: ["DECREASED", "INCREASED"] },
+    },
+    take: 5,
+    orderBy: {
+      createdAt: "desc",
+    },
+
+    select: {
+      id: true,
+      createdAt: true,
+      action: true,
+      stockBefore: true,
+      stockChange: true,
+      stockAfter: true,
+      note: true,
+      user: {
+        select: {
+          username: true,
+        },
+      },
+      customer: {
+        select: {
+          id: true,
+          companyName: true,
+        },
+      },
+      vendor: {
+        select: {
+          id: true,
+          companyName: true,
+        },
+      },
+      productVariant: {
+        select: {
+          id: true,
+          variantName: true,
+        },
+      },
+    },
+  });
+
+  return transactions;
+}
+
+export const getCachedProductLastTransactions = cache(
+  async (productId: string) => getProductLastTransactions(productId),
+  ["get-product-last-transactions"]
 );
 
 async function getSingleProduct(id: string): Promise<ProductWithImages | null> {
@@ -264,6 +344,7 @@ export async function addProduct(data: addproductProps, productImages: File[]) {
           "get-products-for-table",
           "get-products-for-display",
           "get-all-transactions",
+          "get-product-last-transactions",
         ],
       }),
     ]);
@@ -376,6 +457,7 @@ export async function editProduct(
           "get-single-product-for-edit",
           "get-products-for-table",
           "get-all-transactions",
+          "get-product-last-transactions",
         ],
       }),
     ]);
