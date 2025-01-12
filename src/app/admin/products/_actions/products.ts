@@ -344,6 +344,7 @@ export async function addProduct(data: addproductProps, productImages: File[]) {
           "get-products-for-table",
           "get-products-for-display",
           "get-all-transactions",
+          "get-product-last-transactions",
         ],
       }),
     ]);
@@ -456,6 +457,7 @@ export async function editProduct(
           "get-single-product-for-edit",
           "get-products-for-table",
           "get-all-transactions",
+          "get-product-last-transactions",
         ],
       }),
     ]);

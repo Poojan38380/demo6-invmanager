@@ -119,7 +119,11 @@ ${vendor ? `-Supplier: ${vendor.companyName}` : ""}
       sendTelegramMessage(notificationMessage),
       cacheRevalidate({
         routesToRevalidate,
-        tagsToRevalidate: ["get-products-for-table", "get-all-transactions"],
+        tagsToRevalidate: [
+          "get-products-for-table",
+          "get-all-transactions",
+          "get-product-last-transactions",
+        ],
       }),
     ]);
 
@@ -285,7 +289,11 @@ ${vendor ? `-Supplier: ${vendor.companyName}` : ""}
       sendTelegramMessage(notificationMessage),
       cacheRevalidate({
         routesToRevalidate,
-        tagsToRevalidate: ["get-products-for-table", "get-all-transactions"],
+        tagsToRevalidate: [
+          "get-products-for-table",
+          "get-all-transactions",
+          "get-product-last-transactions",
+        ],
       }),
     ]).catch(console.error); // Handle errors but don't wait for completion
 
