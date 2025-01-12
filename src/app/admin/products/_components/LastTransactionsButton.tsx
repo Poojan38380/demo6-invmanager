@@ -1,7 +1,14 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { History, ArrowUp, ArrowDown, ArrowRight } from "lucide-react";
+import {
+  History,
+  ArrowUp,
+  ArrowDown,
+  ArrowRight,
+  Building,
+  Truck,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { formatDateYYMMDDHHMM } from "@/lib/format-date";
 import { formatNumber } from "@/lib/formatter";
@@ -15,6 +22,7 @@ import {
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { TransactionAction } from "@prisma/client";
+import Link from "next/link";
 
 type ProductTransaction = {
   id: string;
@@ -25,9 +33,9 @@ type ProductTransaction = {
   stockAfter: number;
   note: string | null;
   user: { username: string };
-  customer: { companyName: string } | null;
-  vendor: { companyName: string } | null;
-  productVariant: { variantName: string } | null;
+  customer: { companyName: string; id: string } | null;
+  vendor: { companyName: string; id: string } | null;
+  productVariant: { variantName: string; id: string } | null;
 };
 
 const TransactionItem = ({
@@ -38,7 +46,7 @@ const TransactionItem = ({
   const isIncrease = transaction.action === "INCREASED";
 
   return (
-    <div className="flex flex-col gap-2 p-3 rounded-lg hover:bg-accent/50 transition-colors">
+    <div className="flex flex-col gap-1 p-3 border rounded-lg hover:bg-accent/50 transition-colors">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           {transaction.productVariant && (
@@ -72,12 +80,37 @@ const TransactionItem = ({
       </div>
 
       <div className="flex items-center justify-between text-xs">
-        <div className="flex items-center gap-2 text-muted-foreground">
-          <span>{formatDateYYMMDDHHMM(transaction.createdAt)}</span>
-          <span>•</span>
-          <span>{transaction.user.username}</span>
+        <div>
+          <div className="flex items-center gap-2 text-muted-foreground">
+            <span>{formatDateYYMMDDHHMM(transaction.createdAt)}</span>
+            <span>•</span>
+            <span>{transaction.user.username}</span>
+          </div>
+          <div>
+            {transaction.customer ? (
+              <Link
+                prefetch={false}
+                href={`/admin/transactions/customer/${transaction.customer.id}`}
+                className="flex items-center gap-2 text-primary hover:underline hover:text-accent-foreground transition-colors"
+              >
+                <Building className="h-4 w-4" />
+                {transaction.customer.companyName}
+              </Link>
+            ) : transaction.vendor ? (
+              <Link
+                prefetch={false}
+                href={`/admin/transactions/supplier/${transaction.vendor.id}`}
+                className="flex items-center gap-2 text-primary hover:underline hover:text-accent-foreground transition-colors"
+              >
+                <Truck className="h-4 w-4" />
+                {transaction.vendor.companyName}
+              </Link>
+            ) : null}
+          </div>
         </div>
-        {transaction.note}
+        <div className="text-xs text-muted-foreground font-bold">
+          {transaction.note}
+        </div>
       </div>
     </div>
   );

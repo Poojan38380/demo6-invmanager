@@ -92,12 +92,15 @@ export type ProductTransaction = {
     username: string;
   };
   customer: {
+    id: string;
     companyName: string;
   } | null;
   vendor: {
+    id: string;
     companyName: string;
   } | null;
   productVariant: {
+    id: string;
     variantName: string;
   } | null;
 };
@@ -130,16 +133,19 @@ async function getProductLastTransactions(
       },
       customer: {
         select: {
+          id: true,
           companyName: true,
         },
       },
       vendor: {
         select: {
+          id: true,
           companyName: true,
         },
       },
       productVariant: {
         select: {
+          id: true,
           variantName: true,
         },
       },
