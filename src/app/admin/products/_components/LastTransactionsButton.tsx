@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { History, ArrowUp, ArrowDown, X } from "lucide-react";
+import { History, ArrowUp, ArrowDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { formatDateYYMMDDHHMM } from "@/lib/format-date";
 import { formatNumber } from "@/lib/formatter";
