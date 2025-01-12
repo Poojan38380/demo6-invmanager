@@ -28,6 +28,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useState } from "react";
+import LastTransactionsButton from "./_components/LastTransactionsButton";
 
 export const BasicColumns: ColumnDef<ProductWithOneImage>[] = [
   {
@@ -39,12 +40,12 @@ export const BasicColumns: ColumnDef<ProductWithOneImage>[] = [
         className="justify-center"
       />
     ),
-
     cell: ({ row }) => {
       const productName: string = row.getValue("name");
 
       return (
         <div className="flex items-center gap-2">
+          <LastTransactionsButton productId={row.original.id} />
           <Avatar className="">
             <AvatarImage src={row.original.productImages[0]?.url} />
             <AvatarFallback>
