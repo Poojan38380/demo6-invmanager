@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { History, ArrowUp, ArrowDown } from "lucide-react";
+import { History, ArrowUp, ArrowDown, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { formatDateYYMMDDHHMM } from "@/lib/format-date";
 import { formatNumber } from "@/lib/formatter";
@@ -36,43 +36,48 @@ const TransactionItem = ({
   transaction: ProductTransaction;
 }) => {
   const isIncrease = transaction.action === "INCREASED";
+
   return (
-    <div className=" flex  justify-between mb-4">
-      <div>
+    <div className="flex flex-col gap-2 p-3 rounded-lg hover:bg-accent/50 transition-colors">
+      <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          {transaction.productVariant ? (
-            <Badge variant={"outline"} className={`text-xs font-medium `}>
+          {transaction.productVariant && (
+            <Badge variant="outline" className="text-xs">
               {transaction.productVariant.variantName}
             </Badge>
-          ) : null}
+          )}
           <Badge
-            variant={`${isIncrease ? "success" : "destructive"}`}
-            className={`text-sm font-medium flex items-center gap-1  w-min`}
+            variant={isIncrease ? "success" : "destructive"}
+            className="text-sm font-medium flex items-center gap-1"
           >
-            {isIncrease ? "" : "-"}
+            {isIncrease ? "+" : "-"}
             {formatNumber(Math.abs(transaction.stockChange))}
             {isIncrease ? (
-              <ArrowUp className="h-4 w-4  flex-shrink-0" />
+              <ArrowUp className="h-3 w-3" />
             ) : (
-              <ArrowDown className="h-4 w-4  flex-shrink-0" />
+              <ArrowDown className="h-3 w-3" />
             )}
           </Badge>
         </div>
-        <div className="text-xs text-muted-foreground mt-1">
-          {formatDateYYMMDDHHMM(transaction.createdAt)} •{" "}
-          {transaction.user.username}
-        </div>
-      </div>
-      <div className="text-sm flex justify-between gap-1   pt-2">
-        <div className="">
-          {formatNumber(transaction.stockBefore)} →{" "}
-          <span className="font-semibold">
+
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-muted-foreground">
+            {formatNumber(transaction.stockBefore)}
+          </span>
+          <ArrowRight className="h-3 w-3 text-muted-foreground" />
+          <span className="text-sm font-medium">
             {formatNumber(transaction.stockAfter)}
           </span>
-          <div className="text-sm text-muted-foreground flex justify-end">
-            {transaction.note}
-          </div>
         </div>
+      </div>
+
+      <div className="flex items-center justify-between text-xs">
+        <div className="flex items-center gap-2 text-muted-foreground">
+          <span>{formatDateYYMMDDHHMM(transaction.createdAt)}</span>
+          <span>•</span>
+          <span>{transaction.user.username}</span>
+        </div>
+        {transaction.note}
       </div>
     </div>
   );
@@ -112,22 +117,26 @@ const CompactTransactionHistory = ({ productId }: { productId: string }) => {
           <History className="h-4 w-4" />
         </Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle>Last 5 transactions</DialogTitle>
+          <DialogTitle className="flex items-center gap-2">
+            <History className="h-4 w-4" />
+            Last 5 Transactions
+          </DialogTitle>
         </DialogHeader>
 
-        <div>
+        <div className="space-y-2">
           {isLoading ? (
-            <div className="flex items-center justify-center h-full">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+            <div className="flex items-center justify-center py-8">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
             </div>
           ) : transactions.length === 0 ? (
-            <div className="text-center p-4 text-sm text-muted-foreground">
-              No transactions found
+            <div className="flex flex-col items-center justify-center py-8 text-muted-foreground">
+              <History className="h-8 w-8 mb-2 opacity-50" />
+              <p className="text-sm">No transactions found</p>
             </div>
           ) : (
-            <div className="p-2">
+            <div className="space-y-2">
               {transactions.map((transaction) => (
                 <TransactionItem
                   key={transaction.id}
