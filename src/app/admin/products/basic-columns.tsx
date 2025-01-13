@@ -211,7 +211,7 @@ const ProductActionsCell = ({ product }: { product: ProductWithOneImage }) => {
         <DropdownMenuContent className="font-semibold">
           <DropdownMenuGroup>
             <Link
-              href={`/admin/products/${product.id}`}
+              href={`/admin/products/${encodeURLid(product.id)}`}
               prefetch={false}
               title="Edit Product"
             >

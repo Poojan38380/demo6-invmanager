@@ -41,7 +41,7 @@ export const SupplierColumns: ColumnDef<Vendor>[] = [
           <Button asChild size={"icon"} variant={"ghost"}>
             <Link
               prefetch={false}
-              href={`/admin/settings/suppliers/${supplierId}`}
+              href={`/admin/settings/suppliers/${encodeURLid(supplierId)}`}
             >
               <Edit />
             </Link>

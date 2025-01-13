@@ -41,7 +41,7 @@ export const CustomerColumns: ColumnDef<Customer>[] = [
           <Button asChild size={"icon"} variant={"ghost"}>
             <Link
               prefetch={false}
-              href={`/admin/settings/customers/${customerId}`}
+              href={`/admin/settings/customers/${encodeURLid(customerId)}`}
             >
               <Edit />
             </Link>
