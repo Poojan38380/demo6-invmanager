@@ -5,6 +5,7 @@ import { formatNumber } from "@/lib/formatter";
 import { sendTelegramMessage } from "@/lib/send-telegram-message";
 import prisma from "@/prisma";
 import cacheRevalidate from "@/utils/cache-revalidation-helper";
+import { encodeURLid } from "@/utils/url-encoder-decoder";
 import { redirect } from "next/navigation";
 
 interface updateProductStockProps {
@@ -105,13 +106,13 @@ ${vendor ? `-Supplier: ${vendor.companyName}` : ""}
       "/admin",
       "/admin/products",
       "/admin/transactions",
-      `/admin/transactions/product/${data.productId}`,
-      `/admin/transactions/user/${updater.id}`,
+      `/admin/transactions/product/${encodeURLid(data.productId)}`,
+      `/admin/transactions/user/${encodeURLid(updater.id)}`,
       ...(data.customerId
-        ? [`/admin/transactions/customer/${data.customerId}`]
+        ? [`/admin/transactions/customer/${encodeURLid(data.customerId)}`]
         : []),
       ...(data.vendorId
-        ? [`/admin/transactions/supplier/${data.vendorId}`]
+        ? [`/admin/transactions/supplier/${encodeURLid(data.vendorId)}`]
         : []),
     ].filter(Boolean);
 
@@ -274,14 +275,16 @@ ${vendor ? `-Supplier: ${vendor.companyName}` : ""}
       "/admin",
       "/admin/products",
       "/admin/transactions",
-      `/admin/transactions/product/${data.productId}`,
-      `/admin/transactions/product/variant/${data.variantId}`,
-      `/admin/transactions/user/${updater.id}`,
+      `/admin/transactions/product/${encodeURLid(data.productId)}`,
+      ...data.variantId.map(
+        (id) => `/admin/transactions/product/variant/${encodeURLid(id)}`
+      ),
+      `/admin/transactions/user/${encodeURLid(updater.id)}`,
       ...(data.customerId
-        ? [`/admin/transactions/customer/${data.customerId}`]
+        ? [`/admin/transactions/customer/${encodeURLid(data.customerId)}`]
         : []),
       ...(data.vendorId
-        ? [`/admin/transactions/supplier/${data.vendorId}`]
+        ? [`/admin/transactions/supplier/${encodeURLid(data.vendorId)}`]
         : []),
     ];
 

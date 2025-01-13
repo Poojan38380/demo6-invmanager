@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { sendTelegramMessage } from "@/lib/send-telegram-message";
 import { formatDateYYMMDDHHMM } from "@/lib/format-date";
 import cacheRevalidate from "@/utils/cache-revalidation-helper";
+import { encodeURLid } from "@/utils/url-encoder-decoder";
 
 export async function deleteTransaction({
   transactionId,
@@ -67,11 +68,13 @@ StockChange: *${transaction.stockChange}*
           "/products",
           "/admin/transactions",
           "/admin",
-          `/admin/transactions/product/${transaction.productId}`,
-          `/admin/transactions/product/variant/${transaction.productVariantId}`,
-          `/admin/transactions/user/${transaction.userId}`,
-          `/admin/transactions/vendor/${transaction.vendorId}`,
-          `/admin/transactions/customer/${transaction.customerId}`,
+          `/admin/transactions/product/${encodeURLid(transaction.productId)}`,
+          `/admin/transactions/product/variant/${encodeURLid(
+            transaction.productVariantId
+          )}`,
+          `/admin/transactions/user/${encodeURLid(transaction.userId)}`,
+          `/admin/transactions/vendor/${encodeURLid(transaction.vendorId)}`,
+          `/admin/transactions/customer/${encodeURLid(transaction.customerId)}`,
         ],
         tagsToRevalidate: [
           "get-products-for-table",

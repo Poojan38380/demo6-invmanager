@@ -49,15 +49,17 @@ export const TransactionTableColumns: ColumnDef<TransactionForTable>[] = [
             <Package className="h-4 w-4" aria-hidden="true" />
             <span className="font-medium">{productName}</span>
           </Link>
-          {variantName && (
+          {productVariantId ? (
             <Link
-              href={`/admin/transactions/product/variant/${productVariantId}`}
+              href={`/admin/transactions/product/variant/${encodeURLid(
+                productVariantId
+              )}`}
               className=" text-foreground hover:underline hover:text-accent-foreground transition-colors"
               prefetch={false}
             >
               <Badge variant={"secondary"}>{variantName}</Badge>
             </Link>
-          )}
+          ) : null}
         </span>
       );
     },
@@ -160,7 +162,7 @@ export const TransactionTableColumns: ColumnDef<TransactionForTable>[] = [
       return (
         <Link
           prefetch={false}
-          href={`/admin/transactions/user/${userId}`}
+          href={`/admin/transactions/user/${encodeURLid(userId)}`}
           className="flex items-center gap-2 text-primary hover:underline hover:text-accent-foreground transition-colors"
         >
           <User className="h-4 w-4" />
@@ -194,7 +196,9 @@ export const TransactionTableColumns: ColumnDef<TransactionForTable>[] = [
         return (
           <Link
             prefetch={false}
-            href={`/admin/transactions/${customerOrVendor.type}/${customerOrVendor.id}`}
+            href={`/admin/transactions/${customerOrVendor.type}/${encodeURLid(
+              customerOrVendor.id
+            )}`}
             className="flex items-center gap-2 text-primary hover:underline hover:text-accent-foreground transition-colors"
           >
             {customerOrVendor.type === "customer" ? (

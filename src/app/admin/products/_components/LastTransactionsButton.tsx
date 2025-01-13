@@ -24,6 +24,7 @@ import { Badge } from "@/components/ui/badge";
 import { TransactionAction } from "@prisma/client";
 import Link from "next/link";
 import TransactionLoader from "../../transactions/_components/loader/transaction-loader";
+import { encodeURLid } from "@/utils/url-encoder-decoder";
 
 type ProductTransaction = {
   id: string;
@@ -91,7 +92,9 @@ const TransactionItem = ({
             {transaction.customer ? (
               <Link
                 prefetch={false}
-                href={`/admin/transactions/customer/${transaction.customer.id}`}
+                href={`/admin/transactions/customer/${encodeURLid(
+                  transaction.customer.id
+                )}`}
                 className="flex items-center gap-2 text-primary hover:underline hover:text-accent-foreground transition-colors"
               >
                 <Building className="h-4 w-4" />
@@ -100,7 +103,9 @@ const TransactionItem = ({
             ) : transaction.vendor ? (
               <Link
                 prefetch={false}
-                href={`/admin/transactions/supplier/${transaction.vendor.id}`}
+                href={`/admin/transactions/supplier/${encodeURLid(
+                  transaction.vendor.id
+                )}`}
                 className="flex items-center gap-2 text-primary hover:underline hover:text-accent-foreground transition-colors"
               >
                 <Truck className="h-4 w-4" />

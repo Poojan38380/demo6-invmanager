@@ -1,4 +1,5 @@
-export function encodeURLid(id: string) {
+export function encodeURLid(id?: string | null) {
+  if (!id) return undefined;
   return Buffer.from(id).toString("base64");
 }
 

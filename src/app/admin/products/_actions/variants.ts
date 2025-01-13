@@ -4,6 +4,7 @@ import { auth } from "@/lib/auth";
 import { sendTelegramMessage } from "@/lib/send-telegram-message";
 import prisma from "@/prisma";
 import cacheRevalidate from "@/utils/cache-revalidation-helper";
+import { encodeURLid } from "@/utils/url-encoder-decoder";
 import { redirect } from "next/navigation";
 
 interface VariantDataProps {
@@ -85,8 +86,8 @@ Number of variants: ${data.variants.length}
         routesToRevalidate: [
           "/admin/products",
           "/admin/transactions",
-          `/admin/transactions/product/${data.productId}`,
-          `/admin/products/${data.productId}`,
+          `/admin/transactions/product/${encodeURLid(data.productId)}`,
+          `/admin/products/${encodeURLid(data.productId)}`,
         ],
         tagsToRevalidate: [
           "get-products-for-table",

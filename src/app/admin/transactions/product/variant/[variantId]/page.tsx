@@ -1,6 +1,7 @@
 import TransactionLayout from "../../../transactionLayout";
 import { getCachedTransactionsByVariantId } from "../../../_actions/getTransactions";
 import { checkIdValidity } from "@/utils/checkIdValidity";
+import { decodeURLid } from "@/utils/url-encoder-decoder";
 
 export default async function ProductTransactionsPage({
   params,
@@ -8,11 +9,12 @@ export default async function ProductTransactionsPage({
   params: Promise<{ variantId: string }>;
 }) {
   const { variantId } = await params;
+  const variantIdDecoded = decodeURLid(variantId);
 
-  const idValidityCheck = checkIdValidity(variantId, "variantId");
+  const idValidityCheck = checkIdValidity(variantIdDecoded, "variantId");
   if (idValidityCheck) return idValidityCheck;
 
-  const transactions = await getCachedTransactionsByVariantId(variantId);
+  const transactions = await getCachedTransactionsByVariantId(variantIdDecoded);
 
   if (!transactions || transactions.length === 0)
     return (
