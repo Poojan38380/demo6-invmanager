@@ -173,6 +173,7 @@ export default function UpdateStockVariants({
           variant="outline"
           size="icon"
           className="h-9 w-9 p-1 bg-card shadow-lg"
+          title="Update stock"
         >
           <ArrowUpDown />
         </Button>

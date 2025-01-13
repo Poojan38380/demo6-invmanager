@@ -275,6 +275,7 @@ ${vendor ? `-Supplier: ${vendor.companyName}` : ""}
       "/admin/products",
       "/admin/transactions",
       `/admin/transactions/product/${data.productId}`,
+      `/admin/transactions/product/variant/${data.variantId}`,
       `/admin/transactions/user/${updater.id}`,
       ...(data.customerId
         ? [`/admin/transactions/customer/${data.customerId}`]

@@ -29,6 +29,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useState } from "react";
 import LastTransactionsButton from "./_components/LastTransactionsButton";
+import { encodeURLid } from "@/utils/url-encoder-decoder";
 
 export const BasicColumns: ColumnDef<ProductWithOneImage>[] = [
   {
@@ -45,7 +46,6 @@ export const BasicColumns: ColumnDef<ProductWithOneImage>[] = [
 
       return (
         <div className="flex items-center gap-2">
-          <LastTransactionsButton productId={row.original.id} />
           <Avatar className="">
             <AvatarImage src={row.original.productImages[0]?.url} />
             <AvatarFallback>
@@ -194,30 +194,36 @@ const ProductActionsCell = ({ product }: { product: ProductWithOneImage }) => {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="w-max flex items-center justify-between gap-2">
+    <div className="w-max flex items-center justify-between gap-1">
       {product.hasVariants ? (
         <UpdateStockVariants product={product} />
       ) : (
         <UpdateStock product={product} />
       )}
+      <LastTransactionsButton productId={product.id} />
 
       <DropdownMenu open={open} onOpenChange={setOpen}>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost">
+          <Button variant="ghost" className="p-1" title="Addtional Settings">
             <EllipsisVertical />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="font-semibold">
           <DropdownMenuGroup>
-            <Link href={`/admin/products/${product.id}`} prefetch={false}>
+            <Link
+              href={`/admin/products/${product.id}`}
+              prefetch={false}
+              title="Edit Product"
+            >
               <DropdownMenuItem>
                 <Pen />
                 <span>Edit</span>
               </DropdownMenuItem>
             </Link>
             <Link
-              href={`/admin/transactions/product/${product.id}`}
+              href={`/admin/transactions/product/${encodeURLid(product.id)}`}
               prefetch={false}
+              title="View Transactions"
             >
               <DropdownMenuItem>
                 <ChartNoAxesCombined />

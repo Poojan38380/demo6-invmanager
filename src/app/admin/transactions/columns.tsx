@@ -25,6 +25,7 @@ import {
 import { formatDateYYMMDDHHMM } from "@/lib/format-date";
 import { Badge } from "@/components/ui/badge";
 import TransactionDeletionDialog from "./_components/trans-deletion-dialog";
+import { encodeURLid } from "@/utils/url-encoder-decoder";
 
 export const TransactionTableColumns: ColumnDef<TransactionForTable>[] = [
   {
@@ -41,7 +42,7 @@ export const TransactionTableColumns: ColumnDef<TransactionForTable>[] = [
       return (
         <span className="flex flex-wrap gap-1">
           <Link
-            href={`/admin/transactions/product/${productId}`}
+            href={`/admin/transactions/product/${encodeURLid(productId)}`}
             className="flex items-center gap-2 text-primary hover:underline hover:text-accent-foreground transition-colors"
             prefetch={false}
           >

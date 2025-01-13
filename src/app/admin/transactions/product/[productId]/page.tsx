@@ -3,6 +3,7 @@ import { getCachedTransactionsByProductId } from "../../_actions/getTransactions
 import TransactionLayout from "../../transactionLayout";
 import TableSkeleton from "@/app/admin/_components/table-skeleton";
 import { Suspense } from "react";
+import { decodeURLid } from "@/utils/url-encoder-decoder";
 
 async function ProductTransactionsComp({ productId }: { productId: string }) {
   const idValidityCheck = checkIdValidity(productId, "productId");
@@ -33,7 +34,7 @@ export default async function TransactionsPage({
 
   return (
     <Suspense fallback={<TableSkeleton />}>
-      <ProductTransactionsComp productId={productId} />
+      <ProductTransactionsComp productId={decodeURLid(productId)} />
     </Suspense>
   );
 }
