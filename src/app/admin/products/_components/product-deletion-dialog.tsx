@@ -68,6 +68,7 @@ export default function ProductDeletionDialog({
             e.preventDefault();
           }}
           className="bg-destructive/70 text-destructive-foreground"
+          title="Delete Product"
         >
           <Trash />
           <span>Delete</span>

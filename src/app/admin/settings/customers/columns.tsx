@@ -3,6 +3,7 @@ import { TooltipWrapper } from "@/components/tooltip-wrapper";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DataTableColumnHeader } from "@/components/ui/data-table/data-table-column-header";
+import { encodeURLid } from "@/utils/url-encoder-decoder";
 import { Customer } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
 import { Edit, Mail, MapPin, Phone } from "lucide-react";
@@ -20,7 +21,7 @@ export const CustomerColumns: ColumnDef<Customer>[] = [
       const customerId = row.original.id;
       return (
         <Link
-          href={`/admin/transactions/customer/${customerId}`}
+          href={`/admin/transactions/customer/${encodeURLid(customerId)}`}
           className="flex items-center gap-2 text-primary hover:underline hover:text-accent-foreground transition-colors"
           prefetch={false}
         >
@@ -40,7 +41,7 @@ export const CustomerColumns: ColumnDef<Customer>[] = [
           <Button asChild size={"icon"} variant={"ghost"}>
             <Link
               prefetch={false}
-              href={`/admin/settings/customers/${customerId}`}
+              href={`/admin/settings/customers/${encodeURLid(customerId)}`}
             >
               <Edit />
             </Link>

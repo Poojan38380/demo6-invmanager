@@ -4,6 +4,7 @@ import CustomerForm from "../../_components/create-update-customer-form";
 import { getCachedSingleCustomer } from "../../_actions/cust-supp-actions";
 import BackButton from "@/app/admin/_components/sidebar/back-button";
 import { checkIdValidity } from "@/utils/checkIdValidity";
+import { decodeURLid } from "@/utils/url-encoder-decoder";
 
 export default async function EditCustomerPage({
   params,
@@ -11,11 +12,11 @@ export default async function EditCustomerPage({
   params: Promise<{ customerId: string }>;
 }) {
   const { customerId } = await params;
-
-  const idValidityCheck = checkIdValidity(customerId, "customerId");
+  const decodedCustomerId = decodeURLid(customerId);
+  const idValidityCheck = checkIdValidity(decodedCustomerId, "customerId");
   if (idValidityCheck) return idValidityCheck;
 
-  const customer = await getCachedSingleCustomer(customerId);
+  const customer = await getCachedSingleCustomer(decodedCustomerId);
   if (!customer) return notFound();
   return (
     <Card className="m-6 max-425:m-2">

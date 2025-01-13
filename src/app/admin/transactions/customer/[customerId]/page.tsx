@@ -1,6 +1,7 @@
 import { checkIdValidity } from "@/utils/checkIdValidity";
 import { getCachedTransactionsByCustomerId } from "../../_actions/getTransactions";
 import TransactionLayout from "../../transactionLayout";
+import { decodeURLid } from "@/utils/url-encoder-decoder";
 
 export default async function CustomerTransactionsPage({
   params,
@@ -8,11 +9,14 @@ export default async function CustomerTransactionsPage({
   params: Promise<{ customerId: string }>;
 }) {
   const { customerId } = await params;
+  const customerIdDecoded = decodeURLid(customerId);
 
-  const idValidityCheck = checkIdValidity(customerId, "customerId");
+  const idValidityCheck = checkIdValidity(customerIdDecoded, "customerId");
   if (idValidityCheck) return idValidityCheck;
 
-  const transactions = await getCachedTransactionsByCustomerId(customerId);
+  const transactions = await getCachedTransactionsByCustomerId(
+    customerIdDecoded
+  );
 
   if (!transactions || transactions.length === 0) {
     return (

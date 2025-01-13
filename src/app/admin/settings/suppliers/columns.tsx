@@ -3,6 +3,7 @@ import { TooltipWrapper } from "@/components/tooltip-wrapper";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DataTableColumnHeader } from "@/components/ui/data-table/data-table-column-header";
+import { encodeURLid } from "@/utils/url-encoder-decoder";
 import { Vendor } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
 import { Edit, Mail, MapPin, Phone } from "lucide-react";
@@ -21,7 +22,7 @@ export const SupplierColumns: ColumnDef<Vendor>[] = [
       return (
         <Link
           prefetch={false}
-          href={`/admin/transactions/supplier/${supplierId}`}
+          href={`/admin/transactions/supplier/${encodeURLid(supplierId)}`}
           className="flex items-center gap-2 text-primary hover:underline hover:text-accent-foreground transition-colors"
         >
           <span className="font-medium">{companyName}</span>
@@ -40,7 +41,7 @@ export const SupplierColumns: ColumnDef<Vendor>[] = [
           <Button asChild size={"icon"} variant={"ghost"}>
             <Link
               prefetch={false}
-              href={`/admin/settings/suppliers/${supplierId}`}
+              href={`/admin/settings/suppliers/${encodeURLid(supplierId)}`}
             >
               <Edit />
             </Link>

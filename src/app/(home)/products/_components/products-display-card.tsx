@@ -3,6 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { ProductWithImages } from "@/types/dataTypes";
 import Link from "next/link";
 import Image from "next/image";
+import { encodeURLid } from "@/utils/url-encoder-decoder";
 
 const placeholderImage =
   "https://res.cloudinary.com/dxvvg9nwf/image/upload/v1733234845/zup2ich88q9k8xhoyeuj.png";
@@ -18,7 +19,7 @@ export default function ProductDisplayCard({
   return (
     <Link
       prefetch={false}
-      href={`/products/${id}`}
+      href={`/products/${encodeURLid(id)}`}
       className="group relative block overflow-hidden rounded-xl transition-all hover:shadow-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
     >
       <Card className="h-full">

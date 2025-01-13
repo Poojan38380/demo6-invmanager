@@ -25,6 +25,7 @@ import {
 import { formatDateYYMMDDHHMM } from "@/lib/format-date";
 import { Badge } from "@/components/ui/badge";
 import TransactionDeletionDialog from "./_components/trans-deletion-dialog";
+import { encodeURLid } from "@/utils/url-encoder-decoder";
 
 export const TransactionTableColumns: ColumnDef<TransactionForTable>[] = [
   {
@@ -41,22 +42,24 @@ export const TransactionTableColumns: ColumnDef<TransactionForTable>[] = [
       return (
         <span className="flex flex-wrap gap-1">
           <Link
-            href={`/admin/transactions/product/${productId}`}
+            href={`/admin/transactions/product/${encodeURLid(productId)}`}
             className="flex items-center gap-2 text-primary hover:underline hover:text-accent-foreground transition-colors"
             prefetch={false}
           >
             <Package className="h-4 w-4" aria-hidden="true" />
             <span className="font-medium">{productName}</span>
           </Link>
-          {variantName && (
+          {productVariantId ? (
             <Link
-              href={`/admin/transactions/product/variant/${productVariantId}`}
+              href={`/admin/transactions/product/variant/${encodeURLid(
+                productVariantId
+              )}`}
               className=" text-foreground hover:underline hover:text-accent-foreground transition-colors"
               prefetch={false}
             >
               <Badge variant={"secondary"}>{variantName}</Badge>
             </Link>
-          )}
+          ) : null}
         </span>
       );
     },
@@ -159,7 +162,7 @@ export const TransactionTableColumns: ColumnDef<TransactionForTable>[] = [
       return (
         <Link
           prefetch={false}
-          href={`/admin/transactions/user/${userId}`}
+          href={`/admin/transactions/user/${encodeURLid(userId)}`}
           className="flex items-center gap-2 text-primary hover:underline hover:text-accent-foreground transition-colors"
         >
           <User className="h-4 w-4" />
@@ -193,7 +196,9 @@ export const TransactionTableColumns: ColumnDef<TransactionForTable>[] = [
         return (
           <Link
             prefetch={false}
-            href={`/admin/transactions/${customerOrVendor.type}/${customerOrVendor.id}`}
+            href={`/admin/transactions/${customerOrVendor.type}/${encodeURLid(
+              customerOrVendor.id
+            )}`}
             className="flex items-center gap-2 text-primary hover:underline hover:text-accent-foreground transition-colors"
           >
             {customerOrVendor.type === "customer" ? (

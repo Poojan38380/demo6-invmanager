@@ -11,6 +11,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { formatDateYYMMDDHHMM } from "@/lib/format-date";
 import BackButton from "../../_components/sidebar/back-button";
+import { encodeURLid } from "@/utils/url-encoder-decoder";
 
 interface UserListProps {
   initialUsers: UserWithCounts[];
@@ -55,7 +56,7 @@ export default function UserList({ initialUsers }: UserListProps) {
                 <div className="flex items-center gap-3">
                   <Link
                     prefetch={false}
-                    href={`/admin/transactions/user/${user.id}`}
+                    href={`/admin/transactions/user/${encodeURLid(user.id)}`}
                   >
                     <Avatar className="h-12 w-12">
                       <AvatarImage src={user.profilePic} alt={user.username} />
@@ -68,7 +69,9 @@ export default function UserList({ initialUsers }: UserListProps) {
                     <CardTitle className="text-lg">
                       <Link
                         prefetch={false}
-                        href={`/admin/transactions/user/${user.id}`}
+                        href={`/admin/transactions/user/${encodeURLid(
+                          user.id
+                        )}`}
                         className="hover:underline"
                       >
                         {user.username}
@@ -88,7 +91,7 @@ export default function UserList({ initialUsers }: UserListProps) {
               <div className="grid grid-cols-2 gap-2 text-sm">
                 <Link
                   prefetch={false}
-                  href={`/admin/transactions/user/${user.id}`}
+                  href={`/admin/transactions/user/${encodeURLid(user.id)}`}
                   className="flex items-center gap-2 text-muted-foreground hover:font-semibold hover:underline"
                 >
                   <ArrowLeftRight size={16} />

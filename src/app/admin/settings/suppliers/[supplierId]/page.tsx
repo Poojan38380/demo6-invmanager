@@ -4,6 +4,7 @@ import SupplierForm from "../../_components/create-update-supplier-form";
 import { getCachedSinglesupplier } from "../../_actions/cust-supp-actions";
 import BackButton from "@/app/admin/_components/sidebar/back-button";
 import { checkIdValidity } from "@/utils/checkIdValidity";
+import { decodeURLid } from "@/utils/url-encoder-decoder";
 
 export default async function EditSupplierPage({
   params,
@@ -11,11 +12,12 @@ export default async function EditSupplierPage({
   params: Promise<{ supplierId: string }>;
 }) {
   const { supplierId } = await params;
+  const decodedSupplierId = decodeURLid(supplierId);
 
-  const idValidityCheck = checkIdValidity(supplierId, "supplierId");
+  const idValidityCheck = checkIdValidity(decodedSupplierId, "supplierId");
   if (idValidityCheck) return idValidityCheck;
 
-  const supplier = await getCachedSinglesupplier(supplierId);
+  const supplier = await getCachedSinglesupplier(decodedSupplierId);
   if (!supplier) return notFound();
   return (
     <Card className="m-6 max-425:m-2">

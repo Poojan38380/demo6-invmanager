@@ -23,6 +23,8 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { TransactionAction } from "@prisma/client";
 import Link from "next/link";
+import TransactionLoader from "../../transactions/_components/loader/transaction-loader";
+import { encodeURLid } from "@/utils/url-encoder-decoder";
 
 type ProductTransaction = {
   id: string;
@@ -90,7 +92,9 @@ const TransactionItem = ({
             {transaction.customer ? (
               <Link
                 prefetch={false}
-                href={`/admin/transactions/customer/${transaction.customer.id}`}
+                href={`/admin/transactions/customer/${encodeURLid(
+                  transaction.customer.id
+                )}`}
                 className="flex items-center gap-2 text-primary hover:underline hover:text-accent-foreground transition-colors"
               >
                 <Building className="h-4 w-4" />
@@ -99,7 +103,9 @@ const TransactionItem = ({
             ) : transaction.vendor ? (
               <Link
                 prefetch={false}
-                href={`/admin/transactions/supplier/${transaction.vendor.id}`}
+                href={`/admin/transactions/supplier/${encodeURLid(
+                  transaction.vendor.id
+                )}`}
                 className="flex items-center gap-2 text-primary hover:underline hover:text-accent-foreground transition-colors"
               >
                 <Truck className="h-4 w-4" />
@@ -160,8 +166,8 @@ const CompactTransactionHistory = ({ productId }: { productId: string }) => {
 
         <div className="space-y-2">
           {isLoading ? (
-            <div className="flex items-center justify-center py-8">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+            <div className="flex items-center justify-center py-8 scale-90">
+              <TransactionLoader />
             </div>
           ) : transactions.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-8 text-muted-foreground">

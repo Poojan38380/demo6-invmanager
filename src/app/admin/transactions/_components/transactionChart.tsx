@@ -21,11 +21,11 @@ import { formatNumber } from "@/lib/formatter";
 
 const chartConfig = {
   stock: {
-    label: "Stock Level",
+    label: "Total Stock Level",
     color: "hsl(var(--chart-4))",
   },
   demand: {
-    label: "Demand (Units Decreased)",
+    label: "Total Demand (Units Decreased)",
     color: "hsl(var(--chart-2))",
   },
 } satisfies ChartConfig;
@@ -46,16 +46,19 @@ export default function TransactionChart({
       (a, b) =>
         new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
     );
+
     interface DailyDataEntry {
       date: string;
       stock: number;
       stockChange: number;
       demand: number;
       actions: string[];
+      productStocks: { [key: string]: number };
     }
 
     const dailyData: { [key: string]: DailyDataEntry } = {};
 
+    // Group transactions by date and aggregate data
     sortedTransactions.forEach((transaction) => {
       const date = new Date(transaction.createdAt).toLocaleDateString("en-IN", {
         month: "short",
@@ -65,22 +68,31 @@ export default function TransactionChart({
       if (!dailyData[date]) {
         dailyData[date] = {
           date,
-          stock: transaction.stockAfter,
-          stockChange: transaction.stockChange,
-          demand:
-            transaction.action === "DECREASED"
-              ? Math.abs(transaction.stockChange)
-              : 0,
-          actions: [transaction.action],
+          stock: 0,
+          stockChange: 0,
+          demand: 0,
+          actions: [],
+          productStocks: {},
         };
-      } else {
-        dailyData[date].stock = transaction.stockAfter;
-        dailyData[date].stockChange += transaction.stockChange;
-        if (transaction.action === "DECREASED") {
-          dailyData[date].demand += Math.abs(transaction.stockChange);
-        }
-        dailyData[date].actions.push(transaction.action);
       }
+
+      const entry = dailyData[date];
+      const productKey = transaction.productVariantId || transaction.productId;
+
+      // Update product-specific stock
+      entry.productStocks[productKey] = transaction.stockAfter;
+
+      // Recalculate total stock as sum of all product stocks
+      entry.stock = Object.values(entry.productStocks).reduce(
+        (a, b) => a + b,
+        0
+      );
+      entry.stockChange += transaction.stockChange;
+
+      if (transaction.action === "DECREASED") {
+        entry.demand += Math.abs(transaction.stockChange);
+      }
+      entry.actions.push(transaction.action);
     });
 
     return Object.values(dailyData);
@@ -98,7 +110,6 @@ export default function TransactionChart({
             <ChartTooltip
               content={<CustomTooltip chartConfig={chartConfig} />}
             />
-
             <Line
               type="monotone"
               dataKey="stock"
@@ -107,15 +118,14 @@ export default function TransactionChart({
               dot={false}
             />
             <ReferenceLine y={0} stroke="hsl(var(--muted))" />
-
             <Legend />
             <Line
               type="monotone"
               dataKey="demand"
               stroke={chartConfig.demand.color}
-              strokeWidth={1} // Thinner line for subtlety
-              strokeOpacity={0.7} // Lower opacity
-              strokeDasharray="10 10" // Dashed line style
+              strokeWidth={1}
+              strokeOpacity={0.7}
+              strokeDasharray="10 10"
               dot={false}
             />
           </LineChart>
@@ -145,7 +155,6 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({
       <div className="bg-card flex flex-col gap-1 p-4 rounded-md shadow-md border border-border">
         <p className="font-semibold text-muted-foreground">{label}</p>
         <div className="flex flex-col gap-2">
-          {/* Stock */}
           <div className="flex items-center gap-3 justify-between">
             <div className="flex items-center gap-1">
               <span
@@ -154,7 +163,7 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({
                 }}
                 className="w-3 h-3 rounded-full"
               />
-              Stock:{" "}
+              Total Stock:{" "}
               <span className="font-bold font-mono">
                 {formatNumber(data.stock)}
               </span>
@@ -164,7 +173,7 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({
                 style={{
                   color: actionColors[action as keyof typeof actionColors],
                 }}
-                className="flex  items-center justify-end font-mono  text-xs font-extralight  "
+                className="flex items-center justify-end font-mono text-xs font-extralight"
               >
                 {action === "INCREASED" ? (
                   <ArrowUp size={14} />
@@ -176,7 +185,6 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({
             </div>
           </div>
 
-          {/* Demand */}
           <div className="flex items-center gap-2">
             <span
               style={{
@@ -184,7 +192,7 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({
               }}
               className="w-3 h-3 rounded-full"
             />
-            Demand:{" "}
+            Total Demand:{" "}
             <span className="font-bold font-mono">
               {formatNumber(data.demand)}
             </span>
