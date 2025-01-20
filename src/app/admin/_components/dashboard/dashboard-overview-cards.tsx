@@ -1,8 +1,8 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AlertCircle, AlertTriangle, Package } from "lucide-react";
-import { ProductWithOneImage } from "../../products/_actions/products";
 import Link from "next/link";
+import { ProductWithOneImage } from "../../products/_actions/products";
 
 const DashboardOverviewCards = ({
   products,
@@ -17,20 +17,26 @@ const DashboardOverviewCards = ({
     const approachingThreshold = 1.1; // 10% above buffer stock
 
     products.forEach((product) => {
-      // Count all products except archived ones
       if (!product.isArchived) {
         totalProducts++;
-        totalStock += product.stock || 0;
 
+        // Calculate actual stock based on whether product has variants
+        const actualStock = product.hasVariants
+          ? product.productVariants?.reduce(
+              (sum, variant) => sum + variant.variantStock,
+              0
+            ) ?? 0
+          : product.stock || 0;
+
+        totalStock += actualStock;
         const bufferStock = product.bufferStock || 0;
-        const currentStock = product.stock || 0;
 
-        // Check buffer stock conditions
-        if (currentStock < bufferStock) {
+        // Check buffer stock conditions using actual stock
+        if (actualStock < bufferStock) {
           belowBufferCount++;
         } else if (
-          currentStock <= bufferStock * approachingThreshold &&
-          currentStock >= bufferStock
+          actualStock <= bufferStock * approachingThreshold &&
+          actualStock >= bufferStock
         ) {
           approachingBufferCount++;
         }
@@ -51,7 +57,7 @@ const DashboardOverviewCards = ({
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
       {/* Total Active Products */}
       <Link prefetch={false} href="/admin/products">
-        <Card className="bg-primary/5  rounded-2xl hover:shadow-lg hover:scale-105 transition-all">
+        <Card className="bg-primary/5 rounded-2xl hover:shadow-lg hover:scale-105 transition-all">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">
               Active Products
@@ -63,16 +69,16 @@ const DashboardOverviewCards = ({
               {metrics.totalProducts}
             </div>
             <p className="text-xs text-muted-foreground mt-1">
-              Total stock: {metrics.totalStock} units
+              Total stock: {metrics.totalStock.toLocaleString()} units
             </p>
           </CardContent>
         </Card>
       </Link>
 
       {/* Approaching Buffer Stock Warning */}
-      {metrics.approachingBufferCount > 0 ? (
+      {metrics.approachingBufferCount > 0 && (
         <Link prefetch={false} href="/admin/products/warning" target="_blank">
-          <Card className="bg-warning/5  rounded-2xl hover:shadow-lg hover:scale-105 transition-all">
+          <Card className="bg-warning/5 rounded-2xl hover:shadow-lg hover:scale-105 transition-all">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium">
                 Approaching Min. Stock
@@ -89,12 +95,12 @@ const DashboardOverviewCards = ({
             </CardContent>
           </Card>
         </Link>
-      ) : null}
+      )}
 
       {/* Below Buffer Stock Alert */}
-      {metrics.belowBufferCount > 0 ? (
+      {metrics.belowBufferCount > 0 && (
         <Link prefetch={false} href="/admin/products/critical" target="_blank">
-          <Card className="bg-destructive/10  rounded-2xl hover:shadow-lg hover:scale-105 transition-all">
+          <Card className="bg-destructive/10 rounded-2xl hover:shadow-lg hover:scale-105 transition-all">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium">
                 Below Min. Stock
@@ -111,7 +117,7 @@ const DashboardOverviewCards = ({
             </CardContent>
           </Card>
         </Link>
-      ) : null}
+      )}
     </div>
   );
 };

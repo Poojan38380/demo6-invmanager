@@ -18,21 +18,30 @@ export default async function WarningProducts() {
 
   const warningProducts = products.filter((product) => {
     const bufferStock = product.bufferStock || 0;
+
+    // Calculate actual stock based on whether product has variants
+    const actualStock = product.hasVariants
+      ? product.productVariants?.reduce(
+          (sum, variant) => sum + variant.variantStock,
+          0
+        ) ?? 0
+      : product.stock || 0;
+
     return (
-      product.stock <= bufferStock * approachingThreshold &&
-      product.stock >= bufferStock
+      actualStock <= bufferStock * approachingThreshold &&
+      actualStock >= bufferStock
     );
   });
 
   return (
-    <Card className="border-none  shadow-none bg-background ">
+    <Card className="border-none shadow-none bg-background">
       <CardHeader>
         <div className="flex items-center">
           <BackButton />
           <CardTitle className="text-warning">Warning Products</CardTitle>
         </div>
         <CardDescription>
-          Products on the verge of becoming critical (stock is approching
+          Products on the verge of becoming critical (stock is approaching
           min.stock)
         </CardDescription>
       </CardHeader>
