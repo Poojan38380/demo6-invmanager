@@ -11,7 +11,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { format, subDays } from "date-fns";
-import { CalendarIcon, X, Search } from "lucide-react";
+import { CalendarIcon, X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 

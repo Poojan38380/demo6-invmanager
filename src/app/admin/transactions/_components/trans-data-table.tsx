@@ -33,7 +33,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -66,6 +65,7 @@ export function TransactionsDataTable<TData, TValue>({
   const [productFilter, setProductFilter] = React.useState<string | null>(null);
 
   const filteredData = React.useMemo(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return data.filter((transaction: any) => {
       const matchesUser = userFilter
         ? transaction.user.username === userFilter
@@ -130,10 +130,12 @@ export function TransactionsDataTable<TData, TValue>({
 
   // Extract unique values for filters
   const uniqueUsers = Array.from(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     new Set(data.map((transaction: any) => transaction.user.username))
   );
   const uniqueCustomerSuppliers = Array.from(
     new Set(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       data.flatMap((transaction: any) =>
         [
           transaction.customer?.companyName,
@@ -143,9 +145,11 @@ export function TransactionsDataTable<TData, TValue>({
     )
   );
   const uniqueActions = Array.from(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     new Set(data.map((transaction: any) => transaction.action))
   );
   const uniqueProducts = Array.from(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     new Set(data.map((transaction: any) => transaction.product.name))
   );
 
