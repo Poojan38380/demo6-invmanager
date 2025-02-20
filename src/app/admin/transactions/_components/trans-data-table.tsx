@@ -26,7 +26,15 @@ import { Input } from "@/components/ui/input";
 
 import { DataTableViewOptions } from "@/components/ui/data-table/data-table-column-visibility";
 import { DataTablePagination } from "@/components/ui/data-table/data-table-pagination";
-
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@/components/ui/button";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
@@ -49,8 +57,41 @@ export function TransactionsDataTable<TData, TValue>({
   const [rowSelection, setRowSelection] = React.useState({});
   const [globalFilter, setGlobalFilter] = React.useState("");
 
+  // New filter states
+  const [userFilter, setUserFilter] = React.useState<string | null>(null);
+  const [customerSupplierFilter, setCustomerSupplierFilter] = React.useState<
+    string | null
+  >(null);
+  const [actionFilter, setActionFilter] = React.useState<string | null>(null);
+  const [productFilter, setProductFilter] = React.useState<string | null>(null);
+
+  const filteredData = React.useMemo(() => {
+    return data.filter((transaction: any) => {
+      const matchesUser = userFilter
+        ? transaction.user.username === userFilter
+        : true;
+      const matchesCustomerSupplier = customerSupplierFilter
+        ? transaction.customer?.companyName === customerSupplierFilter ||
+          transaction.vendor?.companyName === customerSupplierFilter
+        : true;
+      const matchesAction = actionFilter
+        ? transaction.action === actionFilter
+        : true;
+      const matchesProduct = productFilter
+        ? transaction.product.name === productFilter
+        : true;
+
+      return (
+        matchesUser &&
+        matchesCustomerSupplier &&
+        matchesAction &&
+        matchesProduct
+      );
+    });
+  }, [data, userFilter, customerSupplierFilter, actionFilter, productFilter]);
+
   const table = useReactTable({
-    data,
+    data: filteredData,
     columns,
     initialState: {
       pagination: {
@@ -87,14 +128,100 @@ export function TransactionsDataTable<TData, TValue>({
     },
   });
 
+  // Extract unique values for filters
+  const uniqueUsers = Array.from(
+    new Set(data.map((transaction: any) => transaction.user.username))
+  );
+  const uniqueCustomerSuppliers = Array.from(
+    new Set(
+      data.flatMap((transaction: any) =>
+        [
+          transaction.customer?.companyName,
+          transaction.vendor?.companyName,
+        ].filter(Boolean)
+      )
+    )
+  );
+  const uniqueActions = Array.from(
+    new Set(data.map((transaction: any) => transaction.action))
+  );
+  const uniqueProducts = Array.from(
+    new Set(data.map((transaction: any) => transaction.product.name))
+  );
+
   return (
     <div>
-      <div className="flex items-center justify-between pb-4 gap-2 ">
+      <div className="flex gap-2 overflow-x-auto mb-4">
+        <Button
+          onClick={() => {
+            setUserFilter(null);
+            setCustomerSupplierFilter(null);
+            setActionFilter(null);
+            setProductFilter(null);
+          }}
+          variant="outline"
+          className="ml-2 rounded-full"
+        >
+          Clear Filters
+        </Button>
+        <Select onValueChange={setUserFilter}>
+          <SelectTrigger className="w-min rounded-full ">
+            <SelectValue placeholder="User" />
+          </SelectTrigger>
+          <SelectContent>
+            {uniqueUsers.map((user) => (
+              <SelectItem key={user} value={user}>
+                {user}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
+        <Select onValueChange={setCustomerSupplierFilter}>
+          <SelectTrigger className="w-min rounded-full">
+            <SelectValue placeholder="Customer/Supplier" />
+          </SelectTrigger>
+          <SelectContent>
+            {uniqueCustomerSuppliers.map((name) => (
+              <SelectItem key={name} value={name}>
+                {name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
+        <Select onValueChange={setActionFilter}>
+          <SelectTrigger className="w-min rounded-full">
+            <SelectValue placeholder="Action" />
+          </SelectTrigger>
+          <SelectContent>
+            {uniqueActions.map((action) => (
+              <SelectItem key={action} value={action}>
+                {action}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
+        <Select onValueChange={setProductFilter}>
+          <SelectTrigger className="w-min rounded-full">
+            <SelectValue placeholder="Product" />
+          </SelectTrigger>
+          <SelectContent>
+            {uniqueProducts.map((product) => (
+              <SelectItem key={product} value={product}>
+                {product}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+      <div className="flex items-center justify-between pb-4 gap-2">
         <Input
-          placeholder="Search in transactions..."
+          placeholder="Search transactions..."
           value={globalFilter}
           onChange={(event) => setGlobalFilter(event.target.value)}
-          className="max-w-60 rounded-full bg-card shadow-sm"
+          className="max-w-52 rounded-full bg-card shadow-sm"
         />
         <DataTableViewOptions table={table} />
       </div>
