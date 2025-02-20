@@ -169,3 +169,12 @@ model Warehouse {
 
   products Product[]
 }
+
+model Settings {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  customerMandatory Boolean @default(false)
+  supplierMandatory Boolean @default(false)
+}

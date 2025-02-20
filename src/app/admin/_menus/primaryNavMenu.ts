@@ -91,6 +91,10 @@ export const PrimaryNavItems: NavItem[] = [
         title: "Units",
         url: "/admin/settings/units",
       },
+      {
+        title: "Preferences",
+        url: "/admin/settings/preferences",
+      },
     ],
   },
 ];

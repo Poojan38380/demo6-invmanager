@@ -29,8 +29,8 @@ export async function deleteTransaction({
           id: transactionId,
         },
         include: {
-          product: { select: { name: true } },
-          productVariant: { select: { variantName: true } },
+          product: { select: { name: true, stock: true } },
+          productVariant: { select: { variantName: true, variantStock: true } },
         },
       }),
     ]);
@@ -41,6 +41,21 @@ export async function deleteTransaction({
 
     if (!transaction) {
       throw new Error("Transaction not found.");
+    }
+
+    if (transaction.productVariantId && transaction.productVariant) {
+      const stockAfter =
+        transaction.productVariant.variantStock - transaction.stockChange;
+      await prisma.productVariant.update({
+        where: { id: transaction.productVariantId },
+        data: { variantStock: stockAfter },
+      });
+    } else {
+      const stockAfter = transaction.product.stock - transaction.stockChange;
+      await prisma.product.update({
+        where: { id: transaction.productId },
+        data: { stock: stockAfter },
+      });
     }
 
     await prisma.transaction.delete({
