@@ -1,4 +1,4 @@
-import { LucideIcon, Store } from "lucide-react";
+import { Download, LucideIcon, Store } from "lucide-react";
 
 interface NavItem {
   title: string;
@@ -7,6 +7,11 @@ interface NavItem {
 }
 
 export const BottomNavItems: NavItem[] = [
+  {
+    title: "Export Data",
+    url: "/admin/export",
+    icon: Download,
+  },
   {
     title: "View Store",
     url: "/",

@@ -97,7 +97,6 @@ model Transaction {
 
 enum TransactionAction {
   CREATED
-  UPDATED
   DELETED
   INCREASED
   DECREASED
