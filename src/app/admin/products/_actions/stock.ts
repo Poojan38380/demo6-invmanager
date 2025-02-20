@@ -23,7 +23,7 @@ export async function updateProductStock({
 }) {
   const session = await auth();
   if (!session?.user) {
-    throw new Error("Unauthorized. Login first.");
+    return { success: false, error: "Unauthorized. Login first." };
   }
   try {
     if (
@@ -31,23 +31,40 @@ export async function updateProductStock({
       data.productId.length !== 24 ||
       !/^[a-fA-F0-9]{24}$/.test(data.productId)
     ) {
-      throw new Error("Invalid Product ID.");
+      return { success: false, error: "Invalid Product ID." };
     }
 
     const updaterId = session.user.id;
 
     if (!updaterId) return redirect("/login");
-    const [updater, product] = await Promise.all([
+    const [updater, product, settings] = await Promise.all([
       prisma.user.findUnique({ where: { id: updaterId } }),
       prisma.product.findUnique({ where: { id: data.productId } }),
+      prisma.settings.findFirst(),
     ]);
 
     if (!updater) {
-      throw new Error("User not found.");
+      return { success: false, error: "User not found." };
     }
 
     if (!product) {
-      throw new Error("Product not found.");
+      return { success: false, error: "Product not found." };
+    }
+
+    if (settings) {
+      if (data.change < 0 && settings.customerMandatory && !data.customerId) {
+        return {
+          success: false,
+          error: "Customer information is required for stock reduction.",
+        };
+      }
+
+      if (data.change > 0 && settings.supplierMandatory && !data.vendorId) {
+        return {
+          success: false,
+          error: "Supplier information is required for stock addition.",
+        };
+      }
     }
 
     const stockBefore = product.stock;
@@ -130,8 +147,9 @@ ${vendor ? `-Supplier: ${vendor.companyName}` : ""}
 
     return { success: true, productId: data.productId };
   } catch (error) {
+    console.error("Error in updateProductStock server action: ", error);
     if (error instanceof Error) {
-      console.error("Error in updateProductStock server action: ", error.stack);
+      return { success: false, error: error.message };
     }
     return { success: false, error: "Failed to update product stock" };
   }
@@ -152,7 +170,7 @@ export async function updateProductVariantStock({
 }) {
   const session = await auth();
   if (!session?.user) {
-    throw new Error("Unauthorized. Login first.");
+    return { success: false, error: "Unauthorized. Login first." };
   }
 
   try {
@@ -161,14 +179,14 @@ export async function updateProductVariantStock({
       data.productId.length !== 24 ||
       !/^[a-fA-F0-9]{24}$/.test(data.productId)
     ) {
-      throw new Error("Invalid Product ID.");
+      return { success: false, error: "Invalid Product ID." };
     }
 
     const updaterId = session.user.id;
     if (!updaterId) return redirect("/login");
 
     // Optimize database queries by including only necessary fields
-    const [updater, variants, product] = await Promise.all([
+    const [updater, variants, product, settings] = await Promise.all([
       prisma.user.findUnique({
         where: { id: updaterId },
         select: { id: true, username: true },
@@ -181,17 +199,26 @@ export async function updateProductVariantStock({
         where: { id: data.productId },
         select: { id: true, name: true, unit: true },
       }),
+      prisma.settings.findFirst(),
     ]);
 
     // Validate entities
     if (!updater || !product || !variants.length) {
-      throw new Error(
-        !updater
-          ? "User not found."
-          : !product
-          ? "Product not found."
-          : "Product Variants not found."
-      );
+      if (!updater) return { success: false, error: "User not found." };
+      else if (!product) return { success: false, error: "Product not found." };
+      else return { success: false, error: "Product Variants not found." };
+    }
+
+    if (settings) {
+      if (data.change < 0 && settings.customerMandatory && !data.customerId) {
+        throw new Error(
+          "Customer information is required for stock reduction."
+        );
+      }
+
+      if (data.change > 0 && settings.supplierMandatory && !data.vendorId) {
+        throw new Error("Supplier information is required for stock addition.");
+      }
     }
 
     const variantUpdates = variants.map((variant) => ({
@@ -303,11 +330,9 @@ ${vendor ? `-Supplier: ${vendor.companyName}` : ""}
 
     return { success: true, variantId: data.variantId };
   } catch (error) {
+    console.error("Error in updateProductVariantStock server action: ", error);
     if (error instanceof Error) {
-      console.error(
-        "Error in updateProductVariantStock server action: ",
-        error.stack
-      );
+      return { success: false, error: error.message };
     }
     return { success: false, error: "Failed to update product variant stock" };
   }
