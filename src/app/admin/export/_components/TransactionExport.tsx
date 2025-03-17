@@ -60,6 +60,7 @@ const TransactionExport = ({
     to: undefined,
   });
 
+  const [positiveStockChange, setPositiveStockChange] = useState(false);
   const [selectedProducts, setSelectedProducts] = useState<string[]>([]);
   const [selectedCustomers, setSelectedCustomers] = useState<string[]>([]);
   const [selectedVendors, setSelectedVendors] = useState<string[]>([]);
@@ -168,7 +169,7 @@ const TransactionExport = ({
       t.product.name,
       t.productVariant?.variantName || "-",
       t.stockBefore,
-      t.stockChange,
+      positiveStockChange ? Math.abs(t.stockChange) : t.stockChange,
       t.stockAfter,
       t.user.username,
       t.customer?.companyName || "-",
@@ -528,6 +529,17 @@ const TransactionExport = ({
                 </Button>
               </Badge>
             ))}
+          </div>
+          <div className="flex items-center space-x-2 mt-2">
+            <input
+              type="checkbox"
+              id="positive-stock-change"
+              checked={positiveStockChange}
+              onChange={(e) => setPositiveStockChange(e.target.checked)}
+            />
+            <label htmlFor="positive-stock-change">
+              Show all stock changes as positive values
+            </label>
           </div>
           <div>
             <Button
