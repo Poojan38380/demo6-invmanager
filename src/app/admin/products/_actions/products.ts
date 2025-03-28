@@ -31,9 +31,7 @@ async function getProductsforTable(): Promise<ProductWithOneImage[]> {
 
   const products = await prisma.product.findMany({
     orderBy: { updatedAt: "desc" },
-    select: {
-      id: true,
-      updatedAt: true,
+    include: {
       vendor: {
         select: { companyName: true },
       },
@@ -42,7 +40,6 @@ async function getProductsforTable(): Promise<ProductWithOneImage[]> {
         take: 1,
         select: { url: true },
       },
-      productVariants: true,
       transactions: {
         where: {
           action: "DECREASED",
@@ -54,6 +51,7 @@ async function getProductsforTable(): Promise<ProductWithOneImage[]> {
           stockChange: true,
         },
       },
+      productVariants: true,
       _count: {
         select: {
           transactions: { where: { action: { not: "CREATED" } } },
@@ -62,23 +60,19 @@ async function getProductsforTable(): Promise<ProductWithOneImage[]> {
     },
   });
 
-  // Use native JS reduce to calculate sales and transaction count
-  return products.map((product) => {
+  const productsWithSales = products.map((product) => {
     const lastMonthSales = product.transactions.reduce(
       (total, transaction) => total + Math.abs(transaction.stockChange),
       0
     );
-
-    // Destructure to create a clean object without Prisma proxy
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { transactions, _count, ...rest } = product;
-
     return {
-      ...rest,
+      ...product,
       lastMonthSales,
-      specialTransactionCount: _count.transactions,
-    } as ProductWithOneImage;
+      specialTransactionCount: product._count.transactions,
+    };
   });
+
+  return productsWithSales;
 }
 
 export const getCachedProductsforTable = cache(
