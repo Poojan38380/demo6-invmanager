@@ -230,6 +230,16 @@ const ProductActionsCell = ({ product }: { product: ProductWithOneImage }) => {
                 <span>Transactions</span>
               </DropdownMenuItem>
             </Link>
+            <Link
+              href={`/admin/products/report/${encodeURLid(product.id)}`}
+              prefetch={false}
+              title="View Report"
+            >
+              <DropdownMenuItem>
+                <ChartNoAxesCombined />
+                <span>Report</span>
+              </DropdownMenuItem>
+            </Link>
           </DropdownMenuGroup>
           {product.specialTransactionCount === 0 && (
             <>
