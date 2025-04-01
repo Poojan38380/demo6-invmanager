@@ -12,7 +12,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import {
   XAxis,
-  YAxis,
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
@@ -61,12 +60,19 @@ export default function ProductReport({
   const isLowStock = product.stock < (product.bufferStock || 0);
 
   const formatDateTime = (date: Date) => {
-    return new Date(date).toLocaleString("en-US", {
+    return new Date(date).toLocaleString("en-IN", {
       year: "numeric",
       month: "short",
       day: "numeric",
       hour: "2-digit",
       minute: "2-digit",
+    });
+  };
+  const formatDate = (date: Date) => {
+    return new Date(date).toLocaleString("en-IN", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
     });
   };
 
@@ -108,7 +114,7 @@ export default function ProductReport({
 
   // Stock movement data for line chart
   const stockMovementData = filteredTransactions.map((t) => ({
-    date: new Date(t.createdAt).toLocaleDateString(),
+    date: formatDate(new Date(t.createdAt)),
     stock: t.stockAfter,
   }));
 
@@ -801,11 +807,10 @@ export default function ProductReport({
                               <BarChart data={sortedData}>
                                 <CartesianGrid strokeDasharray="3 3" />
                                 <XAxis dataKey="month" />
-                                <YAxis />
                                 <Tooltip />
                                 <Bar
                                   dataKey="usage"
-                                  name="Units Used"
+                                  name="Demand"
                                   fill="hsl(var(--chart-1))"
                                 />
                               </BarChart>
@@ -915,7 +920,6 @@ export default function ProductReport({
                         tick={{ fontSize: 12 }}
                         tickFormatter={(value) => value.split(" ")[0]}
                       />
-                      <YAxis />
                       <Tooltip />
                       <Area
                         type="monotone"
@@ -941,7 +945,7 @@ export default function ProductReport({
             </Card>
 
             {/* NOTE: Recent transactions */}
-            <Card className="w-full">
+            <Card className="w-full border-none shadow-none bg-background">
               <CardHeader>
                 <CardTitle>Recent Transactions</CardTitle>
               </CardHeader>
