@@ -35,6 +35,7 @@ export type ProductReportDataType = {
   categoryId: string | null;
 
   transactions: {
+    id: string;
     action: "CREATED" | "DELETED" | "INCREASED" | "DECREASED";
     createdAt: Date;
     note: string | null;
@@ -61,6 +62,28 @@ export type ProductReportDataType = {
     profilePic: string;
   };
 };
+
+export type ReportTransactionsType = {
+  id: string;
+  action: "CREATED" | "DELETED" | "INCREASED" | "DECREASED";
+  createdAt: Date;
+  note: string | null;
+  stockAfter: number;
+  stockBefore: number;
+  stockChange: number;
+  user: {
+    username: string;
+  };
+  userId: string;
+  vendor: {
+    companyName: string;
+  } | null;
+  customer: {
+    companyName: string;
+  } | null;
+  vendorId: string | null;
+  customerId: string | null;
+}[];
 
 export async function GetProductReportData(
   productId: string
@@ -98,6 +121,7 @@ export async function GetProductReportData(
 
       transactions: {
         select: {
+          id: true,
           action: true,
           createdAt: true,
           note: true,

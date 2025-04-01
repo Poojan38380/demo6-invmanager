@@ -21,11 +21,11 @@ export default async function ProductReportPage({
   const product = await GetProductReportData(decodedId);
   if (!product) return notFound();
   return (
-    <Card className="border-none shadow-none bg-background">
+    <Card className="border-none shadow-none bg-background ">
       <CardHeader className="py-4 flex flex-row  items-center gap-4 justify-between">
-        <BackButton title={`${product.name} : Product report`} />
+        <BackButton title={`Product report`} />
       </CardHeader>
-      <CardContent>
+      <CardContent className="max-425:p-0">
         <ProductReport product={product} />
       </CardContent>
     </Card>
