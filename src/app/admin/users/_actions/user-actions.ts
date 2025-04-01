@@ -89,3 +89,68 @@ export async function addUser({
     return { success: false, error: `Failed to create user : ${error}` };
   }
 }
+
+export async function changePassword({
+  userId,
+  currentPassword,
+  newPassword,
+}: {
+  userId: string;
+  currentPassword: string;
+  newPassword: string;
+}) {
+  const session = await auth();
+  if (!session?.user) {
+    throw new Error("Unauthorized");
+  }
+
+  // Ensure either the user is changing their own password or an admin is doing it
+  if (session.user.id !== userId) {
+    throw new Error("Unauthorized: You can only change your own password");
+  }
+
+  if (!currentPassword || !newPassword) {
+    throw new Error("Current password and new password are required");
+  }
+
+  try {
+    // Find the user
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    // Verify current password
+    const isPasswordValid = await bcrypt.compare(
+      currentPassword,
+      user.password
+    );
+    if (!isPasswordValid) {
+      throw new Error("Current password is incorrect");
+    }
+
+    // Hash the new password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+    // Update the user's password
+    await prisma.user.update({
+      where: { id: userId },
+      data: { password: hashedPassword },
+    });
+
+    // Send notification about password change
+    const notification = `.\n\nUser: ${user.username} changed their password\n\n.`;
+    await sendTelegramMessage(notification);
+
+    return { success: true, message: "Password updated successfully" };
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error("Error in changePassword server action: ", error.stack);
+    }
+    return { success: false, error: `Failed to update password: ${error}` };
+  }
+}
