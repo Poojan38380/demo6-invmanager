@@ -37,15 +37,25 @@ import {
   AlertCircle,
   Clock,
   User,
+  CalendarIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Calendar as CalenderComponent } from "@/components/ui/calendar";
+import { DateRange } from "react-day-picker";
+import { format } from "date-fns";
 
 export default function ProductReport({
   product,
 }: {
   product: ProductReportDataType;
 }) {
-  const [timeRange, setTimeRange] = useState("30");
+  const [timeRange, setTimeRange] = useState<string | DateRange>("all");
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
 
   // Calculate if stock level is below buffer
   const isLowStock = product.stock < (product.bufferStock || 0);
@@ -63,7 +73,16 @@ export default function ProductReport({
   // Format transactions for various charts
   const filteredTransactions = product.transactions
     .filter((t) => {
-      if (timeRange === "7") {
+      if (typeof timeRange === "object" && timeRange.from) {
+        const txDate = new Date(t.createdAt);
+        if (timeRange.to) {
+          // Range with from and to dates
+          return txDate >= timeRange.from && txDate <= timeRange.to;
+        } else {
+          // Only from date
+          return txDate >= timeRange.from;
+        }
+      } else if (timeRange === "7") {
         return (
           new Date(t.createdAt) > new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
         );
@@ -77,6 +96,8 @@ export default function ProductReport({
           new Date(t.createdAt) >
           new Date(Date.now() - 90 * 24 * 60 * 60 * 1000)
         );
+      } else if (timeRange === "all") {
+        return true;
       }
       return true;
     })
@@ -114,27 +135,11 @@ export default function ProductReport({
     },
     {} as { [key: string]: number }
   );
-  console.log("Transaction types:", transactionTypes);
 
   const transactionTypesData = Object.keys(transactionTypes).map((key) => ({
     name: key,
     value: transactionTypes[key],
   }));
-
-  // Monthly usage data for bar chart
-  const monthlyUsage = filteredTransactions.reduce(
-    (acc: { [key: string]: number }, transaction) => {
-      const month = new Date(transaction.createdAt).toLocaleString("default", {
-        month: "short",
-      });
-      if (transaction.action === "DECREASED") {
-        acc[month] = (acc[month] || 0) + transaction.stockChange;
-      }
-      return acc;
-    },
-    {} as { [key: string]: number }
-  );
-  console.log("Monthly usage:", monthlyUsage);
 
   // User transaction counts
   const userTransactions = filteredTransactions.reduce(
@@ -145,7 +150,6 @@ export default function ProductReport({
     },
     {} as { [key: string]: number }
   );
-  console.log("User transactions:", userTransactions);
 
   const topUsers = (Object.entries(userTransactions) as [string, number][])
     .sort((a, b) => b[1] - a[1])
@@ -165,13 +169,18 @@ export default function ProductReport({
       (sum, t) => sum + Math.abs(t.stockChange),
       0
     );
-    const daysPeriod = parseInt(timeRange) || 30;
-    console.log(
-      "Calculating daily usage with timeRange:",
-      timeRange,
-      "parsed days:",
-      daysPeriod
-    );
+
+    let daysPeriod = 30;
+    if (typeof timeRange === "string") {
+      daysPeriod = timeRange === "all" ? 365 : Number.parseInt(timeRange) || 30;
+    } else if (timeRange.from && timeRange.to) {
+      // Calculate days between the two dates
+      const diffTime = Math.abs(
+        timeRange.to.getTime() - timeRange.from.getTime()
+      );
+      daysPeriod = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    }
+
     const avgDailyUsage = totalDecrease / daysPeriod;
 
     if (avgDailyUsage === 0) return "N/A";
@@ -181,7 +190,7 @@ export default function ProductReport({
   };
 
   const daysCalcResult = calculateDaysRemaining();
-  console.log("Days remaining calculation:", daysCalcResult);
+
   const [daysRemaining, avgDailyUsage] = Array.isArray(daysCalcResult)
     ? daysCalcResult
     : ["N/A", 0];
@@ -205,8 +214,8 @@ export default function ProductReport({
   return (
     <div className="space-y-6">
       {/* Header Section */}
-      <div className="flex flex-col lg:flex-row gap-4 justify-between">
-        <div>
+      <div className="flex  flex-col items-center lg:flex-row gap-4 justify-between">
+        <div className="px-4">
           <h1 className="text-3xl font-bold mb-2">{product.name}</h1>
           <div className="flex flex-wrap gap-2 mb-4">
             {product.SKU && (
@@ -225,9 +234,11 @@ export default function ProductReport({
               </Badge>
             )}
           </div>
-          <p className="text-muted-foreground max-w-2xl">
-            {product.shortDescription || "No description available."}
-          </p>
+          {product.shortDescription && (
+            <p className="text-muted-foreground max-w-2xl">
+              {product.shortDescription}
+            </p>
+          )}
         </div>
 
         <Card className="min-w-60">
@@ -268,30 +279,85 @@ export default function ProductReport({
         </Card>
       </div>
 
-      {/* Time Range Filter */}
-      <div className="flex justify-end mb-4">
-        <div className="border rounded-md p-1">
+      {/* NOTE: Time Range Filter */}
+      <div className="flex justify-end mb-4 max-425:px-4">
+        <div className="border rounded-md p-1 flex flex-wrap gap-1">
           <Button
-            onClick={() => setTimeRange("7")}
-            variant={`${timeRange === "7" ? "default" : "ghost"}`}
-            className={`px-3 py-1 rounded-md `}
+            onClick={() => setTimeRange("all")}
+            className="px-3 py-1 rounded-md"
+            variant={`${timeRange === "all" ? "default" : "ghost"}`}
           >
-            7 Days
+            All Time
           </Button>
-          <Button
-            onClick={() => setTimeRange("30")}
-            variant={`${timeRange === "30" ? "default" : "ghost"}`}
-            className={`px-3 py-1 rounded-md `}
-          >
-            30 Days
-          </Button>
-          <Button
-            onClick={() => setTimeRange("90")}
-            className={`px-3 py-1 rounded-md `}
-            variant={`${timeRange === "90" ? "default" : "ghost"}`}
-          >
-            90 Days
-          </Button>
+          <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
+            <PopoverTrigger asChild>
+              <Button
+                variant={typeof timeRange === "object" ? "default" : "ghost"}
+                className="px-3 py-1 rounded-md flex items-center gap-1"
+              >
+                <CalendarIcon className="h-4 w-4" />
+                {typeof timeRange === "object" && timeRange.from ? (
+                  timeRange.to ? (
+                    <>
+                      {format(timeRange.from, "LLL dd, y")} -{" "}
+                      {format(timeRange.to, "LLL dd, y")}
+                    </>
+                  ) : (
+                    format(timeRange.from, "LLL dd, y")
+                  )
+                ) : (
+                  ""
+                )}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-[300px] mt-1 mx-2" align="start">
+              <div className="flex flex-wrap  gap-2   p-3  border-b ">
+                <Badge
+                  onClick={() => {
+                    setTimeRange("7");
+                    setIsCalendarOpen(false);
+                  }}
+                  variant={`${timeRange === "7" ? "default" : "outline"}`}
+                  className="cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors  "
+                >
+                  Last 7 Days
+                </Badge>
+                <Badge
+                  onClick={() => {
+                    setTimeRange("30");
+                    setIsCalendarOpen(false);
+                  }}
+                  variant={`${timeRange === "30" ? "default" : "outline"}`}
+                  className="cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors  "
+                >
+                  Last 30 Days
+                </Badge>
+                <Badge
+                  onClick={() => {
+                    setTimeRange("90");
+                    setIsCalendarOpen(false);
+                  }}
+                  variant={`${timeRange === "90" ? "default" : "outline"}`}
+                  className="cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors  "
+                >
+                  Last 90 Days
+                </Badge>
+              </div>
+              <CalenderComponent
+                initialFocus
+                mode="range"
+                defaultMonth={new Date()}
+                selected={typeof timeRange === "object" ? timeRange : undefined}
+                onSelect={(range) => {
+                  if (range) setTimeRange(range);
+                }}
+                numberOfMonths={1}
+                disabled={(date) =>
+                  date > new Date() && date < product.createdAt
+                }
+              />
+            </PopoverContent>
+          </Popover>
         </div>
       </div>
 
@@ -473,7 +539,24 @@ export default function ProductReport({
           <div className="grid grid-cols-1  gap-6">
             {/* NOTE: Overview of insights --- turnover, days remaining, stockout incidents*/}
             {(() => {
-              // Calculate stock turnover rate (if possible)
+              const getDaysPeriod = () => {
+                if (typeof timeRange === "string") {
+                  if (timeRange === "all") {
+                    const productAgeMs =
+                      Date.now() - new Date(product.createdAt).getTime();
+                    return Math.ceil(productAgeMs / (1000 * 60 * 60 * 24));
+                  }
+                  return Number.parseInt(timeRange) || 30;
+                }
+                if (timeRange?.from) {
+                  const from = timeRange.from;
+                  const to = timeRange.to || new Date();
+                  const diffTime = Math.abs(to.getTime() - from.getTime());
+                  return Math.ceil(diffTime / (1000 * 60 * 60 * 24)) || 1;
+                }
+                return 30;
+              };
+
               const decreaseTransactions = filteredTransactions.filter(
                 (t) => t.action === "DECREASED"
               );
@@ -484,12 +567,13 @@ export default function ProductReport({
                   (sum, t) => sum + Math.abs(t.stockChange),
                   0
                 );
-                const avgStock = product.stock; // This is simplified, ideally would be average over period
+                const avgStock = product.stock;
 
                 if (avgStock === 0) return null;
 
+                const daysPeriod = getDaysPeriod();
                 const turnover =
-                  (totalDecrease / avgStock) * (365 / parseInt(timeRange));
+                  (totalDecrease / avgStock) * (365 / daysPeriod);
                 return turnover.toFixed(2);
               })();
 
