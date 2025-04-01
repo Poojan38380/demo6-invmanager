@@ -10,6 +10,7 @@ import {
   EllipsisVertical,
   Package,
   Pen,
+  Proportions,
 } from "lucide-react";
 import { ProductWithOneImage } from "./_actions/products";
 import { formatNumber } from "@/lib/formatter";
@@ -236,7 +237,7 @@ const ProductActionsCell = ({ product }: { product: ProductWithOneImage }) => {
               title="View Report"
             >
               <DropdownMenuItem>
-                <ChartNoAxesCombined />
+                <Proportions />
                 <span>Report</span>
               </DropdownMenuItem>
             </Link>
