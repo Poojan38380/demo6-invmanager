@@ -539,7 +539,24 @@ export default function ProductReport({
           <div className="grid grid-cols-1  gap-6">
             {/* NOTE: Overview of insights --- turnover, days remaining, stockout incidents*/}
             {(() => {
-              // Calculate stock turnover rate (if possible)
+              const getDaysPeriod = () => {
+                if (typeof timeRange === "string") {
+                  if (timeRange === "all") {
+                    const productAgeMs =
+                      Date.now() - new Date(product.createdAt).getTime();
+                    return Math.ceil(productAgeMs / (1000 * 60 * 60 * 24));
+                  }
+                  return Number.parseInt(timeRange) || 30;
+                }
+                if (timeRange?.from) {
+                  const from = timeRange.from;
+                  const to = timeRange.to || new Date();
+                  const diffTime = Math.abs(to.getTime() - from.getTime());
+                  return Math.ceil(diffTime / (1000 * 60 * 60 * 24)) || 1;
+                }
+                return 30;
+              };
+
               const decreaseTransactions = filteredTransactions.filter(
                 (t) => t.action === "DECREASED"
               );
@@ -550,12 +567,13 @@ export default function ProductReport({
                   (sum, t) => sum + Math.abs(t.stockChange),
                   0
                 );
-                const avgStock = product.stock; // This is simplified, ideally would be average over period
+                const avgStock = product.stock;
 
                 if (avgStock === 0) return null;
 
+                const daysPeriod = getDaysPeriod();
                 const turnover =
-                  (totalDecrease / avgStock) * (365 / parseInt(timeRange));
+                  (totalDecrease / avgStock) * (365 / daysPeriod);
                 return turnover.toFixed(2);
               })();
 
