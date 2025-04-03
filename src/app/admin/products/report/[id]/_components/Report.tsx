@@ -1135,7 +1135,7 @@ export default function ProductReport({
                     <div>
                       <h3 className="text-lg font-semibold mb-4 flex items-center">
                         <Truck className="w-5 h-5 mr-2" /> Purchased from
-                        Vendors
+                        Suppliers
                       </h3>
                       {sortedVendors.length > 0 ? (
                         <div className="space-y-3">
@@ -1317,7 +1317,7 @@ export default function ProductReport({
 
                     <div>
                       <h3 className="text-lg font-semibold mb-4 flex items-center">
-                        <Truck className="w-5 h-5 mr-2" /> Associated Vendors
+                        <Truck className="w-5 h-5 mr-2" /> Associated Suppliers
                       </h3>
                       {topVendors.length > 0 ? (
                         <div className="space-y-2">
@@ -1335,7 +1335,7 @@ export default function ProductReport({
                         </div>
                       ) : (
                         <p className="text-center text-muted-foreground py-4">
-                          No associated vendors for this time period.
+                          No associated suppliers for this time period.
                         </p>
                       )}
                     </div>
