@@ -221,16 +221,7 @@ const ProductActionsCell = ({ product }: { product: ProductWithOneImage }) => {
                 <span>Edit</span>
               </DropdownMenuItem>
             </Link>
-            <Link
-              href={`/admin/transactions/product/${encodeURLid(product.id)}`}
-              prefetch={false}
-              title="View Transactions"
-            >
-              <DropdownMenuItem>
-                <ChartNoAxesCombined />
-                <span>Transactions</span>
-              </DropdownMenuItem>
-            </Link>
+
             <Link
               href={`/admin/products/report/${encodeURLid(product.id)}`}
               prefetch={false}
@@ -239,6 +230,16 @@ const ProductActionsCell = ({ product }: { product: ProductWithOneImage }) => {
               <DropdownMenuItem>
                 <Proportions />
                 <span>Report</span>
+              </DropdownMenuItem>
+            </Link>
+            <Link
+              href={`/admin/transactions/product/${encodeURLid(product.id)}`}
+              prefetch={false}
+              title="View Transactions"
+            >
+              <DropdownMenuItem>
+                <ChartNoAxesCombined />
+                <span>Transactions</span>
               </DropdownMenuItem>
             </Link>
           </DropdownMenuGroup>
