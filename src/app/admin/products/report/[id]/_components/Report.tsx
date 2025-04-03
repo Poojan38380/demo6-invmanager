@@ -1045,7 +1045,143 @@ export default function ProductReport({
 
         {/* NOTE: Transaction Analysis */}
         <TabsContent value="transactions" className="space-y-6 mt-6">
+          {/* NOTE: Transaction Quantities */}
+          <Card className="col-span-1 md:col-span-2">
+            {/* <CardHeader>
+              <CardTitle>Transaction Quantities</CardTitle>
+              <CardDescription>
+                Units sold to customers and purchased from vendors
+              </CardDescription>
+            </CardHeader> */}
+            <CardContent className="mt-6">
+              {(() => {
+                // Calculate quantities by vendor and customer
+                const vendorQuantities: Record<string, number> = {};
+                const customerQuantities: Record<string, number> = {};
+
+                filteredTransactions.forEach((t) => {
+                  // Track quantities added by vendors (INCREASED transactions)
+                  if (t.action === "INCREASED" && t.vendorId && t.vendor) {
+                    vendorQuantities[t.vendor.companyName] =
+                      (vendorQuantities[t.vendor.companyName] || 0) +
+                      t.stockChange;
+                  }
+
+                  // Track quantities decreased for customers (DECREASED transactions)
+                  if (t.action === "DECREASED" && t.customerId && t.customer) {
+                    customerQuantities[t.customer.companyName] =
+                      (customerQuantities[t.customer.companyName] || 0) +
+                      Math.abs(t.stockChange);
+                  }
+                });
+
+                const sortedVendors = Object.entries(vendorQuantities)
+                  .sort((a, b) => b[1] - a[1])
+                  .slice(0, 5)
+                  .map(([name, quantity]) => ({ name, quantity }));
+
+                const sortedCustomers = Object.entries(customerQuantities)
+                  .sort((a, b) => b[1] - a[1])
+                  .slice(0, 5)
+                  .map(([name, quantity]) => ({ name, quantity }));
+
+                return (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* Customer quantities */}
+                    <div>
+                      <h3 className="text-lg font-semibold mb-4 flex items-center">
+                        <Users className="w-5 h-5 mr-2" /> Sold to Customers
+                      </h3>
+                      {sortedCustomers.length > 0 ? (
+                        <div className="space-y-3">
+                          {sortedCustomers.map((customer, idx) => (
+                            <div key={idx} className="p-3 border rounded-lg">
+                              <div className="flex justify-between items-center">
+                                <span className="font-medium">
+                                  {customer.name}
+                                </span>
+                                <span className="text-red-600 font-semibold">
+                                  {customer.quantity} {product.unit}
+                                </span>
+                              </div>
+                              <div className="mt-2 w-full bg-gray-200 rounded-full h-2">
+                                <div
+                                  className="bg-red-500 h-2 rounded-full"
+                                  style={{
+                                    width: `${Math.min(
+                                      100,
+                                      (customer.quantity /
+                                        Math.max(
+                                          ...sortedCustomers.map(
+                                            (c) => c.quantity
+                                          )
+                                        )) *
+                                        100
+                                    )}%`,
+                                  }}
+                                />
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="text-center text-muted-foreground py-4">
+                          No customer sales data for this time period.
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Vendor quantities */}
+                    <div>
+                      <h3 className="text-lg font-semibold mb-4 flex items-center">
+                        <Truck className="w-5 h-5 mr-2" /> Purchased from
+                        Vendors
+                      </h3>
+                      {sortedVendors.length > 0 ? (
+                        <div className="space-y-3">
+                          {sortedVendors.map((vendor, idx) => (
+                            <div key={idx} className="p-3 border rounded-lg">
+                              <div className="flex justify-between items-center">
+                                <span className="font-medium">
+                                  {vendor.name}
+                                </span>
+                                <span className="text-green-600 font-semibold">
+                                  {vendor.quantity} {product.unit}
+                                </span>
+                              </div>
+                              <div className="mt-2 w-full bg-gray-200 rounded-full h-2">
+                                <div
+                                  className="bg-green-500 h-2 rounded-full"
+                                  style={{
+                                    width: `${Math.min(
+                                      100,
+                                      (vendor.quantity /
+                                        Math.max(
+                                          ...sortedVendors.map(
+                                            (v) => v.quantity
+                                          )
+                                        )) *
+                                        100
+                                    )}%`,
+                                  }}
+                                />
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="text-center text-muted-foreground py-4">
+                          No vendor purchase data for this time period.
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                );
+              })()}
+            </CardContent>
+          </Card>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* NOTE: Transaction Type Breakdown */}
             <Card>
               <CardHeader>
                 <CardTitle>Transaction Type Breakdown</CardTitle>
@@ -1080,6 +1216,8 @@ export default function ProductReport({
                 </div>
               </CardContent>
             </Card>
+
+            {/* NOTE: Most Active Users */}
 
             <Card>
               <CardHeader>
@@ -1118,7 +1256,7 @@ export default function ProductReport({
               </CardContent>
             </Card>
           </div>
-
+          {/* NOTE: Associated Partners */}
           <Card>
             <CardHeader>
               <CardTitle>Associated Partners</CardTitle>
