@@ -19,7 +19,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 type Transaction = {
   id: string;
   createdAt: Date;
-  action: "CREATED" | "DELETED" | "INCREASED" | "DECREASED";
+  action: "CREATED" | "DELETED" | "INCREASED" | "DECREASED" | "RETURNED";
   stockBefore: number;
   stockChange: number;
   stockAfter: number;

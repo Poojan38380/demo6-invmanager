@@ -21,6 +21,7 @@ model User {
 
   transactions Transaction[]
   products     Product[]     @relation("createdProducts")
+  Return       Return[]
 }
 
 model Product {
@@ -56,6 +57,7 @@ model Product {
   transactions    Transaction[]
   productImages   ProductImage[]
   productVariants ProductVariant[] // New relation for variants
+  Return          Return[]
 }
 
 model ProductVariant {
@@ -69,6 +71,7 @@ model ProductVariant {
   productId String  @db.ObjectId
 
   transactions Transaction[]
+  Return       Return[]
 }
 
 model Transaction {
@@ -99,6 +102,7 @@ enum TransactionAction {
   CREATED
   DELETED
   INCREASED
+  RETURNED
   DECREASED
 }
 
@@ -115,6 +119,7 @@ model Customer {
   address       String?
 
   transactions Transaction[]
+  Return       Return[]
 }
 
 model Vendor {
@@ -176,4 +181,23 @@ model Settings {
 
   customerMandatory Boolean @default(false)
   supplierMandatory Boolean @default(false)
+}
+
+model Return {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime @default(now())
+  returnQty Float
+
+  returnReason String?
+
+  user      User    @relation(fields: [userId], references: [id])
+  userId    String  @db.ObjectId
+  product   Product @relation(fields: [productId], references: [id])
+  productId String  @db.ObjectId
+
+  customer   Customer? @relation(fields: [customerId], references: [id])
+  customerId String?   @db.ObjectId
+
+  productVariant   ProductVariant? @relation(fields: [productVariantId], references: [id])
+  productVariantId String?         @db.ObjectId
 }
