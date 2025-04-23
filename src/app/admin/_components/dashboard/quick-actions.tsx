@@ -1,7 +1,14 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Plus, Package, TrendingUp, Users, Truck } from "lucide-react";
+import {
+  Plus,
+  Package,
+  TrendingUp,
+  Users,
+  Truck,
+  GitPullRequestCreateArrowIcon,
+} from "lucide-react";
 import Link from "next/link";
 import ShareButton from "@/components/share-button";
 
@@ -48,6 +55,20 @@ const QuickActions = () => {
       icon: Truck,
       color: "text-orange-600",
       bgColor: "bg-orange-100",
+    },
+    {
+      title: "File a Return",
+      href: "/admin/products/returns/file-new",
+      icon: GitPullRequestCreateArrowIcon,
+      color: "text-red-600",
+      bgColor: "bg-red-100",
+    },
+    {
+      title: "All Returns",
+      href: "/admin/products/returns",
+      icon: GitPullRequestCreateArrowIcon,
+      color: "text-yellow-7",
+      bgColor: "bg-yellow-100",
     },
   ];
 
