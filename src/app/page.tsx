@@ -91,6 +91,10 @@ const pricingPlans = [
   },
 ];
 
+// Add free trial messaging
+const freeTrialMessage =
+  "Try InvManager FREE for 30 days - No credit card required!";
+
 export default function LandingPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
@@ -251,12 +255,11 @@ export default function LandingPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.8, duration: 0.5 }}
             >
-              Powerful, intuitive, and comprehensive inventory management
-              solution for businesses of all sizes.
+              {freeTrialMessage}
             </motion.p>
             <motion.div
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1, duration: 0.5 }}
@@ -265,9 +268,9 @@ export default function LandingPage() {
               <motion.div
                 className="absolute -inset-1 rounded-lg bg-gradient-to-r from-indigo-500 to-purple-500 opacity-75 blur-sm"
                 animate={{
-                  opacity: [0.5, 0.8, 0.5],
+                  opacity: [0.5, 0.7, 0.5],
                 }}
-                transition={{ duration: 2, repeat: Infinity }}
+                transition={{ duration: 3, repeat: Infinity }}
               />
               <Link
                 href="https://wa.me/+918849779702"
@@ -276,22 +279,22 @@ export default function LandingPage() {
               >
                 <motion.span
                   animate={{
-                    x: [0, 5, 0],
+                    x: [0, 3, 0],
                   }}
                   transition={{
                     repeat: Infinity,
-                    duration: 1.5,
+                    duration: 2,
                   }}
                 >
-                  Call Now for a FREE Demo
+                  Start Your FREE 30-Day Trial
                 </motion.span>
                 <motion.div
                   animate={{
-                    x: [0, 5, 0],
+                    x: [0, 3, 0],
                   }}
                   transition={{
                     repeat: Infinity,
-                    duration: 1.5,
+                    duration: 2,
                   }}
                 >
                   <ArrowRight className="ml-2 h-5 w-5" />
@@ -719,12 +722,13 @@ export default function LandingPage() {
                   ))}
                 </ul>
                 <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
                   className="relative z-10"
                 >
                   <Link
-                    href="#contact"
+                    href="https://wa.me/+918849779702"
+                    target="_blank"
                     className={`block w-full text-center px-6 py-3 rounded-md font-medium relative overflow-hidden group ${
                       plan.popular
                         ? "bg-indigo-600 text-white hover:bg-indigo-700"
@@ -751,7 +755,7 @@ export default function LandingPage() {
                       />
                     )}
                     <span className="relative z-10 flex items-center justify-center">
-                      Contact Us
+                      Start Your FREE Demo
                       <motion.span
                         animate={{ x: [0, 3, 0] }}
                         transition={{ repeat: Infinity, duration: 1.5 }}
@@ -949,66 +953,40 @@ export default function LandingPage() {
       {/* CTA Section */}
       <section className="py-20 bg-gradient-to-br from-indigo-600 via-indigo-700 to-purple-700 relative overflow-hidden">
         <div className="absolute inset-0 overflow-hidden">
-          {/* Animated gradient overlay */}
+          {/* Simplified animated gradient overlay */}
           <div className="absolute inset-0 opacity-20">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.15),transparent_75%)]"></div>
           </div>
 
-          {/* Animated circles */}
+          {/* Simplified animated circles */}
           <motion.div
             className="absolute right-0 top-0 h-40 w-40 bg-white rounded-full opacity-20"
             style={{ top: "10%", right: "5%" }}
             animate={{
-              scale: [0.9, 1.3, 0.9],
-              y: [0, -20, 0],
-              x: [0, 15, 0],
+              scale: [1, 1.2, 1],
+              y: [0, -10, 0],
             }}
             transition={{
               repeat: Infinity,
-              duration: 15,
+              duration: 8,
+              ease: "easeInOut",
             }}
           />
           <motion.div
             className="absolute left-0 bottom-0 h-60 w-60 bg-white rounded-full opacity-10"
             style={{ bottom: "5%", left: "5%" }}
             animate={{
-              scale: [1.1, 0.8, 1.1],
-              y: [0, 20, 0],
-              x: [0, -15, 0],
+              scale: [1, 0.9, 1],
+              y: [0, 10, 0],
             }}
             transition={{
               repeat: Infinity,
-              duration: 18,
+              duration: 10,
+              ease: "easeInOut",
             }}
           />
 
-          {/* Animated dots pattern */}
-          <svg
-            className="absolute inset-0 w-full h-full opacity-10"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <defs>
-              <pattern
-                id="cta-dots"
-                x="0"
-                y="0"
-                width="22"
-                height="22"
-                patternUnits="userSpaceOnUse"
-              >
-                <circle cx="3" cy="3" r="1.5" fill="white" />
-              </pattern>
-            </defs>
-            <rect
-              x="0"
-              y="0"
-              width="100%"
-              height="100%"
-              fill="url(#cta-dots)"
-            />
-          </svg>
-
-          {/* Moving light beam */}
+          {/* Simplified moving light beam */}
           <motion.div
             className="absolute top-0 left-0 w-full h-24 bg-gradient-to-r from-transparent via-white to-transparent opacity-5 -skew-y-6"
             animate={{
@@ -1016,7 +994,7 @@ export default function LandingPage() {
             }}
             transition={{
               repeat: Infinity,
-              duration: 8,
+              duration: 10,
               ease: "linear",
             }}
           />
@@ -1034,13 +1012,13 @@ export default function LandingPage() {
               animate={{
                 textShadow: [
                   "0px 0px 0px rgba(255,255,255,0)",
-                  "0px 0px 15px rgba(255,255,255,0.5)",
+                  "0px 0px 10px rgba(255,255,255,0.3)",
                   "0px 0px 0px rgba(255,255,255,0)",
                 ],
               }}
-              transition={{ duration: 3, repeat: Infinity }}
+              transition={{ duration: 4, repeat: Infinity }}
             >
-              Ready to Transform Your Inventory Management?
+              Start Your FREE 30-Day Trial Today!
             </motion.h2>
             <motion.p
               className="text-xl text-indigo-100 mb-10"
@@ -1048,13 +1026,15 @@ export default function LandingPage() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.2 }}
             >
-              Join thousands of businesses already using InvManager
+              Experience the power of InvManager with our risk-free trial. No
+              credit card required.
             </motion.p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <motion.a
-                href="tel:+918849779702"
-                whileHover={{ scale: 1.05, y: -5 }}
-                whileTap={{ scale: 0.95 }}
+                href="https://wa.me/+918849779702"
+                target="_blank"
+                whileHover={{ scale: 1.02, y: -2 }}
+                whileTap={{ scale: 0.98 }}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.3 }}
@@ -1064,22 +1044,22 @@ export default function LandingPage() {
                 <motion.div
                   className="mr-2 relative z-10"
                   animate={{
-                    rotate: [0, 15, 0, -15, 0],
+                    rotate: [0, 10, 0],
                   }}
                   transition={{
                     repeat: Infinity,
                     duration: 2,
-                    repeatDelay: 1.5,
+                    ease: "easeInOut",
                   }}
                 >
                   <Phone className="h-5 w-5" />
                 </motion.div>
-                <span className="relative z-10">Call Now</span>
+                <span className="relative z-10">Call Now for FREE Trial</span>
               </motion.a>
               <motion.a
                 href="mailto:poojangoyani@gmail.com"
-                whileHover={{ scale: 1.05, y: -5 }}
-                whileTap={{ scale: 0.95 }}
+                whileHover={{ scale: 1.02, y: -2 }}
+                whileTap={{ scale: 0.98 }}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.4 }}
@@ -1089,68 +1069,45 @@ export default function LandingPage() {
                 <motion.div
                   className="mr-2 relative z-10"
                   animate={{
-                    rotate: [0, 15, 0, -15, 0],
+                    rotate: [0, 10, 0],
                   }}
                   transition={{
                     repeat: Infinity,
                     duration: 2,
-                    repeatDelay: 1.5,
+                    ease: "easeInOut",
                     delay: 0.5,
                   }}
                 >
                   <Mail className="h-5 w-5" />
                 </motion.div>
-                <span className="relative z-10">Email Us</span>
+                <span className="relative z-10">Email for FREE Trial</span>
               </motion.a>
-              <motion.div
-                whileHover={{ scale: 1.05, y: -5 }}
-                whileTap={{ scale: 0.95 }}
+              <motion.a
+                href="tel:+918849779702"
+                whileHover={{ scale: 1.02, y: -2 }}
+                whileTap={{ scale: 0.98 }}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.5 }}
-                className="relative w-full sm:w-auto"
+                className="relative inline-flex items-center px-8 py-3 text-base font-medium rounded-md text-indigo-600 bg-white hover:bg-gray-50 shadow-xl w-full sm:w-auto overflow-hidden"
               >
+                <div className="absolute inset-0 bg-gradient-to-r from-indigo-50 to-white opacity-70"></div>
                 <motion.div
-                  className="absolute -inset-0.5 bg-white opacity-30 rounded-md blur-sm"
+                  className="mr-2 relative z-10"
                   animate={{
-                    boxShadow: [
-                      "0 0 0 0 rgba(255, 255, 255, 0.2)",
-                      "0 0 0 15px rgba(255, 255, 255, 0)",
-                    ],
+                    rotate: [0, 10, 0],
                   }}
                   transition={{
                     repeat: Infinity,
-                    duration: 1.5,
+                    duration: 2,
+                    ease: "easeInOut",
+                    delay: 0.7,
                   }}
-                />
-                <Link
-                  href="/admin"
-                  className="relative inline-flex items-center justify-center px-8 py-3 border-2 border-white text-base font-medium rounded-md text-white bg-transparent hover:bg-white hover:bg-opacity-10 w-full backdrop-blur-sm"
                 >
-                  <motion.div
-                    animate={{
-                      rotate: [0, 10, 0, -10, 0],
-                      scale: [1, 1.2, 1, 1.2, 1],
-                    }}
-                    transition={{
-                      rotate: {
-                        repeat: Infinity,
-                        duration: 2.5,
-                        repeatDelay: 1,
-                      },
-                      scale: {
-                        repeat: Infinity,
-                        duration: 2.5,
-                        repeatDelay: 1,
-                      },
-                    }}
-                    className="mr-2"
-                  >
-                    <Sparkles className="h-5 w-5" />
-                  </motion.div>
-                  <span>Go to Dashboard</span>
-                </Link>
-              </motion.div>
+                  <Phone className="h-5 w-5" />
+                </motion.div>
+                <span className="relative z-10">Call Us</span>
+              </motion.a>
             </div>
           </motion.div>
         </div>
