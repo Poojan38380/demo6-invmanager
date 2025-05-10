@@ -36,7 +36,7 @@ export type ProductReportDataType = {
 
   transactions: {
     id: string;
-    action: "CREATED" | "DELETED" | "INCREASED" | "DECREASED";
+    action: "CREATED" | "DELETED" | "INCREASED" | "DECREASED" | "RETURNED";
     createdAt: Date;
     note: string | null;
     stockAfter: number;
@@ -65,7 +65,7 @@ export type ProductReportDataType = {
 
 export type ReportTransactionsType = {
   id: string;
-  action: "CREATED" | "DELETED" | "INCREASED" | "DECREASED";
+  action: "CREATED" | "DELETED" | "INCREASED" | "DECREASED" | "RETURNED";
   createdAt: Date;
   note: string | null;
   stockAfter: number;
