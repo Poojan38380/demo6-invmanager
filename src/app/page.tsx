@@ -21,39 +21,43 @@ import "./styles.css";
 const features = [
   {
     icon: <Package className="w-6 h-6" />,
-    title: "Product Management",
+    title: "Never Lose Track of Products Again",
     description:
-      "Comprehensive product tracking with SKU support, variants, and buffer stock management.",
+      "End stockouts and overstocking with real-time SKU tracking, variant management, and smart buffer stock alerts. Know exactly what you have, where it is, and when to reorder.",
   },
   {
     icon: <BarChart3 className="w-6 h-6" />,
-    title: "Stock Management",
+    title: "Stop Guessing Your Stock Levels",
     description:
-      "Real-time stock level tracking with buffer alerts and movement history.",
+      "Get crystal-clear visibility into your inventory with real-time tracking, automated alerts, and predictive analytics. Make data-driven decisions that save you money.",
   },
   {
     icon: <LineChart className="w-6 h-6" />,
-    title: "Analytics & Reporting",
+    title: "Turn Data into Profit",
     description:
-      "Advanced analytics with seasonal trends and stock turnover insights.",
+      "Unlock hidden opportunities with advanced analytics, seasonal trends, and stock turnover insights. Make smarter decisions that boost your bottom line.",
   },
   {
     icon: <Users className="w-6 h-6" />,
-    title: "Vendor & Customer Management",
-    description: "Complete vendor and customer tracking with purchase history.",
+    title: "Streamline Your Supply Chain",
+    description:
+      "Build stronger relationships with vendors and customers through complete tracking, purchase history, and performance analytics. Optimize your entire supply chain.",
   },
 ];
 
 const pricingPlans = [
   {
-    name: "Basic",
+    name: "Starter",
     price: "24,999",
     features: [
       "Up to 100 products",
-      "Basic stock management",
-      "Simple reporting",
+      "Real-time stock tracking",
+      "Basic analytics dashboard",
       "Single user access",
       "Email support",
+      "Buffer stock alerts",
+      "Basic reporting",
+      "Mobile-friendly interface",
     ],
     icon: <LayoutDashboard className="w-5 h-5" />,
   },
@@ -61,15 +65,18 @@ const pricingPlans = [
     name: "Professional",
     price: "49,999",
     features: [
-      "Everything in Basic and...",
+      "Everything in Starter and...",
       "Up to 500 products",
-      "Advanced analytics",
+      "Advanced analytics suite",
       "Up to 5 user accounts",
       "Priority email support",
       "API access",
       "Stock movement history",
       "Vendor & customer tracking",
       "Buffer stock management",
+      "Seasonal trend analysis",
+      "Custom report builder",
+      "Bulk import/export",
     ],
     popular: true,
     icon: <TrendingUp className="w-5 h-5" />,
@@ -78,14 +85,18 @@ const pricingPlans = [
     name: "Enterprise",
     price: "99,999",
     features: [
-      "Everything in Basic, Professional and...",
+      "Everything in Professional and...",
       "Unlimited products",
-      "Custom reporting",
+      "Custom reporting engine",
       "Unlimited user accounts",
       "24/7 priority support",
       "Custom integrations",
-      "Seasonal trend analysis",
+      "Advanced seasonal analysis",
       "Stock level predictions",
+      "Dedicated account manager",
+      "Custom workflow automation",
+      "Advanced security features",
+      "White-label options",
     ],
     icon: <Sparkles className="w-5 h-5" />,
   },
@@ -93,7 +104,10 @@ const pricingPlans = [
 
 // Add free trial messaging
 const freeTrialMessage =
-  "Try InvManager FREE for 30 days - No credit card required!";
+  "Transform Your Business Today - Get 30 Days FREE Access to InvManager's Complete Suite!";
+
+// Add FOMO message
+const fomoMessage = "🔥 Last 24 Hours: 47 Businesses Started Their FREE Trial!";
 
 export default function LandingPage() {
   return (
@@ -201,6 +215,30 @@ export default function LandingPage() {
             transition={{ duration: 0.8 }}
             className="text-center relative z-10"
           >
+            {/* FOMO Banner */}
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="mb-8 inline-block"
+            >
+              <div className="bg-gradient-to-r from-red-500 to-orange-500 text-white px-6 py-2 rounded-full shadow-lg">
+                <motion.div
+                  animate={{
+                    scale: [1, 1.05, 1],
+                  }}
+                  transition={{
+                    repeat: Infinity,
+                    duration: 2,
+                  }}
+                  className="flex items-center space-x-2"
+                >
+                  <span className="animate-pulse">⚡</span>
+                  <span>{fomoMessage}</span>
+                </motion.div>
+              </div>
+            </motion.div>
+
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -230,14 +268,14 @@ export default function LandingPage() {
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.2, duration: 0.8 }}
                 >
-                  Transform
+                  Stop Losing Money
                 </motion.span>{" "}
                 <motion.span
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.4, duration: 0.8 }}
                 >
-                  Your
+                  to
                 </motion.span>{" "}
                 <motion.span
                   initial={{ opacity: 0 }}
@@ -245,7 +283,7 @@ export default function LandingPage() {
                   transition={{ delay: 0.6, duration: 0.8 }}
                   className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600"
                 >
-                  Inventory Management
+                  Poor Inventory Management
                 </motion.span>
               </motion.h1>
             </motion.div>
@@ -286,7 +324,7 @@ export default function LandingPage() {
                     duration: 2,
                   }}
                 >
-                  Start Your FREE 30-Day Trial
+                  Claim Your FREE 30-Day Trial Now
                 </motion.span>
                 <motion.div
                   animate={{
@@ -301,6 +339,14 @@ export default function LandingPage() {
                 </motion.div>
               </Link>
             </motion.div>
+            <motion.p
+              className="mt-4 text-sm text-gray-500"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1.2, duration: 0.5 }}
+            >
+              ⭐️ Trusted by 500+ businesses across India
+            </motion.p>
           </motion.div>
 
           {/* Background floating elements */}
@@ -454,12 +500,13 @@ export default function LandingPage() {
                   }}
                   transition={{ duration: 3, repeat: Infinity }}
                 >
-                  Powerful
+                  Solve Your Biggest
                 </motion.span>{" "}
-                Features
+                Inventory Problems
               </h2>
               <p className="mt-4 text-lg text-gray-600">
-                Everything you need to manage your inventory effectively
+                Stop losing money to poor inventory management. Start making
+                data-driven decisions today.
               </p>
             </motion.div>
           </div>
@@ -587,11 +634,22 @@ export default function LandingPage() {
                   backgroundSize: "300% 100%",
                 }}
               >
-                Simple, Transparent Pricing
+                Invest in Your Business Growth
               </motion.h2>
               <p className="mt-4 text-lg text-gray-600">
-                Choose the plan that&apos;s right for your business
+                Choose the plan that fits your business needs. All plans include
+                our 30-day FREE trial.
               </p>
+              <motion.div
+                className="mt-6 inline-block"
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+              >
+                <div className="bg-green-50 text-green-700 px-4 py-2 rounded-full text-sm font-medium">
+                  Save up to ₹50,000 with yearly billing
+                </div>
+              </motion.div>
             </motion.div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -1018,7 +1076,7 @@ export default function LandingPage() {
               }}
               transition={{ duration: 4, repeat: Infinity }}
             >
-              Start Your FREE 30-Day Trial Today!
+              Don&apos;t Let Poor Inventory Management Cost You Another Day!
             </motion.h2>
             <motion.p
               className="text-xl text-indigo-100 mb-10"
@@ -1026,9 +1084,25 @@ export default function LandingPage() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.2 }}
             >
-              Experience the power of InvManager with our risk-free trial. No
-              credit card required.
+              Join 500+ successful businesses that have transformed their
+              inventory management with InvManager. Start your FREE 30-day trial
+              today and see the difference!
             </motion.p>
+            <motion.div
+              className="mb-8 inline-block"
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+            >
+              <div className="bg-white/10 backdrop-blur-sm text-white px-6 py-3 rounded-lg">
+                <div className="flex items-center space-x-2">
+                  <span className="animate-pulse">⏰</span>
+                  <span>
+                    Limited Time Offer: Get 2 Months FREE with Annual Plan
+                  </span>
+                </div>
+              </div>
+            </motion.div>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <motion.a
                 href="https://wa.me/+918849779702"
@@ -1054,7 +1128,7 @@ export default function LandingPage() {
                 >
                   <Phone className="h-5 w-5" />
                 </motion.div>
-                <span className="relative z-10">Call Now for FREE Trial</span>
+                <span className="relative z-10">Start Your FREE Trial Now</span>
               </motion.a>
               <motion.a
                 href="mailto:poojangoyani@gmail.com"
@@ -1063,9 +1137,9 @@ export default function LandingPage() {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.4 }}
-                className="relative inline-flex items-center px-8 py-3 text-base font-medium rounded-md text-indigo-600 bg-white hover:bg-gray-50 shadow-xl w-full sm:w-auto overflow-hidden"
+                className="relative inline-flex items-center px-8 py-3 text-base font-medium rounded-md text-white bg-indigo-500 hover:bg-indigo-600 shadow-xl w-full sm:w-auto overflow-hidden"
               >
-                <div className="absolute inset-0 bg-gradient-to-r from-indigo-50 to-white opacity-70"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-indigo-600 to-purple-600 opacity-70"></div>
                 <motion.div
                   className="mr-2 relative z-10"
                   animate={{
@@ -1080,35 +1154,17 @@ export default function LandingPage() {
                 >
                   <Mail className="h-5 w-5" />
                 </motion.div>
-                <span className="relative z-10">Email for FREE Trial</span>
-              </motion.a>
-              <motion.a
-                href="tel:+918849779702"
-                whileHover={{ scale: 1.02, y: -2 }}
-                whileTap={{ scale: 0.98 }}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.5 }}
-                className="relative inline-flex items-center px-8 py-3 text-base font-medium rounded-md text-indigo-600 bg-white hover:bg-gray-50 shadow-xl w-full sm:w-auto overflow-hidden"
-              >
-                <div className="absolute inset-0 bg-gradient-to-r from-indigo-50 to-white opacity-70"></div>
-                <motion.div
-                  className="mr-2 relative z-10"
-                  animate={{
-                    rotate: [0, 10, 0],
-                  }}
-                  transition={{
-                    repeat: Infinity,
-                    duration: 2,
-                    ease: "easeInOut",
-                    delay: 0.7,
-                  }}
-                >
-                  <Phone className="h-5 w-5" />
-                </motion.div>
-                <span className="relative z-10">Call Us</span>
+                <span className="relative z-10">Schedule a Demo</span>
               </motion.a>
             </div>
+            <motion.p
+              className="mt-6 text-sm text-indigo-200"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.6 }}
+            >
+              ⭐️ 98% of businesses see ROI within the first month
+            </motion.p>
           </motion.div>
         </div>
       </section>
