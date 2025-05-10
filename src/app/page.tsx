@@ -14,6 +14,9 @@ import {
   Sparkles,
   LayoutDashboard,
   TrendingUp,
+  Shield,
+  Clock,
+  DollarSign,
 } from "lucide-react";
 import Link from "next/link";
 import "./styles.css";
@@ -109,9 +112,69 @@ const freeTrialMessage =
 // Add FOMO message
 const fomoMessage = "🔥 Last 24 Hours: 47 Businesses Started Their FREE Trial!";
 
+// Add trust badges
+const trustBadges = [
+  {
+    icon: <Shield className="w-6 h-6" />,
+    title: "100% Secure",
+    description: "Bank-grade security",
+  },
+  {
+    icon: <Clock className="w-6 h-6" />,
+    title: "24/7 Support",
+    description: "Always here to help",
+  },
+  {
+    icon: <DollarSign className="w-6 h-6" />,
+    title: "Money Back",
+    description: "30-day guarantee",
+  },
+];
+
+// Add key benefits
+const keyBenefits = [
+  "Reduce stockouts by up to 95%",
+  "Cut inventory costs by 30%",
+  "Save 15+ hours per week",
+  "Increase profit margins by 25%",
+  "Eliminate manual data entry",
+  "Make data-driven decisions",
+];
+
 export default function LandingPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
+      {/* Sticky CTA */}
+      <motion.div
+        initial={{ y: -100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 2 }}
+        className="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-md shadow-lg z-50 py-3 border-t border-gray-100"
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+          <div className="hidden md:block">
+            <p className="text-sm font-medium text-gray-900">
+              Ready to transform your inventory management?
+            </p>
+            <p className="text-sm text-gray-600">
+              Start your FREE 30-day trial now!
+            </p>
+          </div>
+          <div className="flex items-center space-x-4">
+            <motion.a
+              href="https://wa.me/+918849779702"
+              target="_blank"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="inline-flex items-center px-6 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
+            >
+              Start Free Trial
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </motion.a>
+          </div>
+        </div>
+      </motion.div>
+
       {/* Navbar */}
       <nav className="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -584,6 +647,77 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* Add Trust Badges Section after Features */}
+      <section className="py-16 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {trustBadges.map((badge, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className="flex items-center justify-center p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300"
+              >
+                <div className="flex items-center space-x-4">
+                  <motion.div
+                    className="text-indigo-600"
+                    whileHover={{ scale: 1.1, rotate: 10 }}
+                  >
+                    {badge.icon}
+                  </motion.div>
+                  <div className="text-left">
+                    <h3 className="font-semibold text-gray-900">
+                      {badge.title}
+                    </h3>
+                    <p className="text-sm text-gray-600">{badge.description}</p>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Add Key Benefits Section before Pricing */}
+      <section className="py-16 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              className="text-3xl font-bold text-gray-900"
+            >
+              Real Results, Real Numbers
+            </motion.h2>
+            <p className="mt-4 text-lg text-gray-600">
+              See what InvManager can do for your business
+            </p>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-8">
+            {keyBenefits.map((benefit, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className="flex items-center space-x-3"
+              >
+                <motion.div
+                  whileHover={{ scale: 1.2 }}
+                  className="flex-shrink-0 w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600"
+                >
+                  <CheckCircle className="w-5 h-5" />
+                </motion.div>
+                <span className="text-lg text-gray-800 font-medium">
+                  {benefit}
+                </span>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Pricing Section */}
       <section className="py-20 bg-gray-50 relative overflow-hidden">
         <div className="absolute inset-0 bg-grid-pattern opacity-[0.03] pointer-events-none"></div>
@@ -1005,6 +1139,56 @@ export default function LandingPage() {
               </motion.div>
             </motion.div>
           </div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+            className="mt-12 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-2xl p-8"
+          >
+            <h3 className="text-2xl font-bold text-gray-900 mb-4">
+              Why Choose InvManager?
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <h4 className="font-semibold text-gray-900 mb-2">
+                  For Business Owners
+                </h4>
+                <ul className="space-y-2">
+                  <li className="flex items-center space-x-2">
+                    <CheckCircle className="w-5 h-5 text-green-500" />
+                    <span>Complete visibility of your inventory</span>
+                  </li>
+                  <li className="flex items-center space-x-2">
+                    <CheckCircle className="w-5 h-5 text-green-500" />
+                    <span>Reduce costs and increase profits</span>
+                  </li>
+                  <li className="flex items-center space-x-2">
+                    <CheckCircle className="w-5 h-5 text-green-500" />
+                    <span>Make data-driven decisions</span>
+                  </li>
+                </ul>
+              </div>
+              <div>
+                <h4 className="font-semibold text-gray-900 mb-2">
+                  For Operations Teams
+                </h4>
+                <ul className="space-y-2">
+                  <li className="flex items-center space-x-2">
+                    <CheckCircle className="w-5 h-5 text-green-500" />
+                    <span>Automate manual processes</span>
+                  </li>
+                  <li className="flex items-center space-x-2">
+                    <CheckCircle className="w-5 h-5 text-green-500" />
+                    <span>Real-time stock updates</span>
+                  </li>
+                  <li className="flex items-center space-x-2">
+                    <CheckCircle className="w-5 h-5 text-green-500" />
+                    <span>Streamlined workflows</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </motion.div>
         </div>
       </section>
 
