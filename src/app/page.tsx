@@ -270,7 +270,8 @@ export default function LandingPage() {
                 transition={{ duration: 2, repeat: Infinity }}
               />
               <Link
-                href="/admin"
+                href="https://wa.me/+918849779702"
+                target="_blank"
                 className="relative inline-flex items-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 shadow-lg"
               >
                 <motion.span
@@ -282,7 +283,7 @@ export default function LandingPage() {
                     duration: 1.5,
                   }}
                 >
-                  Go to Dashboard
+                  Call Now for a FREE Demo
                 </motion.span>
                 <motion.div
                   animate={{
