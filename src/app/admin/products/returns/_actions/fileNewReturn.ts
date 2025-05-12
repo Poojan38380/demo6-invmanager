@@ -7,15 +7,12 @@ import { redirect } from "next/navigation";
 
 interface fileNewReturnProps {
   productId: string;
-  userId: string;
   returnQty: number;
   productName: string;
   productVariantName?: string;
-
   productVariantId?: string;
   returnReason?: string;
   customerId?: string;
-  customerName?: string;
 }
 
 export async function fileNewReturn(data: fileNewReturnProps) {
@@ -41,6 +38,20 @@ export async function fileNewReturn(data: fileNewReturnProps) {
 
     if (!product) {
       throw new Error("Product not found");
+    }
+
+    let customer;
+
+    if (data.customerId) {
+      customer = await prisma.customer.findUnique({
+        where: {
+          id: data.customerId,
+        },
+      });
+
+      if (!customer) {
+        throw new Error("Customer not found");
+      }
     }
 
     const dbOperations = [];
@@ -80,12 +91,8 @@ export async function fileNewReturn(data: fileNewReturnProps) {
     - Product Name: ${data.productName} 
     - Return Qty: ${data.returnQty}
     - Return Reason: ${data.returnReason}
-    ${data.customerName ? `- Customer: ${data.customerName}` : ""}
-     ${
-       data.productVariantName
-         ? `\nVariant Name: ${data.productVariantName}`
-         : ""
-     }`;
+    ${customer ? `- Customer: ${customer.companyName}` : ""}
+    ${data.productVariantName ? `- Variant Name: ${data.productVariantName}` : ""}`;
 
     // Send notification and revalidate paths in parallel
 

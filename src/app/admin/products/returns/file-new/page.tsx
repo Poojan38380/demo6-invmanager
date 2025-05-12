@@ -1,7 +1,7 @@
 import React from "react";
 
-const FileNewReturn = () => {
-  return <div>FileNewReturn</div>;
+const FileNewReturnPage = () => {
+  return <div>FileNewReturnPage</div>;
 };
 
-export default FileNewReturn;
+export default FileNewReturnPage;
