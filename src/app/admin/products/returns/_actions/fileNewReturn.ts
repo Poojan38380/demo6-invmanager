@@ -1,3 +1,5 @@
+"use server";
+
 import { auth } from "@/lib/auth";
 import { sendTelegramMessage } from "@/lib/send-telegram-message";
 import prisma from "@/prisma";
@@ -9,10 +11,12 @@ interface fileNewReturnProps {
   productId: string;
   returnQty: number;
   productName: string;
-  productVariantName?: string;
+
   productVariantId?: string;
   returnReason?: string;
   customerId?: string;
+
+  productVariantName?: string;
 }
 
 export async function fileNewReturn(data: fileNewReturnProps) {
@@ -62,7 +66,7 @@ export async function fileNewReturn(data: fileNewReturnProps) {
           productId: data.productId,
           returnQty: data.returnQty,
           returnReason: data.returnReason,
-          customerId: data.customerId,
+          customerId: data.customerId ? data.customerId : null,
           productVariantId: data.productVariantId,
           userId: creatorId,
         },
@@ -72,14 +76,14 @@ export async function fileNewReturn(data: fileNewReturnProps) {
     dbOperations.push(
       prisma.transaction.create({
         data: {
-          action: "INCREASED",
+          action: "RETURNED",
           stockBefore: product.stock,
           stockChange: data.returnQty,
           stockAfter: product.stock + data.returnQty,
           productId: data.productId,
           userId: creatorId,
           note: data.returnReason,
-          customerId: data.customerId,
+          customerId: data.customerId ? data.customerId : null,
           productVariantId: data.productVariantId,
         },
       })

@@ -53,6 +53,10 @@ export const PrimaryNavItems: NavItem[] = [
         title: "Categories",
         url: "/admin/products/categories",
       },
+      {
+        title: "Returns",
+        url: "/admin/products/returns",
+      },
     ],
   },
 

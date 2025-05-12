@@ -1,0 +1,66 @@
+"use server";
+
+import prisma from "@/prisma";
+import { ProductWithOneImage } from "../../_actions/products";
+
+export async function searchProducts(query: string): Promise<ProductWithOneImage[]> {
+    if (!query || query.trim() === "") {
+        return [];
+    }
+
+    try {
+        const products = await prisma.product.findMany({
+            where: {
+                name: {
+                    contains: query,
+                    mode: "insensitive",
+                },
+            },
+            take: 10,
+            orderBy: { name: "asc" },
+            include: {
+                vendor: {
+                    select: { companyName: true },
+                },
+                category: { select: { name: true } },
+                productImages: {
+                    take: 1,
+                    select: { url: true },
+                },
+                productVariants: true,
+                transactions: {
+                    where: {
+                        action: "DECREASED",
+                        createdAt: {
+                            gte: new Date(new Date().setMonth(new Date().getMonth() - 1)),
+                        },
+                    },
+                    select: {
+                        stockChange: true,
+                    },
+                },
+                _count: {
+                    select: {
+                        transactions: { where: { action: { not: "CREATED" } } },
+                    },
+                },
+            },
+        });
+
+        return products.map((product) => {
+            const lastMonthSales = product.transactions.reduce(
+                (total, transaction) => total + Math.abs(transaction.stockChange),
+                0
+            );
+
+            return {
+                ...product,
+                lastMonthSales,
+                specialTransactionCount: product._count.transactions,
+            };
+        });
+    } catch (error) {
+        console.error("Error searching products:", error);
+        return [];
+    }
+} 
