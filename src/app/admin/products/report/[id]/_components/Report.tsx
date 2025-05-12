@@ -37,6 +37,7 @@ import {
   Clock,
   User,
   CalendarIcon,
+  PackageOpen,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -968,6 +969,8 @@ export default function ProductReport({
                                 ? "bg-red-100"
                                 : txn.action === "CREATED"
                                 ? "bg-blue-100"
+                                : txn.action === "RETURNED"
+                                ? "bg-yellow-100"
                                 : "bg-gray-100"
                             }`}
                           >
@@ -983,6 +986,9 @@ export default function ProductReport({
                             {txn.action === "DELETED" && (
                               <AlertCircle className="h-5 w-5 text-gray-600" />
                             )}
+                            {txn.action === "RETURNED" && (
+                              <PackageOpen className="h-5 w-5 text-yellow-600" />
+                            )}
                           </div>
                           <div className="flex-1">
                             <div className="flex justify-between items-start">
@@ -994,6 +1000,8 @@ export default function ProductReport({
                                     ? "Stock Decreased"
                                     : txn.action === "CREATED"
                                     ? "Product Created"
+                                    : txn.action === "RETURNED"
+                                    ? "Product Returned"
                                     : "Stock Deleted"}
                                 </p>
                                 <p className="text-sm text-muted-foreground">

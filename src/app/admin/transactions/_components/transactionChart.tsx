@@ -34,6 +34,7 @@ const actionColors = {
   INCREASED: "hsl(var(--success))",
   DECREASED: "hsl(var(--destructive))",
   CREATED: "hsl(var(--primary))",
+  RETURNED: "hsl(var(--warning))",
 };
 
 export default function TransactionChart({

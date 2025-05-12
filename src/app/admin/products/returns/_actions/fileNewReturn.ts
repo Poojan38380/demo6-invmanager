@@ -1,3 +1,5 @@
+"use server";
+
 import { auth } from "@/lib/auth";
 import { sendTelegramMessage } from "@/lib/send-telegram-message";
 import prisma from "@/prisma";
@@ -7,15 +9,14 @@ import { redirect } from "next/navigation";
 
 interface fileNewReturnProps {
   productId: string;
-  userId: string;
   returnQty: number;
   productName: string;
-  productVariantName?: string;
 
   productVariantId?: string;
   returnReason?: string;
   customerId?: string;
-  customerName?: string;
+
+  productVariantName?: string;
 }
 
 export async function fileNewReturn(data: fileNewReturnProps) {
@@ -43,6 +44,20 @@ export async function fileNewReturn(data: fileNewReturnProps) {
       throw new Error("Product not found");
     }
 
+    let customer;
+
+    if (data.customerId) {
+      customer = await prisma.customer.findUnique({
+        where: {
+          id: data.customerId,
+        },
+      });
+
+      if (!customer) {
+        throw new Error("Customer not found");
+      }
+    }
+
     const dbOperations = [];
 
     dbOperations.push(
@@ -51,7 +66,7 @@ export async function fileNewReturn(data: fileNewReturnProps) {
           productId: data.productId,
           returnQty: data.returnQty,
           returnReason: data.returnReason,
-          customerId: data.customerId,
+          customerId: data.customerId ? data.customerId : null,
           productVariantId: data.productVariantId,
           userId: creatorId,
         },
@@ -61,14 +76,14 @@ export async function fileNewReturn(data: fileNewReturnProps) {
     dbOperations.push(
       prisma.transaction.create({
         data: {
-          action: "INCREASED",
+          action: "RETURNED",
           stockBefore: product.stock,
           stockChange: data.returnQty,
           stockAfter: product.stock + data.returnQty,
           productId: data.productId,
           userId: creatorId,
           note: data.returnReason,
-          customerId: data.customerId,
+          customerId: data.customerId ? data.customerId : null,
           productVariantId: data.productVariantId,
         },
       })
@@ -80,12 +95,8 @@ export async function fileNewReturn(data: fileNewReturnProps) {
     - Product Name: ${data.productName} 
     - Return Qty: ${data.returnQty}
     - Return Reason: ${data.returnReason}
-    ${data.customerName ? `- Customer: ${data.customerName}` : ""}
-     ${
-       data.productVariantName
-         ? `\nVariant Name: ${data.productVariantName}`
-         : ""
-     }`;
+    ${customer ? `- Customer: ${customer.companyName}` : ""}
+    ${data.productVariantName ? `- Variant Name: ${data.productVariantName}` : ""}`;
 
     // Send notification and revalidate paths in parallel
 
@@ -98,8 +109,11 @@ export async function fileNewReturn(data: fileNewReturnProps) {
           "/admin/transactions",
           "/admin",
           "/admin/returns",
-          `admin/products/report/${encodeURLid(data.productId)}`,
-          `admin/transactions/product/${encodeURLid(data.productId)}`,
+          `/admin/products/report/${encodeURLid(data.productId)}`,
+          `/admin/transactions/product/${encodeURLid(data.productId)}`,
+          "/admin/products/returns",
+          ...(data.customerId ? [`/admin/transactions/customer/${encodeURLid(data.customerId)}`] : []),
+          ...(data.productVariantId ? [`/admin/transactions/product/variant/${encodeURLid(data.productVariantId)}`] : []),
         ],
         tagsToRevalidate: [
           "get-products-for-table",
