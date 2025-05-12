@@ -109,8 +109,11 @@ export async function fileNewReturn(data: fileNewReturnProps) {
           "/admin/transactions",
           "/admin",
           "/admin/returns",
-          `admin/products/report/${encodeURLid(data.productId)}`,
-          `admin/transactions/product/${encodeURLid(data.productId)}`,
+          `/admin/products/report/${encodeURLid(data.productId)}`,
+          `/admin/transactions/product/${encodeURLid(data.productId)}`,
+          "/admin/products/returns",
+          ...(data.customerId ? [`/admin/transactions/customer/${encodeURLid(data.customerId)}`] : []),
+          ...(data.productVariantId ? [`/admin/transactions/product/variant/${encodeURLid(data.productVariantId)}`] : []),
         ],
         tagsToRevalidate: [
           "get-products-for-table",
