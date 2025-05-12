@@ -200,6 +200,64 @@ export const getCachedSingleProduct = cache(
   async (id: string): Promise<ProductWithImages | null> => getSingleProduct(id),
   ["get-single-product-for-edit"]
 );
+
+async function getProducts(): Promise<ProductWithImages[]> {
+  return await prisma.product.findMany({
+    where: {
+      isArchived: false
+    },
+    select: {
+      id: true,
+      name: true,
+      shortDescription: true,
+      longDescription: true,
+      stock: true,
+      unit: true,
+      createdAt: true,
+      updatedAt: true,
+      isArchived: true,
+      hasVariants: true,
+      SKU: true,
+      bufferStock: true,
+      qtyInBox: true,
+      creatorId: true,
+      categoryId: true,
+      warehouseId: true,
+      vendorId: true,
+      productImages: {
+        select: {
+          id: true,
+          url: true,
+          createdAt: true,
+          productId: true
+        }
+      },
+      productVariants: {
+        select: {
+          id: true,
+          variantName: true,
+          variantStock: true,
+          createdAt: true,
+          updatedAt: true,
+          productId: true
+        }
+      }
+    },
+    orderBy: {
+      createdAt: "desc"
+    }
+  });
+}
+
+export const getCachedProducts = cache(
+  getProducts,
+  ["get-all-products"],
+  {
+    revalidate: 60 * 5, // Revalidate every 5 minutes
+    tags: ["products", "variants", "images"]
+  }
+);
+
 interface addVariantProps {
   variantName: string;
   variantStock: number;
@@ -321,13 +379,12 @@ export async function addProduct(data: addproductProps, productImages: File[]) {
     const notificationMessage = `A new product has been created by ${creatorUsername}:
     - Product Name: ${data.name} 
     - Initial Stock: ${data.stock}
-     ${
-       data.productVariants?.length
-         ? `\nVariants:\n${data.productVariants
-             .map((v) => `- ${v.variantName}: Initial Stock ${v.variantStock}`)
-             .join("\n")}`
-         : ""
-     }`;
+     ${data.productVariants?.length
+        ? `\nVariants:\n${data.productVariants
+          .map((v) => `- ${v.variantName}: Initial Stock ${v.variantStock}`)
+          .join("\n")}`
+        : ""
+      }`;
 
     // Send notification and revalidate paths in parallel
 

@@ -2,8 +2,9 @@
 
 import prisma from "@/prisma";
 import { ProductWithOneImage } from "../../_actions/products";
+import { unstable_cache as cache } from "next/cache";
 
-export async function searchProducts(query: string): Promise<ProductWithOneImage[]> {
+async function searchProducts(query: string): Promise<ProductWithOneImage[]> {
     if (!query || query.trim() === "") {
         return [];
     }
@@ -15,19 +16,57 @@ export async function searchProducts(query: string): Promise<ProductWithOneImage
                     contains: query,
                     mode: "insensitive",
                 },
+                isArchived: false
             },
             take: 10,
             orderBy: { name: "asc" },
-            include: {
+            select: {
+                id: true,
+                name: true,
+                stock: true,
+                SKU: true,
+                unit: true,
+                hasVariants: true,
+                createdAt: true,
+                updatedAt: true,
+                isArchived: true,
+                shortDescription: true,
+                longDescription: true,
+                bufferStock: true,
+                qtyInBox: true,
+                creatorId: true,
+                categoryId: true,
+                warehouseId: true,
+                vendorId: true,
                 vendor: {
-                    select: { companyName: true },
+                    select: {
+                        id: true,
+                        companyName: true
+                    },
                 },
-                category: { select: { name: true } },
+                category: {
+                    select: {
+                        id: true,
+                        name: true
+                    }
+                },
                 productImages: {
                     take: 1,
-                    select: { url: true },
+                    select: {
+                        id: true,
+                        url: true
+                    },
                 },
-                productVariants: true,
+                productVariants: {
+                    select: {
+                        id: true,
+                        variantName: true,
+                        variantStock: true,
+                        createdAt: true,
+                        updatedAt: true,
+                        productId: true
+                    }
+                },
                 transactions: {
                     where: {
                         action: "DECREASED",
@@ -41,7 +80,11 @@ export async function searchProducts(query: string): Promise<ProductWithOneImage
                 },
                 _count: {
                     select: {
-                        transactions: { where: { action: { not: "CREATED" } } },
+                        transactions: {
+                            where: {
+                                action: { not: "CREATED" }
+                            }
+                        },
                     },
                 },
             },
@@ -63,4 +106,14 @@ export async function searchProducts(query: string): Promise<ProductWithOneImage
         console.error("Error searching products:", error);
         return [];
     }
-} 
+}
+
+// Cached version of searchProducts
+export const getCachedProductSearch = cache(
+    searchProducts,
+    ["product-search"],
+    {
+        revalidate: 60 * 2, // Revalidate every 2 minutes
+        tags: ["products", "product-images", "product-variants", "transactions"]
+    }
+); 

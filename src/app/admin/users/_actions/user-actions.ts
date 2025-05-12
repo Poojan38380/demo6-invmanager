@@ -10,17 +10,39 @@ import cacheRevalidate from "@/utils/cache-revalidation-helper";
 
 async function getAllUsers(): Promise<UserWithCounts[]> {
   return await prisma.user.findMany({
-    include: {
+    select: {
+      id: true,
+      username: true,
+      email: true,
+      contact: true,
+      profilePic: true,
+      password: true,
+      createdAt: true,
+      isArchived: true,
       _count: {
-        select: { products: true, transactions: true },
-      },
+        select: {
+          products: true,
+          transactions: true,
+          Return: true
+        }
+      }
     },
+    where: {
+      isArchived: false
+    },
+    orderBy: {
+      createdAt: "desc"
+    }
   });
 }
 
-export const getCachedUserList = cache(
-  async () => getAllUsers(),
-  ["get-all-users"]
+export const getCachedUsers = cache(
+  getAllUsers,
+  ["get-all-users"],
+  {
+    revalidate: 60 * 5, // Revalidate every 5 minutes
+    tags: ["users", "products", "transactions", "returns"]
+  }
 );
 
 export async function addUser({
