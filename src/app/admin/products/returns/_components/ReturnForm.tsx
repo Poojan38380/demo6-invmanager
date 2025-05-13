@@ -162,6 +162,7 @@ export default function ReturnForm() {
   // Handle form submission
   const onSubmit = async (values: FormValues) => {
     setIsSubmitting(true);
+    const loadingToast = toast.loading("Filing Return...");
     try {
       const result = await fileNewReturn({
         productId: values.productId,
@@ -174,14 +175,17 @@ export default function ReturnForm() {
       });
 
       if (result.success) {
-        toast.success("Return filed successfully");
+        router.refresh();
+        toast.success("Return filed successfully", { id: loadingToast });
         router.push("/admin/products/returns");
       } else {
-        toast.error(result.error || "Failed to file return");
+        toast.error(result.error || "Failed to file return", {
+          id: loadingToast,
+        });
       }
     } catch (error) {
       console.error("Error filing return:", error);
-      toast.error("An unexpected error occurred");
+      toast.error("An unexpected error occurred", { id: loadingToast });
     } finally {
       setIsSubmitting(false);
     }

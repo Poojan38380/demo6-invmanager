@@ -21,6 +21,7 @@ import {
   ClipboardIcon,
   PlusCircle,
   Truck,
+  PackageOpen,
 } from "lucide-react";
 import { formatDateYYMMDDHHMM } from "@/lib/format-date";
 import { Badge } from "@/components/ui/badge";
@@ -86,12 +87,18 @@ export const TransactionTableColumns: ColumnDef<TransactionForTable>[] = [
                  ? "text-success font-semibold"
                  : action === "DECREASED"
                  ? "text-destructive font-semibold"
+                 : action === "RETURNED"
+                 ? "text-warning font-semibold"
                  : "text-primary"
              }
             `}
           >
             <span>
-              {action === "INCREASED" ? "+" : action === "DECREASED" ? "-" : ""}
+              {action === "INCREASED" || action === "RETURNED"
+                ? "+"
+                : action === "DECREASED"
+                ? "-"
+                : ""}
             </span>
             <span>{formatNumber(Math.abs(stockChange))}</span>
           </div>
@@ -99,6 +106,11 @@ export const TransactionTableColumns: ColumnDef<TransactionForTable>[] = [
             <ArrowUpIcon className="h-4 w-4 text-success" />
           ) : action === "DECREASED" ? (
             <ArrowDownIcon className="h-4 w-4 text-destructive" />
+          ) : action === "RETURNED" ? (
+            <div className="flex items-center gap-1">
+              <ArrowUpIcon className="h-4 w-4 text-warning" />
+              <PackageOpen className="h-4 w-4 text-warning" />
+            </div>
           ) : (
             <PlusCircle className="h-4 w-4 text-primary" />
           )}
