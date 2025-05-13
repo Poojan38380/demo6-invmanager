@@ -10,27 +10,75 @@ type TransactionFilter = {
   vendorId?: string;
   customerId?: string;
   productVariantId?: string;
+  startDate?: Date;
+  endDate?: Date;
 };
 
 async function getTransactions(
   filter: TransactionFilter = {}
 ): Promise<TransactionForTable[]> {
   try {
+    const { startDate, endDate, ...restFilter } = filter;
+
+    const whereClause = {
+      ...restFilter,
+      ...(startDate && endDate ? {
+        createdAt: {
+          gte: startDate,
+          lte: endDate
+        }
+      } : {})
+    };
+
     const transactions = await prisma.transaction.findMany({
-      where: filter,
+      where: whereClause,
       orderBy: { createdAt: "desc" },
-      include: {
+      select: {
+        id: true,
+        action: true,
+        createdAt: true,
+        note: true,
+        stockAfter: true,
+        stockBefore: true,
+        stockChange: true,
+        productId: true,
+        userId: true,
+        customerId: true,
+        vendorId: true,
+        productVariantId: true,
         product: {
           select: {
+            id: true,
             name: true,
             unit: true,
           },
         },
-        productVariant: { select: { variantName: true } },
-        user: { select: { username: true } },
-        customer: { select: { companyName: true } },
-        vendor: { select: { companyName: true } },
+        productVariant: {
+          select: {
+            id: true,
+            variantName: true
+          }
+        },
+        user: {
+          select: {
+            id: true,
+            username: true
+          }
+        },
+        customer: {
+          select: {
+            id: true,
+            companyName: true
+          }
+        },
+        vendor: {
+          select: {
+            id: true,
+            companyName: true
+          }
+        },
       },
+      take: 1000, // Limit to prevent excessive data fetching
     });
     return transactions;
   } catch (error) {
@@ -39,21 +87,41 @@ async function getTransactions(
   }
 }
 
-// Cached version of getTransactions
-export const cacheTransactionsFn = cache(getTransactions, [
-  "get-all-transactions",
-]);
+// Cache the getTransactions function with different filter combinations
+const cacheTransactionsFn = cache(
+  getTransactions,
+  ["get-transactions"],
+  {
+    revalidate: 60 * 2, // Revalidate every 2 minutes
+    tags: ["transactions", "products", "customers", "suppliers", "users"]
+  }
+);
 
-// Helper functions for specific queries
-export const getAllCachedTransactions = async () => cacheTransactionsFn({});
-export const getCachedTransactionsByProductId = async (productId: string) =>
-  cacheTransactionsFn({ productId });
-export const getCachedTransactionsByVariantId = async (
-  productVariantId: string
-) => cacheTransactionsFn({ productVariantId });
 export const getCachedTransactionsByUserId = async (userId: string) =>
   cacheTransactionsFn({ userId });
-export const getCachedTransactionsByVendorId = async (vendorId: string) =>
-  cacheTransactionsFn({ vendorId });
+
+export const getCachedTransactionsByProductId = async (productId: string) =>
+  cacheTransactionsFn({ productId });
+
+export const getCachedTransactionsByDateRange = async (startDate: Date, endDate: Date) =>
+  cacheTransactionsFn({ startDate, endDate });
+
+
+export const getAllCachedTransactions = async () =>
+  cacheTransactionsFn({});
+
 export const getCachedTransactionsByCustomerId = async (customerId: string) =>
   cacheTransactionsFn({ customerId });
+
+export const getCachedTransactionsByVendorId = async (vendorId: string) =>
+  cacheTransactionsFn({ vendorId });
+
+
+
+export const getCachedTransactionsByProductVariantId = async (productVariantId: string) =>
+  cacheTransactionsFn({ productVariantId });
+
+
+
+
+

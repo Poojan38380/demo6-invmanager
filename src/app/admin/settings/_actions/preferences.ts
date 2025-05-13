@@ -7,24 +7,55 @@ import { Settings } from "@prisma/client";
 import { unstable_cache as cache } from "next/cache";
 
 async function getSettings(): Promise<Settings> {
-  const settings = await prisma.settings.findFirst();
-
-  if (!settings) {
-    const newSettings = await prisma.settings.create({
-      data: {
-        customerMandatory: false,
-        supplierMandatory: false,
-      },
+  try {
+    const settings = await prisma.settings.findFirst({
+      select: {
+        id: true,
+        customerMandatory: true,
+        supplierMandatory: true,
+        createdAt: true,
+        updatedAt: true
+      }
     });
-    return newSettings;
-  }
 
-  return settings;
+    if (!settings) {
+      const newSettings = await prisma.settings.create({
+        data: {
+          customerMandatory: false,
+          supplierMandatory: false,
+        },
+        select: {
+          id: true,
+          customerMandatory: true,
+          supplierMandatory: true,
+          createdAt: true,
+          updatedAt: true
+        }
+      });
+      return newSettings;
+    }
+
+    return settings;
+  } catch (error) {
+    console.error("Error fetching settings:", error);
+    // Return default settings if there's an error
+    return {
+      id: "",
+      customerMandatory: false,
+      supplierMandatory: false,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+  }
 }
 
 export const getCachedSettings = cache(
-  async () => getSettings(),
-  ["get-settings"]
+  getSettings,
+  ["get-settings"],
+  {
+    revalidate: 60 * 5, // Revalidate every 5 minutes
+    tags: ["settings"]
+  }
 );
 
 export async function updateSettings(

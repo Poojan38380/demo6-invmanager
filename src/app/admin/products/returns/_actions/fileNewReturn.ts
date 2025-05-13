@@ -72,7 +72,12 @@ export async function fileNewReturn(data: fileNewReturnProps) {
         },
       })
     );
-
+    dbOperations.push(
+      prisma.product.update({
+        where: { id: data.productId },
+        data: { stock: { increment: data.returnQty } },
+      })
+    );
     dbOperations.push(
       prisma.transaction.create({
         data: {

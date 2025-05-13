@@ -7,26 +7,81 @@ import { Customer, Vendor } from "@prisma/client";
 import { unstable_cache as cache } from "next/cache";
 
 async function getSingleCustomer(id: string): Promise<Customer | null> {
-  const customer = await prisma.customer.findUnique({
-    where: { id },
-  });
-  return customer;
+  if (!id) return null;
+
+  try {
+    const customer = await prisma.customer.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        companyName: true,
+        contactName: true,
+        contactNumber: true,
+        email: true,
+        address: true,
+        createdAt: true,
+        isArchived: true,
+        _count: {
+          select: {
+            transactions: true,
+            Return: true
+          }
+        }
+      }
+    });
+    return customer;
+  } catch (error) {
+    console.error("Error fetching customer:", error);
+    return null;
+  }
 }
 
 export const getCachedSingleCustomer = cache(
-  async (id: string): Promise<Customer | null> => getSingleCustomer(id),
-  ["get-single-customer-for-edit"]
+  getSingleCustomer,
+  ["get-single-customer"],
+  {
+    revalidate: 60 * 2, // Revalidate every 2 minutes
+    tags: ["customers", "transactions", "returns"]
+  }
 );
+
 async function getSingleSupplier(id: string): Promise<Vendor | null> {
-  const supplier = await prisma.vendor.findUnique({
-    where: { id },
-  });
-  return supplier;
+  if (!id) return null;
+
+  try {
+    const supplier = await prisma.vendor.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        companyName: true,
+        contactName: true,
+        contactNumber: true,
+        email: true,
+        address: true,
+        createdAt: true,
+        isArchived: true,
+        _count: {
+          select: {
+            products: true,
+            transactions: true
+          }
+        }
+      }
+    });
+    return supplier;
+  } catch (error) {
+    console.error("Error fetching supplier:", error);
+    return null;
+  }
 }
 
-export const getCachedSinglesupplier = cache(
-  async (id: string): Promise<Vendor | null> => getSingleSupplier(id),
-  ["get-single-supplier-for-edit"]
+export const getCachedSingleSupplier = cache(
+  getSingleSupplier,
+  ["get-single-supplier"],
+  {
+    revalidate: 60 * 2, // Revalidate every 2 minutes
+    tags: ["suppliers", "products", "transactions"]
+  }
 );
 
 interface addSupplierProps {

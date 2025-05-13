@@ -1,11 +1,6 @@
 import React from "react";
 
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 import { ProductDataTable } from "./_components/data-table";
 import { BasicColumns } from "./basic-columns";
@@ -30,7 +25,6 @@ function ToggleTable({ products }: { products: ProductWithOneImage[] }) {
       <CardContent className="max-768:px-0">
         <ProductDataTable columns={BasicColumns} data={products} />
       </CardContent>
-      <CardFooter></CardFooter>
     </Card>
   );
 }
