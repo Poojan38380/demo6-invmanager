@@ -245,6 +245,7 @@
 #### 1. Implement Optimistic Updates
 
 - [ ] Add optimistic UI updates for immediate feedback
+
   ```typescript
   // Example implementation
   const updateProduct = async (productId: string, data: ProductUpdate) => {
@@ -312,6 +313,7 @@
 #### 2. Batch Updates
 
 - [ ] Implement batch processing for multiple updates
+
   ```typescript
   // Example batch update
   const batchUpdate = async (updates: ProductUpdate[]) => {
@@ -344,6 +346,7 @@
 #### 1. Implement Redis Caching
 
 - [ ] Add Redis for frequently accessed data
+
   ```typescript
   // Example Redis implementation
   const getCachedProduct = async (productId: string) => {
@@ -362,6 +365,7 @@
 #### 2. Database Indexing
 
 - [ ] Add proper indexes for frequently queried fields
+
   ```prisma
   // Example Prisma schema with indexes
   model Product {
