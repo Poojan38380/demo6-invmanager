@@ -110,3 +110,18 @@ export const getCachedTransactionsByDateRange = async (startDate: Date, endDate:
 export const getAllCachedTransactions = async () =>
   cacheTransactionsFn({});
 
+export const getCachedTransactionsByCustomerId = async (customerId: string) =>
+  cacheTransactionsFn({ customerId });
+
+export const getCachedTransactionsByVendorId = async (vendorId: string) =>
+  cacheTransactionsFn({ vendorId });
+
+
+
+export const getCachedTransactionsByProductVariantId = async (productVariantId: string) =>
+  cacheTransactionsFn({ productVariantId });
+
+
+
+
+

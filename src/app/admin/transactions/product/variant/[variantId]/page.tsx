@@ -1,5 +1,5 @@
 import TransactionLayout from "../../../transactionLayout";
-import { getCachedTransactionsByVariantId } from "../../../_actions/getTransactions";
+import { getCachedTransactionsByProductVariantId } from "../../../_actions/getTransactions";
 import { checkIdValidity } from "@/utils/checkIdValidity";
 import { decodeURLid } from "@/utils/url-encoder-decoder";
 
@@ -14,7 +14,9 @@ export default async function ProductTransactionsPage({
   const idValidityCheck = checkIdValidity(variantIdDecoded, "variantId");
   if (idValidityCheck) return idValidityCheck;
 
-  const transactions = await getCachedTransactionsByVariantId(variantIdDecoded);
+  const transactions = await getCachedTransactionsByProductVariantId(
+    variantIdDecoded
+  );
 
   if (!transactions || transactions.length === 0)
     return (
