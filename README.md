@@ -4,6 +4,8 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 For detailed documentation about the application architecture, features, and development guidelines, please refer to [DOCUMENTATION.md](./DOCUMENTATION.md).
 
+For a comprehensive list of planned improvements and optimizations, see [IMPROVEMENTS.md](./IMPROVEMENTS.md).
+
 ## Getting Started
 
 First, run the development server...
