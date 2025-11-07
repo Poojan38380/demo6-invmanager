@@ -42,6 +42,11 @@ export default function LoginForm() {
     },
   });
 
+  function handleDemoUser() {
+    form.setValue("username", "admin");
+    form.setValue("password", "pass");
+  }
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
 
@@ -64,16 +69,17 @@ export default function LoginForm() {
         return;
       }
 
-      router.push("/admin");
+      // Redirect immediately for faster navigation
+      router.replace("/admin");
       toast.success("Login Successful", {
         description: "Welcome to your Inventory Management dashboard!",
       });
+      return;
     } catch (error) {
       console.error("Unexpected error during login:", error);
       toast.error("Error", {
         description: "An unexpected error occurred. Please try again later.",
       });
-    } finally {
       setIsLoading(false);
     }
   }
@@ -137,16 +143,29 @@ export default function LoginForm() {
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full" disabled={isLoading}>
-          {isLoading ? (
-            <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Logging in...
-            </>
-          ) : (
-            "Log in"
-          )}
-        </Button>
+        <div className="flex flex-col gap-2 justify-between">
+
+          <Button type="submit" className="w-full" disabled={isLoading}>
+            {isLoading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Logging in...
+              </>
+            ) : (
+              "Log in"
+            )}
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            className="w-full text-sm"
+            size="sm"
+            onClick={handleDemoUser}
+            disabled={isLoading}
+          >
+            Demo User
+          </Button>
+        </div>
       </form>
     </Form>
   );
