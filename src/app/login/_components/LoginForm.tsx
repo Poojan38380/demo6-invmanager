@@ -143,29 +143,25 @@ export default function LoginForm() {
             </FormItem>
           )}
         />
-        <div className="flex flex-col gap-2 justify-between">
-
-          <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Logging in...
-              </>
-            ) : (
-              "Log in"
-            )}
-          </Button>
-          <Button
-            type="button"
-            variant="outline"
-            className="w-full text-sm"
-            size="sm"
-            onClick={handleDemoUser}
-            disabled={isLoading}
-          >
-            Demo User
-          </Button>
-        </div>
+        <Button
+          type="button"
+          variant="outline"
+          className="w-full"
+          onClick={handleDemoUser}
+          disabled={isLoading}
+        >
+          Demo User
+        </Button>
+        <Button type="submit" className="w-full" disabled={isLoading}>
+          {isLoading ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Logging in...
+            </>
+          ) : (
+            "Log in"
+          )}
+        </Button>
       </form>
     </Form>
   );
