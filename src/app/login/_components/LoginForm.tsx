@@ -42,6 +42,11 @@ export default function LoginForm() {
     },
   });
 
+  function handleDemoUser() {
+    form.setValue("username", "admin");
+    form.setValue("password", "pass");
+  }
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
 
@@ -137,6 +142,15 @@ export default function LoginForm() {
             </FormItem>
           )}
         />
+        <Button
+          type="button"
+          variant="outline"
+          className="w-full"
+          onClick={handleDemoUser}
+          disabled={isLoading}
+        >
+          Demo User
+        </Button>
         <Button type="submit" className="w-full" disabled={isLoading}>
           {isLoading ? (
             <>

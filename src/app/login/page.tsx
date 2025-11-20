@@ -1,6 +1,8 @@
 import { Metadata } from "next/types";
 import Link from "next/link";
 import { LucideOctagon } from "lucide-react";
+import { redirect } from "next/navigation";
+import { auth } from "@/lib/auth";
 import LoginForm from "./_components/LoginForm";
 
 export const metadata: Metadata = {
@@ -8,7 +10,13 @@ export const metadata: Metadata = {
   description: "Login to your inventory management account",
 };
 
-export default function LoginPage() {
+export default async function LoginPage() {
+  const session = await auth();
+
+  if (session?.user) {
+    redirect("/admin");
+  }
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 p-4">
       <div className="w-full max-w-md bg-card rounded-xl shadow-2xl overflow-hidden">
