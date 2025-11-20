@@ -69,16 +69,17 @@ export default function LoginForm() {
         return;
       }
 
-      router.push("/admin");
+      // Redirect immediately for faster navigation
+      router.replace("/admin");
       toast.success("Login Successful", {
         description: "Welcome to your Inventory Management dashboard!",
       });
+      return;
     } catch (error) {
       console.error("Unexpected error during login:", error);
       toast.error("Error", {
         description: "An unexpected error occurred. Please try again later.",
       });
-    } finally {
       setIsLoading(false);
     }
   }
